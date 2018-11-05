@@ -161,14 +161,29 @@ namespace OctoGame.OctoGame.GameCommands
             account.ArmPen = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
             account.MagPen = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
             account.OnHit = Math.Ceiling((account.OctoLvL/80+1) * (account.AG_Stats/4+1)); // lvl/100 * (1(agility/2)) + ITEMS + SKILLS
-            account.CurrentLogString = null;
-            account.Debuff = null;
-            account.Buff = null;
-            account.DamageOnTimer = null;
-            account.DebuffInTime = null;
-            account.SkillCooldowns = null;
+            account.CurrentLogString = "";
+            account.Debuff = new List<AccountSettings.Cooldown>();
+            account.Buff = new List<AccountSettings.Cooldown>();
+            account.DamageOnTimer = new List<AccountSettings.DmgWithTimer>();
+            account.DebuffInTime = new List<AccountSettings.DmgWithTimer>();
+            account.OctoItems = new List<AccountSettings.ArtifactEntities>();
+            account.SkillCooldowns = new List<AccountSettings.Cooldown>();
+            account.MaxStamina = account.Stamina;
+            
+
+            if (account.Passives == null)
+            account.Passives = "";
+           
+           
+            var passives = account.Passives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+         
+            foreach (var passive in passives)
+            {
+                account.Buff.Add(new AccountSettings.Cooldown( Convert.ToUInt64(passive), 9999));
+            }
 
             _accounts.SaveAccounts(userId);
+            
             return account;
         }
 
@@ -178,7 +193,7 @@ namespace OctoGame.OctoGame.GameCommands
 
             var account = SetupOctopusStats(Context.User.Id);
             var enemy = SetupOctopusStats(account.CurrentEnemy);
-
+          
 
             if (account.PlayingStatus >= 1)
             {

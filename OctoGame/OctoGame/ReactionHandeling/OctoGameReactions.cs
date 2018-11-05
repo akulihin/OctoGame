@@ -21,7 +21,8 @@ namespace OctoGame.OctoGame.ReactionHandeling
         private readonly AwaitForUserMessage _awaitForUserMessage;
 
         public OctoGameReaction(IUserAccounts accounts, OctoGameUpdateMess octoGameUpdateMess,
-            GameSpellHandeling gameSpellHandeling, ISpellAccounts spellAccounts, Global global, AwaitForUserMessage awaitForUserMessage)
+            GameSpellHandeling gameSpellHandeling, ISpellAccounts spellAccounts, Global global,
+            AwaitForUserMessage awaitForUserMessage)
         {
             _accounts = accounts;
             _octoGameUpdateMess = octoGameUpdateMess;
@@ -59,15 +60,15 @@ namespace OctoGame.OctoGame.ReactionHandeling
                                 _global.OctopusGameMessIdList[i].SocketMsg);
                             break;
                         case "📖":
-                          //  await _octoGameUpdateMess.OctoGameLogs(reaction,
-                         //       _global.OctopusGameMessIdList[i].SocketMsg);
+                            //  await _octoGameUpdateMess.OctoGameLogs(reaction,
+                            //       _global.OctopusGameMessIdList[i].SocketMsg);
                             account.MoveListPage = 5;
                             await _octoGameUpdateMess.MainPage(reaction, _global.OctopusGameMessIdList[i].SocketMsg);
                             break;
                         case "❌":
-                            if(await _awaitForUserMessage.FinishTheGame(reaction))
-                            await _octoGameUpdateMess.EndGame(reaction,
-                                _global.OctopusGameMessIdList[i].SocketMsg);
+                            if (await _awaitForUserMessage.FinishTheGame(reaction))
+                                await _octoGameUpdateMess.EndGame(reaction,
+                                    _global.OctopusGameMessIdList[i].SocketMsg);
                             break;
                         case "1⃣":
                         {
@@ -94,7 +95,7 @@ namespace OctoGame.OctoGame.ReactionHandeling
                             }
 
                             if (account.PlayingStatus == 2)
-                               await GetSkillDependingOnMoveList(account, enemy, reaction, i);
+                                await GetSkillDependingOnMoveList(account, enemy, reaction, i);
                             break;
                         }
 
@@ -116,39 +117,38 @@ namespace OctoGame.OctoGame.ReactionHandeling
                         case "4⃣":
                         {
                             await GetSkillDependingOnMoveList(account, enemy, reaction, i);
-                                break;
+                            break;
                         }
 
                         case "5⃣":
                         {
                             await GetSkillDependingOnMoveList(account, enemy, reaction, i);
-                                break;
+                            break;
                         }
 
                         case "6⃣":
                         {
                             await GetSkillDependingOnMoveList(account, enemy, reaction, i);
-                                break;
+                            break;
                         }
 
                         case "7⃣":
                         {
                             await GetSkillDependingOnMoveList(account, enemy, reaction, i);
-                                break;
+                            break;
                         }
 
                         case "8⃣":
                         {
                             await GetSkillDependingOnMoveList(account, enemy, reaction, i);
-                                break;
+                            break;
                         }
                     }
+
                     await _global.OctopusGameMessIdList[i].SocketMsg.RemoveReactionAsync(reaction.Emote,
                         _global.OctopusGameMessIdList[i].Iuser, RequestOptions.Default);
                 }
-
-
-        } 
+        }
 
         public async Task GetSkillDependingOnMoveList(AccountSettings account, AccountSettings enemy,
             SocketReaction reaction, int i)
@@ -159,7 +159,8 @@ namespace OctoGame.OctoGame.ReactionHandeling
 
             if (account.SkillCooldowns.Any(x => x.skillId == skill.SpellId))
             {
-                var hm =  _awaitForUserMessage.ReplyAndDeleteOvertime("this skill is on cooldown, use another one", 6, reaction);
+                var hm = _awaitForUserMessage.ReplyAndDeleteOvertime("this skill is on cooldown, use another one", 6,
+                    reaction);
                 return;
             }
 
@@ -182,50 +183,45 @@ namespace OctoGame.OctoGame.ReactionHandeling
                 account, enemy);
 
 
-            var status = _gameSpellHandeling.DmgHealthHandeling(skill.WhereDmg, dmg, account, enemy);
-            await UpdateIfWinOrContinue(status, reaction, i);
+            var status = _gameSpellHandeling.DmgHealthHandeling(skill.WhereDmg, dmg, account, enemy);      
             await UpdateTurn(account, enemy);
+
+            await UpdateIfWinOrContinue(status, reaction, i);
         }
 
         public async Task UpdateTurn(AccountSettings account, AccountSettings enemy)
         {
-            if(account.Buff != null)
+            if (account.Buff != null)
                 if (account.Buff.Count > 0)
-            {
-                for (var i = 0; i < account.Buff.Count; i++)
-                {
-                    account.Buff[i].cooldown--;
-                    if (account.Buff[i].cooldown <= 0)
+                    for (var i = 0; i < account.Buff.Count; i++)
                     {
-                        account.Buff.RemoveAt(i);
-                        _accounts.SaveAccounts(account.Id);
+                        account.Buff[i].cooldown--;
+                        if (account.Buff[i].cooldown <= 0)
+                        {
+                            account.Buff.RemoveAt(i);
+                            _accounts.SaveAccounts(account.Id);
+                        }
                     }
-                }
-            }
 
             if (account.Debuff != null)
                 if (account.Debuff.Count > 0)
-            {
-                for (var i = 0; i < account.Debuff.Count; i++)
-                {
-                    account.Debuff[i].cooldown--;
-                    if (account.Debuff[i].cooldown <= 0)
+                    for (var i = 0; i < account.Debuff.Count; i++)
                     {
-                        account.Debuff.RemoveAt(i);
-                        _accounts.SaveAccounts(account.Id);
+                        account.Debuff[i].cooldown--;
+                        if (account.Debuff[i].cooldown <= 0)
+                        {
+                            account.Debuff.RemoveAt(i);
+                            _accounts.SaveAccounts(account.Id);
+                        }
                     }
-                }
-            }
 
             if (account.SkillCooldowns != null)
-            {
                 for (var i = 0; i < account.SkillCooldowns.Count; i++)
                 {
                     account.SkillCooldowns[i].cooldown--;
                     if (account.SkillCooldowns[i].cooldown <= 0)
                         account.SkillCooldowns.RemoveAt(i);
                 }
-            }
 
             account.Turn = 1;
             enemy.Turn = 0;
@@ -236,45 +232,48 @@ namespace OctoGame.OctoGame.ReactionHandeling
 
         public async Task CheckForBuffsOrDebuffsBeforeTurn(AccountSettings account, AccountSettings enemy)
         {
+
             if (account.Buff != null)
-                if (account.Buff.Count > 0)
-            {
                 for (var i = 0; i < account.Buff.Count; i++)
                 {
-                    if(account.SkillCooldowns.Any(x => x.skillId == account.Buff[i].skillId))
+                    if (account.SkillCooldowns.Any(x => x.skillId == account.Buff[i].skillId))
                         continue;
-                        
+
 
                     switch (account.Buff[i].skillId)
                     {
                         // (ад ветка) Выжидание - пассивно первая атака за бой будет усилена на 20% ||
-                          case 1000: 
-                              account.PrecentBonusDmg = 0.2;
-                              break;
+                        case 1000:
+                            account.PrecentBonusDmg = 0.2;
+                            account.SkillCooldowns.Add(new AccountSettings.Cooldown(1006, 999));
+                            break;
 
                         // (ад ветка) Меткость - пассивно если враг увернлся - то следующий ход он не может увернутся. (кд 8 ходов) 
-                          case 1002 when enemy.Dodged >= 1: 
-                              enemy.DodgeChance = 0;
-                              if (account.SkillCooldowns == null)
-                                  account.SkillCooldowns = new List<AccountSettings.Cooldown>();
-                              account.SkillCooldowns.Add(new AccountSettings.Cooldown(1002, 8));
-                              break;      
-                       
+                        case 1002 when enemy.Dodged >= 1:
+                            enemy.DodgeChance = 0;
+
+                            account.SkillCooldowns.Add(new AccountSettings.Cooldown(1002, 8));
+                            break;
+
                         //пассивно увеличивает ад на 10% от вражеской текущей выносливости. 
-                        case  1004:
-                            account.AD_Stats += account.AD_Stats * 0.1 * enemy.Stamina;
+                        case 1004:
+                            
+                            account.AD_Stats = account.AD_Stats + 0.1 * enemy.Stamina;
+                            account.SkillCooldowns.Add(new AccountSettings.Cooldown(1004, 8));
                             break;
 
                         //(ад ветка) Без изъяна - пассивно дает 1 армор или резист, если на него не куплено ни одной вещи. 1006
-                        case 1006 when account.OctoItems.Any( x => x.Armor >= 1) && account.OctoItems.Any( x => x.Resist >= 1):         
+                        case 1006 when account.OctoItems.Count == 0 || account.OctoItems.Any(x => x.Armor >= 1) &&
+                                       account.OctoItems.Any(x => x.Resist >= 1):
                             account.Armor++;
                             account.Resist++;
+                            account.SkillCooldowns.Add(new AccountSettings.Cooldown(1006, 999));
                             break;
                     }
+
                     _accounts.SaveAccounts(account.Id);
                     _accounts.SaveAccounts(enemy.Id);
                 }
-            }
 
             await Task.CompletedTask;
         }

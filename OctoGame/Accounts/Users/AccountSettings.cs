@@ -43,6 +43,8 @@ namespace OctoGame.Accounts.Users
 
         public double Strength { get; set; } // 20
         // ReSharper disable once InconsistentNaming
+        public double Bonus_AD_Stats { get; set; } //0
+        public double Base_AD_Stats { get; set; } //0
         public double AD_Stats { get; set; } //0
         // ReSharper disable once InconsistentNaming
         public double AP_Stats { get; set; } //0
@@ -56,6 +58,7 @@ namespace OctoGame.Accounts.Users
         public double Health { get; set; } //100
         public double MaxHealth { get; set; }
         public double Stamina { get; set; } //200    
+        public double MaxStamina { get; set; } //200    
         public double ArmPen { get; set; } // 0 LVL
         public double MagPen { get; set; } // 0 LVL      
         public double OnHit { get; set; }

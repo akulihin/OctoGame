@@ -20,7 +20,7 @@ namespace OctoGame
         private DiscordShardedClient _client;
         private IServiceProvider _services;
         
-        private readonly int[] _shardIds = { 0,1};
+        private readonly int[] _shardIds = {0, 1};
 
         private static void Main()
         {
