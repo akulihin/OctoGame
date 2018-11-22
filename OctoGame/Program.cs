@@ -4,13 +4,20 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using OctoGame.Accounts.GameSpells;
-using OctoGame.Accounts.Server;
-using OctoGame.Accounts.Users;
-using OctoGame.Framework;
-using OctoGame.Framework.Language;
+using OctoGame.DiscordFramework;
+using OctoGame.DiscordFramework.Language;
 using OctoGame.Helpers;
-using OctoGame.OctoGame.ReactionHandeling;
+using OctoGame.LocalPersistentData.GameSpellsAccounts;
+using OctoGame.LocalPersistentData.LoggingSystemJson;
+using OctoGame.LocalPersistentData.ServerAccounts;
+using OctoGame.LocalPersistentData.UsersAccounts;
+using OctoGame.OctoGame.GamePlayFramework;
+using OctoGame.OctoGame.ReactionHandling;
+using OctoGame.OctoGame.SpellHandling;
+using OctoGame.OctoGame.SpellHandling.ActiveSkills;
+using OctoGame.OctoGame.SpellHandling.BonusDmgHandling;
+using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
+using OctoGame.OctoGame.SpellHandling.PassiveSkills;
 using OctoGame.OctoGame.UpdateMessages;
 
 namespace OctoGame
@@ -43,7 +50,7 @@ namespace OctoGame
             await _services.GetRequiredService<CommandHandeling>().InitializeAsync();
             
             var botToken = Config.Bot.Token;
-            await _client.SetGameAsync("Boole! | *help");
+            await _client.SetGameAsync("Boole~");
 
             await _client.LoginAsync(TokenType.Bot, botToken);
             await _client.StartAsync();
@@ -57,26 +64,43 @@ namespace OctoGame
         {            
             return new ServiceCollection()
                 .AddSingleton(_client)
-                .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandeling>()
-                .AddSingleton<DiscordEventHandler>()
+
                 .AddSingleton<OctoPicPull>()
                 .AddSingleton<OctoNamePull>()
                 .AddSingleton<Global>()
+                .AddSingleton<CommandService>()
+                .AddSingleton<CommandHandeling>()
+                .AddSingleton<DiscordEventHandler>()
+                .AddSingleton<MagicReduction>()
+                .AddSingleton<ArmorReduction>()
+                .AddSingleton<Dodge>()
+                .AddSingleton<Crit>()
 
-                .AddTransient<OctoGameUpdateMess>()
-                .AddTransient<GameSpellHandeling>()
+                .AddTransient<AgilityActiveTree>()
+                .AddTransient<AgilityPassiveTree>()
+                .AddTransient<AttackDamageActiveTree>()
+                .AddTransient<AttackDamagePassiveTree>()
+                .AddTransient<DefenceActiveTree>()
+                .AddTransient<DefencePassiveTree>()
+                .AddTransient<MagicActiveTree>()
+                .AddTransient<MagicPassiveTree>()
+                //.AddTransient<666666666>()
+
                 .AddTransient<OctoGameReaction>()
+                .AddTransient<OctoGameUpdateMess>()
+                .AddTransient<AttackDamageActiveTree>()          
                 .AddTransient<CustomCalculator>()
                 .AddTransient<HelperFunctions>()
                 .AddTransient<SecureRandom>()
                 .AddTransient<AwaitForUserMessage>()
+                .AddSingleton<GameFramework>()
 
-                .AddSingleton<IDataStorage, JsonLocalStorage>()
-                .AddSingleton<ILocalization, JsonLocalization>()
-                .AddSingleton<IUserAccounts, UserAccounts>()
-                .AddSingleton<IServerAccounts, ServerAccounts>()
-                .AddSingleton<ISpellAccounts, SpellUserAccounts>()
+                .AddTransient<IDataStorage, JsonLocalStorage>()
+                .AddTransient<ILocalization, JsonLocalization>()
+                .AddTransient<IUserAccounts, UserAccounts>()
+                .AddTransient<IServerAccounts, ServerAccounts>()
+                .AddTransient<ILoggingSystem, LoggingSystem>()
+                .AddTransient<ISpellAccounts, SpellUserAccounts>()
                 .BuildServiceProvider();
         }
     }

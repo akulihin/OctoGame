@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Newtonsoft.Json;
-using OctoGame.Accounts.GameSpells;
-using OctoGame.Accounts.Users;
-using OctoGame.Framework;
-using OctoGame.Framework.Library;
+using OctoGame.DiscordFramework;
+using OctoGame.DiscordFramework.CustomLibrary;
 using OctoGame.Helpers;
+using OctoGame.LocalPersistentData.GameSpellsAccounts;
+using OctoGame.LocalPersistentData.LoggingSystemJson;
+using OctoGame.LocalPersistentData.UsersAccounts;
+using OctoGame.OctoGame.GamePlayFramework;
 
 namespace OctoGame.OctoGame.GameCommands
 {
@@ -17,27 +19,31 @@ namespace OctoGame.OctoGame.GameCommands
     {
         private readonly IUserAccounts _accounts;
         private readonly ISpellAccounts _spellAccounts;
+        private readonly ILoggingSystem _loggingSystem;
         private readonly Global _global;
         private readonly AwaitForUserMessage _awaitForUserMessage;
         private readonly CommandHandeling _command;
+        private readonly GameFramework _gameFramework;
 
-        public OctoGameCommand(IUserAccounts accounts, ISpellAccounts spellAccounts, Global global, AwaitForUserMessage awaitForUserMessage, CommandHandeling command)
+        public OctoGameCommand(IUserAccounts accounts, ISpellAccounts spellAccounts, Global global,
+            AwaitForUserMessage awaitForUserMessage, CommandHandeling command, ILoggingSystem loggingSystem,
+            GameFramework gameFramework)
         {
             _accounts = accounts;
             _spellAccounts = spellAccounts;
             _global = global;
             _awaitForUserMessage = awaitForUserMessage;
             _command = command;
+
+            _loggingSystem = loggingSystem;
+            _gameFramework = gameFramework;
         }
-
-
 
 
         [Command("CreateOcto", RunMode = RunMode.Async)]
         [Alias("UpdateOcto", "OctoCreate")]
         public async Task CreateOctopusFighter()
         {
-         
             var account = _accounts.GetAccount(Context.User);
             var response = "бу";
 
@@ -97,16 +103,16 @@ namespace OctoGame.OctoGame.GameCommands
         [Alias("InfoOcto", "OctoInfo", "myOcto")]
         public async Task CehckOctopusFighter(IGuildUser user = null)
         {
-
             AccountSettings account;
-            if(user == null)
-             account = _accounts.GetAccount(Context.User);
+            if (user == null)
+                account = _accounts.GetAccount(Context.User);
             else
-            account = _accounts.GetAccount(user);
+                account = _accounts.GetAccount(user);
             _accounts.SaveAccounts(Context.User);
             if (account.OctoInfo == null)
             {
-                await _command.ReplyAsync(Context, "У тебя нет осьминожки все ещё! Чтобы создать, впиши команду **CreateOcto**");
+                await _command.ReplyAsync(Context,
+                    "У тебя нет осьминожки все ещё! Чтобы создать, впиши команду **CreateOcto**");
                 return;
             }
 
@@ -122,7 +128,7 @@ namespace OctoGame.OctoGame.GameCommands
             var embed = new EmbedBuilder();
             embed.WithAuthor(Context.User);
             embed.WithColor(Color.Blue);
-            embed.AddField($"Твой осьминожка!",
+            embed.AddField("Твой осьминожка!",
                 $"**Имя:** {octoInfoArray[0]}\n**Цвет:** {octoInfoArray[1]}\n**Характер** {octoInfoArray[2]}\n**Лор:** {octoInfoArray[3]}");
 
             await _command.ReplyAsync(Context, embed);
@@ -131,7 +137,6 @@ namespace OctoGame.OctoGame.GameCommands
         [Command("endGame")]
         public async Task EndOctoGameCommand()
         {
- 
             var account = _accounts.GetAccount(Context.User);
             account.PlayingStatus = 0;
             _accounts.SaveAccounts(Context.User);
@@ -142,63 +147,75 @@ namespace OctoGame.OctoGame.GameCommands
         //Math.Ceiling(dmg)
         public AccountSettings SetupOctopusStats(ulong userId)
         {
-            var account = _accounts.GetBotAccount(userId);
+            var account = _accounts.GetAccount(userId);
 
             account.MoveListPage = 1;
             account.MaxHealth = account.Health;
             account.CurrentEnemy = 1;
             account.Health = Math.Ceiling(100.0); //  ONLY ITEMS + SKILLS
-            account.Stamina = Math.Ceiling(100 + 3 * Convert.ToDouble(account.OctoLvL-1)); 
-            account.Strength = Math.Ceiling(20.0) ; // ONLY ITEMS + SKILLS
-            account.AD_Stats = Math.Ceiling(account.Strength * (0.2 * account.OctoLvL));  // + ITEMS + SKILLS
-            account.AP_Stats = Math.Ceiling(10 + 0.1*account.OctoLvL); // +  ITEMS + SKILLS
+            account.Stamina = Math.Ceiling(100 + 3 * Convert.ToDouble(account.OctoLvL - 1));
+            account.Strength = Math.Ceiling(20.0); // ONLY ITEMS + SKILLS
+            account.Base_AD_Stats = Math.Ceiling(account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
+            account.AP_Stats = Math.Ceiling(10 + 0.1 * account.OctoLvL); // +  ITEMS + SKILLS
             account.AG_Stats = Math.Ceiling(1.0); // ONLY ITEMS + SKILLS
             account.CritDmg = Math.Ceiling(150.0); // 250 MAX ONLY ITEMS + SKILLS
             account.CritChance = Math.Ceiling(account.AG_Stats); // + SKILLS
             account.DodgeChance = Math.Ceiling(account.AG_Stats - 1); // + SKILLS
             account.Armor = Math.Ceiling(1.0); // 1-6 MAX + ITEMS + SKILLS
-            account.Resist = Math.Ceiling(1.0);// 1-6 MAX + ITEMS + SKILLS
+            account.Resist = Math.Ceiling(1.0); // 1-6 MAX + ITEMS + SKILLS
             account.ArmPen = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
             account.MagPen = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
-            account.OnHit = Math.Ceiling((account.OctoLvL/80+1) * (account.AG_Stats/4+1)); // lvl/100 * (1(agility/2)) + ITEMS + SKILLS
+            account.OnHit =
+                Math.Ceiling((account.OctoLvL / 80 + 1) *
+                             (account.AG_Stats / 4 + 1)); // lvl/100 * (1(agility/2)) + ITEMS + SKILLS
             account.CurrentLogString = "";
-            account.Debuff = new List<AccountSettings.Cooldown>();
-            account.Buff = new List<AccountSettings.Cooldown>();
+            account.Debuff = new List<AccountSettings.DebuffClass>();
+            account.Buff = new List<AccountSettings.CooldownClass>();
             account.DamageOnTimer = new List<AccountSettings.DmgWithTimer>();
             account.DebuffInTime = new List<AccountSettings.DmgWithTimer>();
             account.OctoItems = new List<AccountSettings.ArtifactEntities>();
-            account.SkillCooldowns = new List<AccountSettings.Cooldown>();
+            account.SkillCooldowns = new List<AccountSettings.CooldownClass>();
+            account.Inventory = new List<AccountSettings.ArtifactEntities>();
+            account.Bonus_AD_Stats = 0;
+            account.AD_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
             account.MaxStamina = account.Stamina;
-            
+            account.FirstHit = true;
+            account.dmgDealedLastTime = 0;
+            account.PhysShield = 0;
+            account.MagShield = 0;
+            account.HowManyTimesCrited = 0;
+            account.LifeStealPrec = 0;
+            account.StatsForTime = new List<AccountSettings.StatsForTimeClass>();
 
             if (account.Passives == null)
-            account.Passives = "";
-           
-           
+                account.Passives = "";
+
+
             var passives = account.Passives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
-         
+
             foreach (var passive in passives)
-            {
-                account.Buff.Add(new AccountSettings.Cooldown( Convert.ToUInt64(passive), 9999));
-            }
+                account.Buff.Add(new AccountSettings.CooldownClass(Convert.ToUInt64(passive), 9999));
 
             _accounts.SaveAccounts(userId);
-            
+
             return account;
         }
 
         [Command("Fight")]
         public async Task CreateFight()
         {
-
             var account = SetupOctopusStats(Context.User.Id);
             var enemy = SetupOctopusStats(account.CurrentEnemy);
-          
+
+
+            var logs = _loggingSystem.CreateNewLog(account.DiscordId, enemy.DiscordId);
+            _loggingSystem.SaveCurrentFightLog(account.DiscordId, enemy.DiscordId);
+            _loggingSystem.SaveCompletedFight(account.DiscordId, enemy.DiscordId);
 
             if (account.PlayingStatus >= 1)
             {
-              //  await ReplyAsync("you are already playing");
-               // return;
+                //  await ReplyAsync("you are already playing");
+                // return;
             }
 
             if (account.AD_Tree == null && account.DEF_Tree == null &&
@@ -215,7 +232,7 @@ namespace OctoGame.OctoGame.GameCommands
 
                 var embed = new EmbedBuilder();
                 embed.WithAuthor(Context.User);
-                embed.WithFooter($"Enemy choice");
+                embed.WithFooter("Enemy choice");
                 embed.WithColor(Color.DarkGreen);
                 embed.AddField("Choose enemy lvl : ",
                     $"{new Emoji("1⃣")} Enemy {account.OctoLvL - 1} LvL\n" +
@@ -238,6 +255,10 @@ namespace OctoGame.OctoGame.GameCommands
                 _global.OctopusGameMessIdList.Add(newOctoGame);
                 _global.OctoGamePlaying += 1;
                 account.PlayingStatus = 1;
+                account.MessageIdInList = _global.OctopusGameMessIdList.Count - 1;
+
+                await _gameFramework.CheckForBuffsOrDebuffsBeforeTurn(account, enemy);
+                await _gameFramework.CheckForBuffsOrDebuffsBeforeTurn(enemy, account);
                 _accounts.SaveAccounts(Context.User);
             }
             else
@@ -247,17 +268,17 @@ namespace OctoGame.OctoGame.GameCommands
         }
 
         [Command("CreateSkill", RunMode = RunMode.Async)]
-        [Alias("CS")]
+        [Alias("CSS")]
         public async Task CreateSkill(ulong skillId)
         {
             var skill = _spellAccounts.GetAccount(skillId);
 
-            if (skill.SpellName != null)
+            if (skill.SpellNameEn != null)
             {
                 var embed1 = new EmbedBuilder();
                 embed1.WithAuthor(Context.User);
                 embed1.AddField("Этот скилл иди уже существует",
-                    $"{skill.SpellName}\nID: {skill.SpellId}\nTree: {skill.SpellTree}\nRU: {skill.SpellDescriptionRu}\nEN: {skill.SpellDescriptionEn}\nFormula: {skill.SpellFormula}\nCD: {skill.SpellCd}\n" +
+                    $"{skill.SpellNameEn}\nID: {skill.SpellId}\nTree: {skill.SpellTreeNum}\nRU: {skill.SpellDescriptionRu}\nEN: {skill.SpellDescriptionEn}\nFormula: {skill.SpellFormula}\nCD: {skill.SpellCd}\n" +
                     "Если хочешь полностью его изменить, напиши **да** (1 минута)");
 
                 await _command.ReplyAsync(Context, embed1);
@@ -266,18 +287,18 @@ namespace OctoGame.OctoGame.GameCommands
 
                 if (res.Content == "да")
                 {
-                    await _command.ReplyAsync(Context, $"Ты изхменяешь скилл {skill.SpellName}");
+                    await _command.ReplyAsync(Context, $"Ты изменяешь скилл {skill.SpellNameEn}");
                 }
                 else
                 {
-                    await _command.ReplyAsync(Context, $"никкаких апдейтов. (ты сказал {res.Content})");
+                    await _command.ReplyAsync(Context, $"никаких апдейтов. (ты сказал {res.Content})");
                     return;
                 }
             }
 
             await _command.ReplyAsync(Context, "Введи Назваие скилла, у тебя 5 минута.");
-            var response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000);
-            skill.SpellName = response.ToString();
+            var response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+            skill.SpellNameEn = response.ToString();
 
             var embed = new EmbedBuilder();
             embed.AddField("Введи Номер дерева скилла, у тебя 5 минута", "1 - AD\n2 - DEF\n3 - AGI\n4 - AP");
@@ -285,60 +306,209 @@ namespace OctoGame.OctoGame.GameCommands
             await _command.ReplyAsync(Context, embed);
 
 
-            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000);
-            skill.SpellTree = Convert.ToInt32(response.ToString());
+            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+            skill.SpellTreeNum = Convert.ToInt32(response.ToString());
 
             await Context.Channel.SendMessageAsync(
                 "Введи Русское описание скилла (либо просто **нету**), у тебя 5 минут.");
-            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000);
+            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
             skill.SpellDescriptionRu = response.ToString();
 
             await Context.Channel.SendMessageAsync(
                 "Введи Английское описание скилла (либо просто **нету**), у тебя 5 минут.");
-            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000);
+            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
             skill.SpellDescriptionEn = response.ToString();
 
             var embedAc = new EmbedBuilder();
             embedAc.AddField("Введи Активка или Пассивка, у тебя 5 минута", "0 - Пассив\n1 - Актив");
             await Context.Channel.SendMessageAsync("", false, embedAc.Build());
-            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000);
-            skill.ActiveOrPassive = Convert.ToInt32(response.ToString());
+            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+            skill.SpellType = Convert.ToInt32(response.ToString());
             /*
             await Context.Channel.SendMessageAsync("Введи Формулу описание скилла, у тебя 5 минут.");
-            response = await AwaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000 );
+            response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
             skill.SpellFormula = response.ToString();
             */
             var embedCd = new EmbedBuilder();
             embedCd.AddField("Введи КД скилла, у тебя 5 минут",
                 "1)Если есть - в ходах\n2)Если КД = 1 раз в игру, пиши 9999\n3)Если КД нету вообще, пиши 0");
             await Context.Channel.SendMessageAsync("", false, embedCd.Build());
-            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000);
+            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
             skill.SpellCd = Convert.ToInt32(response.ToString());
 
             await Context.Channel.SendMessageAsync("Тип урона (AD or AP), у тебя 5 минут.");
-            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000);
-            skill.SpellDmgType = response.ToString();
+            await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+            // skill.SpellDmgType = response.ToString();
 
             /*
             await Context.Channel.SendMessageAsync("Введи Пойзен (прокает он хит), у тебя 5 минут.");
-            response = await AwaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000 );
+            response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
             skill.Poisen = response.ToString();
            
             await Context.Channel.SendMessageAsync("Введи ОнХит, у тебя 5 минут.");
-            response = await AwaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000 );
+            response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
             skill.Onhit = response.ToString();
 
             await Context.Channel.SendMessageAsync("Введи Бафф, у тебя 5 минут.");
-            response = await AwaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000 );
+            response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
             skill.Buff = response.ToString();
 
             await Context.Channel.SendMessageAsync("Введи ДЕбафф, у тебя 5 минут.");
-            response = await AwaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 300000 );
+            response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
             skill.DeBuff = response.ToString();
             */
             _spellAccounts.SaveAccounts();
             await _command.ReplyAsync(Context, "Готово!");
         }
+
+
+        [Command("CS", RunMode = RunMode.Async)]
+        public async Task CreateSkillDev(ulong skillId, [Remainder] string skillNameRu)
+        {
+            var skill = _spellAccounts.GetAccount(skillId);
+
+            var messSplit = skillNameRu.Split(new[] {'-'}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (messSplit.Length >= 3)
+            {
+                await ReplyAsync(" only one `-` can be in a string (between `SpellNameRu` and `SpellDescriptionRu`)");
+                return;
+            }
+
+            var secondSplit = messSplit[0].Split(new[] {')'}, StringSplitOptions.RemoveEmptyEntries);
+
+            skill.SpellNameRu = secondSplit[1];
+            skill.SpellDescriptionRu = messSplit[1];
+            skill.SpellFormula = "TODO";
+            skill.SpellDescriptionEn = "TODO";
+
+            var firstMess = await ReplyAsync("SpellNameEn");
+            var response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+            skill.SpellNameEn = response.ToString();
+            await Context.Channel.DeleteMessageAsync(response);
+
+
+            if (messSplit[1].Contains("пассивно"))
+            {
+                skill.SpellType = 0;
+            }
+            else
+            {
+                await firstMess.ModifyAsync(msg =>
+                {
+                    msg.Content = "SpellType\n" +
+                                  "* 0 = passive\n" +
+                                  "* 1 = active\n" +
+                                  "* 2 = Ultimate";
+                });
+                response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+                skill.SpellType = Convert.ToInt32(response.ToString());
+                await Context.Channel.DeleteMessageAsync(response);
+            }
+
+            if (messSplit[0].Contains("маг ветка"))
+            {
+                skill.SpellTreeNum = 4;
+            }
+            else if (messSplit[0].Contains("ловкость ветка"))
+            {
+                skill.SpellTreeNum = 3;
+            }
+            else if (messSplit[0].Contains("танк ветка"))
+            {
+                skill.SpellTreeNum = 2;
+            }
+            else if (messSplit[0].Contains("ад ветка"))
+            {
+                skill.SpellTreeNum = 1;
+            }
+            else
+            {
+                await firstMess.ModifyAsync(msg =>
+                {
+                    msg.Content = "SpellTreeNum\n" +
+                                  "* 0 = General\n" +
+                                  "* 1 = AD\n" +
+                                  "* 2 = DEF\n" +
+                                  "* 3 = AGI\n" +
+                                  "* 4 = AP\n";
+                });
+                response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+                skill.SpellTreeNum = Convert.ToInt32(response.ToString());
+
+
+                switch (Convert.ToInt32(response.ToString()))
+                {
+                    case 0:
+                        skill.SpellTreeString = "General";
+                        break;
+                    case 1:
+                        skill.SpellTreeString = "AD";
+                        break;
+                    case 2:
+                        skill.SpellTreeString = "DEF";
+                        break;
+                    case 3:
+                        skill.SpellTreeString = "AGI";
+                        break;
+                    case 4:
+                        skill.SpellTreeString = "AP";
+                        break;
+                    default:
+                        await ReplyAsync("You fucked up. change `SpellTreeNum` later");
+                        skill.SpellTreeString = "ERROR";
+                        break;
+                }
+
+                await Context.Channel.DeleteMessageAsync(response);
+            }
+
+            if (messSplit[1].Contains("пассивно"))
+            {
+                skill.SpellDmgType = 5;
+            }
+            else
+            {
+                await firstMess.ModifyAsync(msg =>
+                {
+                    msg.Content = "SpellDmgType\n" +
+                                  "* 0 = Physic\n" +
+                                  "* 1 = Magic\n" +
+                                  "* 2 = True\n" +
+                                  "* 3 = Mix\n";
+                });
+                response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+                skill.SpellDmgType = Convert.ToInt32(response.ToString());
+                await Context.Channel.DeleteMessageAsync(response);
+            }
+
+            await firstMess.ModifyAsync(msg => { msg.Content = "SpellCd"; });
+            response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+            skill.SpellCd = Convert.ToInt32(response.ToString());
+            await Context.Channel.DeleteMessageAsync(response);
+
+            if (messSplit[1].Contains("пассивно"))
+            {
+                skill.WhereDmg = 5;
+            }
+            else
+            {
+                await firstMess.ModifyAsync(msg =>
+                {
+                    msg.Content = "WhereDmg\n" +
+                                  "* 0 = Regular( stamina -> health)\n" +
+                                  "* 1 = directly To health\n" +
+                                  "* 2 = only to stamina\n";
+                });
+                response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
+                skill.WhereDmg = Convert.ToInt32(response.ToString());
+                await Context.Channel.DeleteMessageAsync(response);
+            }
+
+            _spellAccounts.SaveAccounts();
+            await firstMess.ModifyAsync(msg => { msg.Content = "Done"; });
+        }
+
 
         [Command("SeeSkill")]
         public async Task SeeSkill(ulong skillId)
@@ -349,15 +519,15 @@ namespace OctoGame.OctoGame.GameCommands
 
                 var embed = new EmbedBuilder();
                 embed.WithAuthor(Context.User);
-                embed.AddField($"{skill.SpellName}",
-                    $"ID: {skill.SpellId}\nTree: {skill.SpellTree}\nRU: {skill.SpellDescriptionRu}\nEN: {skill.SpellDescriptionEn}\nFormula: {skill.SpellFormula}\nCD: {skill.SpellCd}");
+                embed.AddField($"{skill.SpellNameEn}",
+                    $"ID: {skill.SpellId}\nTree: {skill.SpellTreeNum}\nRU: {skill.SpellDescriptionRu}\nEN: {skill.SpellDescriptionEn}\nFormula: {skill.SpellFormula}\nCD: {skill.SpellCd}");
 
-               
+
                 await _command.ReplyAsync(Context, embed);
             }
             catch
             {
-             //   await ReplyAsync("Такого скила нету. Наши скиллы начинаються с ид **1000**");
+                //   await ReplyAsync("Такого скила нету. Наши скиллы начинаються с ид **1000**");
             }
         }
 
@@ -380,7 +550,7 @@ namespace OctoGame.OctoGame.GameCommands
 
             var embed = new EmbedBuilder();
             var allSkills = "";
-            for (var i = 0; i < data.Count; i++) allSkills += $"{i + 1}. {data[i].SpellName} {data[i].SpellId}\n";
+            for (var i = 0; i < data.Count; i++) allSkills += $"{i + 1}. {data[i].SpellNameEn} {data[i].SpellId}\n";
 
             embed.WithAuthor(Context.User);
             embed.AddField("Все скилы:", $"{allSkills}");

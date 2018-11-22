@@ -7,8 +7,9 @@ using Discord;
 using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
-using OctoGame.Accounts.GameSpells;
-using OctoGame.Accounts.Users;
+using OctoGame.LocalPersistentData.GameSpellsAccounts;
+using OctoGame.LocalPersistentData.UsersAccounts;
+using OctoGame.OctoGame.SpellHandling.ActiveSkills;
 
 namespace OctoGame.OctoGame.UpdateMessages
 {
@@ -16,16 +17,24 @@ namespace OctoGame.OctoGame.UpdateMessages
     {
         private readonly IUserAccounts _accounts;
         private readonly ISpellAccounts _spellAccounts;
-        private readonly GameSpellHandeling _gameSpellHandeling;
+        private readonly AttackDamageActiveTree _attackDamageActiveTree;
+        private readonly AgilityActiveTree _agilityActiveTree;
+        private readonly DefenceActiveTree _defenceActiveTree;
+        private readonly MagicActiveTree _magicActiveTree;
+      //  private readonly 5555 8888;
+
         private readonly Global _global;
 
-        public OctoGameUpdateMess(IUserAccounts accounts, GameSpellHandeling gameSpellHandeling,
-            ISpellAccounts spellAccounts, Global global)
+        public OctoGameUpdateMess(IUserAccounts accounts, AttackDamageActiveTree attackDamageActiveTree,
+            ISpellAccounts spellAccounts, Global global, MagicActiveTree magicActiveTree, DefenceActiveTree defenceActiveTree, AgilityActiveTree agilityActiveTree)
         {
             _accounts = accounts;
-            _gameSpellHandeling = gameSpellHandeling;
+            _attackDamageActiveTree = attackDamageActiveTree;
             _spellAccounts = spellAccounts;
             _global = global;
+            _magicActiveTree = magicActiveTree;
+            _defenceActiveTree = defenceActiveTree;
+            _agilityActiveTree = agilityActiveTree;
         }
 
 
@@ -67,15 +76,15 @@ namespace OctoGame.OctoGame.UpdateMessages
             account.PlayingStatus = 2;
             _accounts.SaveAccounts(userId);
 
-            await MainPage(reaction, socketMsg);
+            await MainPage(reaction.UserId, socketMsg);
         }
 
 
-        public async Task MainPage(SocketReaction reaction, RestUserMessage socketMsg)
+        public async Task MainPage(ulong userId, RestUserMessage socketMsg)
         {
-            var globalAccount = _global.Client.GetUser(reaction.UserId);
+            var globalAccount = _global.Client.GetUser(userId);
             var account = _accounts.GetAccount(globalAccount);
-            var enemy = _accounts.GetBotAccount(account.CurrentEnemy);
+            var enemy = _accounts.GetAccount(account.CurrentEnemy);
 
 
             var skillString = GetSkillString(account, enemy);
@@ -89,16 +98,24 @@ namespace OctoGame.OctoGame.UpdateMessages
         }
 
 
+        public async Task VictoryPage(ulong userId, RestUserMessage socketMsg)
+        {
+
+
+            await socketMsg.Channel.SendMessageAsync("Victory!");
+
+        }
+
         public async Task SkillPageLeft(SocketReaction reaction, RestUserMessage socketMsg)
         {
             var userId = reaction.User.Value.Id;
             var globalAccount = _global.Client.GetUser(reaction.UserId);
             var account = _accounts.GetAccount(globalAccount);
-            var enemy = _accounts.GetBotAccount(account.CurrentEnemy);
+            var enemy = _accounts.GetAccount(account.CurrentEnemy);
 
             account.MoveListPage--;
             if (account.MoveListPage == 0)
-                account.MoveListPage = 4;
+                account.MoveListPage = 5;
             _accounts.SaveAccounts(userId);
 
             var skillString = GetSkillString(account, enemy);
@@ -117,10 +134,10 @@ namespace OctoGame.OctoGame.UpdateMessages
             var userId = reaction.User.Value.Id;
             var globalAccount = _global.Client.GetUser(reaction.UserId);
             var account = _accounts.GetAccount(globalAccount);
-            var enemy = _accounts.GetBotAccount(account.CurrentEnemy);
+            var enemy = _accounts.GetAccount(account.CurrentEnemy);
 
             account.MoveListPage++;
-            if (account.MoveListPage == 5)
+            if (account.MoveListPage == 6)
                 account.MoveListPage = 1;
             _accounts.SaveAccounts(userId);
 
@@ -194,7 +211,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _gameSpellHandeling.AdSkills(skill.SpellId, account, enemy, true);
+                    dmg = _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, true);
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
@@ -209,7 +226,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _gameSpellHandeling.DefdSkills(skill.SpellId, account);
+                    dmg = _defenceActiveTree.DefSkills(skill.SpellId, account);
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
@@ -224,7 +241,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _gameSpellHandeling.AgiSkills(skill.SpellId, account);
+                    dmg = _agilityActiveTree.AgiActiveSkills(skill.SpellId, account);
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
@@ -240,7 +257,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _gameSpellHandeling.ApSkills(skill.SpellId, account);
+                    dmg = _magicActiveTree.ApSkills(skill.SpellId, account);
                     
                         skillString += ReturnSkillString(i, dmg, skill, account);
                 }
@@ -257,9 +274,10 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _gameSpellHandeling.ApSkills(skill.SpellId, account);
+                    // шо это? ты в глаза долбишься? 
+                        //  dmg = _attackDamageActiveTree.ApSkills(skill.SpellId, account);
                         skillString +=
-                            $"{i + 1}. {skill.SpellName} ({skill.SpellDmgType}): {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}**\n";
+                            $"{i + 1}. **{skill.SpellNameEn}** (Passive): {skill.SpellDescriptionRu}\n";
 
                 }
             }
@@ -277,12 +295,12 @@ namespace OctoGame.OctoGame.UpdateMessages
             if (spellCd != 0)
                 spellCdString = $"{spellCd} Turns";
 
-            if (skill.SpellDmgType == "PASS")
+            if (skill.SpellType == 0)
                 return
-                    $"{i + 1}. {skill.SpellName} ({skill.SpellDmgType}): {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}** ({spellCdString})\n";
+                    $"{i + 1}. {skill.SpellNameEn} (Passive): {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}** ({spellCdString})\n";
             
                 return
-                    $"{i + 1}. {skill.SpellName} ({skill.SpellDmgType}): **{Math.Ceiling(dmg)}** ({spellCdString})\n";
+                    $"{i + 1}. {skill.SpellNameEn} (Active): {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}** ({spellCdString})\n";
           
         }
 
@@ -290,17 +308,23 @@ namespace OctoGame.OctoGame.UpdateMessages
             string skillString)
         {
             //{new Emoji("<:Steampunk:445276776676196353>")} 
-            
+
+            var shieldString = "";
+            if (account.PhysShield > 0)
+                shieldString += $"Shields: ({account.PhysShield} Phys)";
+            if (account.MagShield > 0)
+                shieldString += $" ({account.MagShield} Mag)";
+
             var mainPage = new EmbedBuilder();
             mainPage.WithAuthor(globalAccount);
-            mainPage.WithFooter($"Move List Page {account.MoveListPage} from 4");
+            mainPage.WithFooter($"Move List Page {account.MoveListPage} from 5");
             mainPage.WithColor(Color.DarkGreen);
             mainPage.AddField("Enemy:", 
-                                        $"**Name:** {enemy.UserName}\n" +
+                                        $"**Name:** {enemy.DiscordUserName}\n" +
                                         $"**LVL:** {enemy.OctoLvL}\n" +
                                         $"**Strength:** {enemy.Strength}\n" +
                                         $"**AD:** {enemy.AD_Stats + enemy.Strength}  **AP:** {enemy.AP_Stats}\n" +
-                                        $"**Health:** {enemy.Health}\n" +
+                                        $"**Health:** {enemy.Health} {shieldString}\n" +
                                         $"**Stamina:** {enemy.Stamina}\n" +
                                         $"**Armor:** {enemy.Armor} **MagRes:** {enemy.Resist}\n" +
                                         $"**ArmPen:** {enemy.ArmPen}  **MagPen:** {enemy.MagPen}\n" +
@@ -332,16 +356,19 @@ namespace OctoGame.OctoGame.UpdateMessages
             switch (user.MoveListPage)
             {
                 case 1:
-                    tree = "AD";
+                    tree = "Attack Damage";
                     break;
                 case 2:
-                    tree = "DEF";
+                    tree = "Defensive";
                     break;
                 case 3:
-                    tree = "AGI";
+                    tree = "Agility";
                     break;
                 case 4:
-                    tree = "AP";
+                    tree = "Ability Power";
+                    break;
+                case 5:
+                    tree = "Passive";
                     break;
             }
             return tree;

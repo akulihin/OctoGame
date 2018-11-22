@@ -2,11 +2,11 @@
 using Discord;
 using Discord.Commands;
 using DiscordBotsList.Api;
-using OctoGame.Accounts.Users;
-using OctoGame.Framework;
-using OctoGame.Framework.Language;
-using OctoGame.Framework.Library;
+using OctoGame.DiscordFramework;
+using OctoGame.DiscordFramework.CustomLibrary;
+using OctoGame.DiscordFramework.Language;
 using OctoGame.Helpers;
+using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.GeneralCommands
 {
