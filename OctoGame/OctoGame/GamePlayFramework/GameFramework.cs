@@ -7,6 +7,7 @@ using OctoGame.LocalPersistentData.GameSpellsAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
 using OctoGame.OctoGame.SpellHandling.ActiveSkills;
 using OctoGame.OctoGame.SpellHandling.BonusDmgHandling;
+using OctoGame.OctoGame.SpellHandling.Buffs;
 using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 using OctoGame.OctoGame.SpellHandling.PassiveSkills;
 using OctoGame.OctoGame.UpdateMessages;
@@ -18,10 +19,19 @@ namespace OctoGame.OctoGame.GamePlayFramework
         private readonly IUserAccounts _accounts;
         private readonly ISpellAccounts _spellAccounts;
         private readonly OctoGameUpdateMess _octoGameUpdateMess;
-        private readonly AttackDamageActiveTree _gameSpellHandling;
+
+        private readonly AttackDamageActiveTree _attackDamageActiveTree;
         private readonly AttackDamagePassiveTree _attackDamagePassiveTree;
+        private readonly DefenceActiveTree _defenceActiveTree;
+        private readonly DefencePassiveTree _defencePassiveTree;
+        private readonly AgilityActiveTree _agilityActiveTree;
+        private readonly AgilityPassiveTree _agilityPassiveTree;
+        private readonly MagicActiveTree _magicActiveTree;
+        private readonly MagicPassiveTree _magicPassiveTree;
+
         private readonly Global _global;
         private readonly AwaitForUserMessage _awaitForUserMessage;
+        private readonly AllBuffs _allDebuffs;
 
         private readonly Crit _crit;
         private readonly Dodge _dodge;
@@ -30,13 +40,13 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
 
         public GameFramework(IUserAccounts accounts, OctoGameUpdateMess octoGameUpdateMess,
-            AttackDamageActiveTree gameSpellHandling, ISpellAccounts spellAccounts, Global global,
+            AttackDamageActiveTree attackDamageActiveTree, ISpellAccounts spellAccounts, Global global,
             AwaitForUserMessage awaitForUserMessage, MagicReduction magicReduction, ArmorReduction armorReduction,
-            Crit crit, Dodge dodge, AttackDamagePassiveTree attackDamagePassiveTree)
+            Crit crit, Dodge dodge, AttackDamagePassiveTree attackDamagePassiveTree, AllBuffs allDebuffs, DefencePassiveTree defencePassiveTree, DefenceActiveTree defenceActiveTree, AgilityActiveTree agilityActiveTree, AgilityPassiveTree agilityPassiveTree, MagicActiveTree magicActiveTree, MagicPassiveTree magicPassiveTree)
         {
             _accounts = accounts;
             _octoGameUpdateMess = octoGameUpdateMess;
-            _gameSpellHandling = gameSpellHandling;
+            _attackDamageActiveTree = attackDamageActiveTree;
             _spellAccounts = spellAccounts;
             _global = global;
             _awaitForUserMessage = awaitForUserMessage;
@@ -45,6 +55,13 @@ namespace OctoGame.OctoGame.GamePlayFramework
             _crit = crit;
             _dodge = dodge;
             _attackDamagePassiveTree = attackDamagePassiveTree;
+            _allDebuffs = allDebuffs;
+            _defencePassiveTree = defencePassiveTree;
+            _defenceActiveTree = defenceActiveTree;
+            _agilityActiveTree = agilityActiveTree;
+            _agilityPassiveTree = agilityPassiveTree;
+            _magicActiveTree = magicActiveTree;
+            _magicPassiveTree = magicPassiveTree;
         }
 
 
@@ -66,7 +83,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             Console.WriteLine($"{skill.SpellNameEn} + {skill.SpellId}");
 
-            var dmg = _gameSpellHandling.AttackDamageActiveSkills(skill.SpellId, account, enemy, false);
+            var dmg = _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, false);
 
             if (account.IsCrit)
                 dmg = _crit.CritHandling(account.AG_Stats,
@@ -83,18 +100,18 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
         public async Task UpdateTurn(AccountSettings account, AccountSettings enemy)
         {
-            if (account.Buff.Count > 0)
-                for (var i = 0; i < account.Buff.Count; i++)
+            if (account.InstantBuff.Count > 0)
+                for (var i = 0; i < account.InstantBuff.Count; i++)
                 {
-                    account.Buff[i].cooldown--;
-                    if (account.Buff[i].cooldown <= 0)
+                    account.InstantBuff[i].forHowManyTurns--;
+                    if (account.InstantBuff[i].forHowManyTurns <= 0)
                     {
-                        account.Buff.RemoveAt(i);
+                        account.InstantBuff.RemoveAt(i);
                         _accounts.SaveAccounts(account.DiscordId);
                     }
                 }
 
-            await CheckDebuffs(enemy);
+            await _allDebuffs.CheckForDeBuffs(enemy);
 
             if (account.SkillCooldowns != null)
                 for (var i = 0; i < account.SkillCooldowns.Count; i++)
@@ -112,7 +129,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             await CheckDmgWithTimer(enemy, account);
             await CheckStatsForTime(account, enemy);
 
-            await CheckForBuffsOrDebuffsBeforeTurn(account, enemy);
+            await CheckForPassivesAndUpdateStats(account, enemy);
         }
 
 
@@ -131,13 +148,16 @@ namespace OctoGame.OctoGame.GamePlayFramework
                 case 0:
                     dmg = _armorReduction.ArmorHandling(myAccount.ArmPen, enemyAccount.Armor, dmg);
                     myAccount.Health += dmg * myAccount.LifeStealPrec;
-                    // this is lifeSteam handleing as wel, we might change it demending on the mechanic of the game
+                    if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth;
                     break;
                 case 1:
                     dmg = _magicReduction.ResistHandling(myAccount.MagPen, enemyAccount.Resist, dmg);
                     myAccount.Health += dmg * myAccount.LifeStealPrec;
+                    if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth;
                     break;
             }
+
+            dmg = CheckForBlock(dmgType, dmg, myAccount);
 
 
             var status = 0;
@@ -204,6 +224,33 @@ namespace OctoGame.OctoGame.GamePlayFramework
             await UpdateIfWinOrContinue(status, myAccount.DiscordId, myAccount.MessageIdInList);
         }
 
+        public double CheckForBlock(int dmgType, double dmg, AccountSettings myAccount)
+        {
+
+            foreach (var shield in myAccount.BlockShield)
+            {
+                shield.howManyHits--;
+                shield.howManyTurn--;
+                _accounts.SaveAccounts(myAccount.DiscordId);
+
+                if (shield.howManyHits <= -1 || shield.howManyTurn <= -1)
+                    return dmg;
+            }
+
+            foreach (var shield in myAccount.BlockShield)
+            {
+                switch (dmgType)
+                {
+                    case 0 when shield.shieldType == 0:
+                        return 0;
+                    case 1 when shield.shieldType == 1:
+                        return 0;
+
+                }
+            }
+
+            return dmg;
+        }
 
         public async Task CheckDmgWithTimer(AccountSettings account, AccountSettings enemy)
         {
@@ -236,43 +283,19 @@ namespace OctoGame.OctoGame.GamePlayFramework
         }
 
         //move debufs somewhere else
-        public async Task CheckDebuffs(AccountSettings account)
+
+
+        public async Task CheckForPassivesAndUpdateStats(AccountSettings account, AccountSettings enemy)
         {
-            if (account.Debuff.Count > 0)
-                for (var i = 0; i < account.Debuff.Count; i++)
-                {
-                    account.Debuff[i].cooldown--;
-
-
-                    switch (account.Debuff[i].skillId)
-                    {
-                        case 1003:
-                            if (!account.Debuff[i].activated)
-                                account.Armor -= 2;
-                            if (account.Debuff[i].cooldown <= 0)
-                                account.Armor += 2;
-                            break;
-                    }
-
-                    account.Debuff[i].activated = true;
-                    if (account.Debuff[i].cooldown <= 0)
-                    {
-                        account.Debuff.RemoveAt(i);
-                        _accounts.SaveAccounts(account.DiscordId);
-                    }
-                }
-
-            await Task.CompletedTask;
-        }
-
-        public async Task CheckForBuffsOrDebuffsBeforeTurn(AccountSettings account, AccountSettings enemy)
-        {
-            for (var i = 0; i < account.Buff.Count; i++)
+            for (var i = 0; i < account.PassiveList.Count; i++)
             {
-                if (account.SkillCooldowns.Any(x => x.skillId == account.Buff[i].skillId))
+                if (account.SkillCooldowns.Any(x => x.skillId == account.PassiveList[i].skillId))
                     continue;
 
-                _attackDamagePassiveTree.AttackDamagePassiveSkills(account, enemy, i);
+                _attackDamagePassiveTree.AttackDamagePassiveSkills(account.PassiveList[i].skillId, account, enemy);
+                _defencePassiveTree.DefPassiveSkills(account.PassiveList[i].skillId, account, enemy);
+                _agilityPassiveTree.AgiPassiveSkills(account.PassiveList[i].skillId, account, enemy);
+                _magicPassiveTree.ApPassiveSkills(account.PassiveList[i].skillId, account, enemy);
 
             }
 
@@ -302,18 +325,25 @@ namespace OctoGame.OctoGame.GamePlayFramework
         {
             string[] skills = { };
 
-            if (account.MoveListPage == 1)
-                skills = account.AD_Tree.Split(new[] {'|'},
-                    StringSplitOptions.RemoveEmptyEntries);
-            else if (account.MoveListPage == 2)
-                skills = account.DEF_Tree.Split(new[] {'|'},
-                    StringSplitOptions.RemoveEmptyEntries);
-            else if (account.MoveListPage == 3)
-                skills = account.AG_Tree.Split(new[] {'|'},
-                    StringSplitOptions.RemoveEmptyEntries);
-            else if (account.MoveListPage == 4)
-                skills = account.AP_Tree.Split(new[] {'|'},
-                    StringSplitOptions.RemoveEmptyEntries);
+            switch (account.MoveListPage)
+            {
+                case 1:
+                    skills = account.AD_Tree.Split(new[] {'|'},
+                        StringSplitOptions.RemoveEmptyEntries);
+                    break;
+                case 2:
+                    skills = account.DEF_Tree.Split(new[] {'|'},
+                        StringSplitOptions.RemoveEmptyEntries);
+                    break;
+                case 3:
+                    skills = account.AG_Tree.Split(new[] {'|'},
+                        StringSplitOptions.RemoveEmptyEntries);
+                    break;
+                case 4:
+                    skills = account.AP_Tree.Split(new[] {'|'},
+                        StringSplitOptions.RemoveEmptyEntries);
+                    break;
+            }
 
             return skills;
         }

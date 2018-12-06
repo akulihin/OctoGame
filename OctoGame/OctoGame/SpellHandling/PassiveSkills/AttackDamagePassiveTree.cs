@@ -6,9 +6,9 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 {
     public class AttackDamagePassiveTree
     {
-        public void AttackDamagePassiveSkills(AccountSettings account, AccountSettings enemy, int i)
+        public void AttackDamagePassiveSkills(ulong skillId, AccountSettings account, AccountSettings enemy)
         {
-                switch (account.Buff[i].skillId)
+                switch (skillId)
                 {
                     // (ад ветка) Выжидание - пассивно первая атака за бой будет усилена на 20% ||
                     case 1000:

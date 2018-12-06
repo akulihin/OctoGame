@@ -49,6 +49,8 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public double Bonus_AD_Stats { get; set; } //0
         // ReSharper disable once InconsistentNaming
         public double AP_Stats { get; set; } //0
+        public double Base_AP_Stats { get; set; } //0
+        public double Bonus_AP_Stats { get; set; } //0
         // ReSharper disable once InconsistentNaming
         public double AG_Stats { get; set; } //0
         public double CritDmg { get; set; }
@@ -67,12 +69,21 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public string CurrentLogString { get; set; }
         public List<CooldownClass> PassiveList { get; set; }
         public List<CooldownClass> SkillCooldowns { get; set; }
-        public List<DebuffClass> Debuff { get; set; }
-        public List<CooldownClass> Buff { get; set; }
+
+        public List<InstantBuffClass> InstantBuff { get; set; }
+
+        public List<InstantBuffClass> InstantDeBuff { get; set; }
+
+        public List<OnTimeBuffClass> BuffToBeActivatedLater { get; set; }
+
+        public List<OnTimeBuffClass> DeBuffToBeActivatedLater { get; set; }
+
+
+
         public double PrecentBonusDmg { get; set; }
         public double NumberBonusDmg { get; set; }
         public List<DmgWithTimer> DamageOnTimer { get; set; }
-        public List<DmgWithTimer> DebuffInTime { get; set; }
+        public List<Poison> PoisonDamage { get; set; }
         public int Dodged { get; set; }
         public bool FirstHit { get; set; }
         public int MessageIdInList { get; set; }
@@ -82,6 +93,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public int HowManyTimesCrited { get; set; }
         public List<StatsForTimeClass> StatsForTime {get; set; }
         public double LifeStealPrec { get; set; }
+        public List<FullDmgBlock> BlockShield { get; set; }
 
 
         // 1 - AD
@@ -89,9 +101,37 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         // 3 - AGI
         // 4 - AP
 
-        /// <summary>
-        /// All Artifact Entities
-        /// </summary>
+        public class FullDmgBlock
+        {
+            public int shieldType;
+            // 0 = phys
+            // 1 = mag
+            public int howManyHits;
+            public int howManyTurn;
+
+            public FullDmgBlock(int shieldType, int howManyHits, int howManyTurn)
+            {
+                this.shieldType = shieldType;
+                this.howManyHits = howManyHits;
+                this.howManyTurn = howManyTurn;         
+            }
+        }
+
+        public class Poison
+        {
+            public ulong skillId;
+            public double dmg;
+            public int howManyTurns;
+            public int dmgType;
+
+            public Poison(ulong skillId, double dmg, int howManyTurns, int dmgType)
+            {
+                this.skillId = skillId;
+                this.dmg = dmg;
+                this.howManyTurns = howManyTurns;
+                this.dmgType = dmgType;
+            }
+        }
 
 
         public class CooldownClass
@@ -106,16 +146,30 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
             }
         }
 
-        public class DebuffClass
+        public class InstantBuffClass
         {
             public ulong skillId;
-            public int cooldown;
+            public int forHowManyTurns;
             public bool activated;
 
-            public DebuffClass(ulong skillId, int cooldown, bool activated)
+            public InstantBuffClass(ulong skillId, int forHowManyTurns, bool activated)
             {
                 this.skillId = skillId;
-                this.cooldown = cooldown*2;
+                this.forHowManyTurns = forHowManyTurns*2;
+                this.activated = activated;
+            }
+        }
+
+        public class OnTimeBuffClass
+        {
+            public ulong skillId;
+            public int afterHowManyTurns;
+            public bool activated;
+
+            public OnTimeBuffClass(ulong skillId, int afterHowManyTurns, bool activated)
+            {
+                this.skillId = skillId;
+                this.afterHowManyTurns = afterHowManyTurns*2;
                 this.activated = activated;
             }
         }
@@ -157,13 +211,16 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         {
             public double AD_STATS;
             public int timer;
+          //  public double stamina;
 
             public StatsForTimeClass(double AD_STATS, int timer)
             {
                 this.AD_STATS = AD_STATS;
                 this.timer = timer;
+              //  this.stamina = stamina;
             }
         }
+
     }
 }
 

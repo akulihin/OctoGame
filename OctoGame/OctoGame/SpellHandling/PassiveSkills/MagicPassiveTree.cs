@@ -5,10 +5,9 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 {
    public class MagicPassiveTree
     {
-        public double ApPassiveSkills(ulong skillId, AccountSettings account)
+        public void ApPassiveSkills(ulong skillId, AccountSettings account, AccountSettings enemy)
         {
-            double dmg = 0;
-            return dmg;
+
         }
     }
 }

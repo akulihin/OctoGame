@@ -169,10 +169,10 @@ namespace OctoGame.OctoGame.GameCommands
                 Math.Ceiling((account.OctoLvL / 80 + 1) *
                              (account.AG_Stats / 4 + 1)); // lvl/100 * (1(agility/2)) + ITEMS + SKILLS
             account.CurrentLogString = "";
-            account.Debuff = new List<AccountSettings.DebuffClass>();
-            account.Buff = new List<AccountSettings.CooldownClass>();
+            
+            account.BuffToBeActivatedLater = new List<AccountSettings.OnTimeBuffClass>();
             account.DamageOnTimer = new List<AccountSettings.DmgWithTimer>();
-            account.DebuffInTime = new List<AccountSettings.DmgWithTimer>();
+            account.PoisonDamage = new List<AccountSettings.Poison>();
             account.OctoItems = new List<AccountSettings.ArtifactEntities>();
             account.SkillCooldowns = new List<AccountSettings.CooldownClass>();
             account.Inventory = new List<AccountSettings.ArtifactEntities>();
@@ -186,15 +186,18 @@ namespace OctoGame.OctoGame.GameCommands
             account.HowManyTimesCrited = 0;
             account.LifeStealPrec = 0;
             account.StatsForTime = new List<AccountSettings.StatsForTimeClass>();
-
+            account.BlockShield = new List<AccountSettings.FullDmgBlock>();
             if (account.Passives == null)
                 account.Passives = "";
 
 
             var passives = account.Passives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
 
+            account.InstantBuff = new List<AccountSettings.InstantBuffClass>();
+
+            account.PassiveList = new List<AccountSettings.CooldownClass>();
             foreach (var passive in passives)
-                account.Buff.Add(new AccountSettings.CooldownClass(Convert.ToUInt64(passive), 9999));
+                account.PassiveList.Add(new AccountSettings.CooldownClass(Convert.ToUInt64(passive), 9999));
 
             _accounts.SaveAccounts(userId);
 
@@ -257,8 +260,8 @@ namespace OctoGame.OctoGame.GameCommands
                 account.PlayingStatus = 1;
                 account.MessageIdInList = _global.OctopusGameMessIdList.Count - 1;
 
-                await _gameFramework.CheckForBuffsOrDebuffsBeforeTurn(account, enemy);
-                await _gameFramework.CheckForBuffsOrDebuffsBeforeTurn(enemy, account);
+                await _gameFramework.CheckForPassivesAndUpdateStats(account, enemy);
+                await _gameFramework.CheckForPassivesAndUpdateStats(enemy, account);
                 _accounts.SaveAccounts(Context.User);
             }
             else
@@ -343,7 +346,7 @@ namespace OctoGame.OctoGame.GameCommands
             /*
             await Context.Channel.SendMessageAsync("Введи Пойзен (прокает он хит), у тебя 5 минут.");
             response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
-            skill.Poisen = response.ToString();
+            skill.Poison = response.ToString();
            
             await Context.Channel.SendMessageAsync("Введи ОнХит, у тебя 5 минут.");
             response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
@@ -351,7 +354,7 @@ namespace OctoGame.OctoGame.GameCommands
 
             await Context.Channel.SendMessageAsync("Введи Бафф, у тебя 5 минут.");
             response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );
-            skill.Buff = response.ToString();
+            skill.InstantBuff = response.ToString();
 
             await Context.Channel.SendMessageAsync("Введи ДЕбафф, у тебя 5 минут.");
             response = await AwaitForUserMessage.AwaitMessage(Context.User.DiscordId, Context.Channel.DiscordId, 3000000 );

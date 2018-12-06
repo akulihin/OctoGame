@@ -120,6 +120,12 @@ namespace OctoGame.OctoGame.UpdateMessages
 
             var skillString = GetSkillString(account, enemy);
 
+            if (skillString == "404")
+            {
+                await SkillPageLeft(reaction, socketMsg);
+                return;
+            }
+
             var spellBookPage = FightPage(globalAccount, account, enemy, skillString);
           
             await socketMsg.ModifyAsync(message =>
@@ -142,6 +148,12 @@ namespace OctoGame.OctoGame.UpdateMessages
             _accounts.SaveAccounts(userId);
 
             var skillString = GetSkillString(account, enemy);
+
+            if (skillString == "404")
+            {
+                await SkillPageRight(reaction, socketMsg);
+                return;
+            }
 
             var spellBookPage = FightPage(globalAccount, account, enemy, skillString);
 
@@ -196,7 +208,7 @@ namespace OctoGame.OctoGame.UpdateMessages
             string[] skills;
             // var tree = "";
             double dmg;
-            var skillString = "You dont have any skills here.";
+            var skillString = "404";
 
 
             if (account.MoveListPage == 1 && account.AD_Tree != null)
@@ -226,7 +238,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _defenceActiveTree.DefSkills(skill.SpellId, account);
+                    dmg = _defenceActiveTree.DefSkills(skill.SpellId, account, enemy, true);
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
@@ -273,11 +285,8 @@ namespace OctoGame.OctoGame.UpdateMessages
                 {
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
-
-                    // шо это? ты в глаза долбишься? 
-                        //  dmg = _attackDamageActiveTree.ApSkills(skill.SpellId, account);
-                        skillString +=
-                            $"{i + 1}. **{skill.SpellNameEn}** (Passive): {skill.SpellDescriptionRu}\n";
+;
+                    skillString += ReturnSkillString(i, 0, skill, account);
 
                 }
             }
@@ -297,10 +306,10 @@ namespace OctoGame.OctoGame.UpdateMessages
 
             if (skill.SpellType == 0)
                 return
-                    $"{i + 1}. {skill.SpellNameEn} (Passive): {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}** ({spellCdString})\n";
+                    $"{i + 1}. **{skill.SpellNameEn}**: {skill.SpellDescriptionRu} *({spellCdString})*\n";
             
                 return
-                    $"{i + 1}. {skill.SpellNameEn} (Active): {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}** ({spellCdString})\n";
+                    $"{i + 1}. **{skill.SpellNameEn}**: {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}** *({spellCdString})*\n";
           
         }
 

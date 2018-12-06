@@ -7,23 +7,43 @@ namespace OctoGame.OctoGame.SpellHandling.DmgReductionHandling
         public double ArmorHandling(double armPen, double arm, double dmg)
         {
             // TEST IT, maybe an error!!! ( unity test helps)
-            double def = 0;
-            if (Math.Ceiling(arm - armPen) == 1)
-                def = 0.26;
-            else if (Math.Ceiling(arm - armPen) == 2)
-                def = 0.13;
-            else if (Math.Ceiling(arm - armPen) == 3)
-                def = 0.8;
-            else if (Math.Ceiling(arm - armPen) == 4)
-                def = 0.5;
-            else if (Math.Ceiling(arm - armPen) == 5)
-                def = 0.3;
-            else if (Math.Ceiling(arm - armPen) == 6)
-                def = 0.1;
+           
+            var switchVar = Convert.ToInt32(Math.Ceiling(arm - armPen));
+            if (switchVar > 6) switchVar = 6;
 
-            var final = dmg - dmg * def;
+            return dmg - dmg * GetArmorPercentDependsOnLvl(switchVar);
+        }
 
-            return final;
+
+        public double GetArmorPercentDependsOnLvl(double armorLvl)
+        {
+            double armorPercent = 0;
+
+            switch (armorLvl)
+
+            {
+                case 1:
+                    armorPercent = 0.26;
+                    break;
+                case 2:
+                    armorPercent = 0.39;
+                    break;
+                case 3:
+                    armorPercent = 0.47;
+                    break;
+                case 4:
+                    armorPercent = 0.52;
+                    break;
+                case 5:
+                    armorPercent = 0.55;
+                    break;
+                case 6:
+                    armorPercent = 0.56;
+                    break;
+            }
+
+
+            return armorPercent;
         }
     }
 }

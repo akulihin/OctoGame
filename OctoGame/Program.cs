@@ -16,6 +16,7 @@ using OctoGame.OctoGame.ReactionHandling;
 using OctoGame.OctoGame.SpellHandling;
 using OctoGame.OctoGame.SpellHandling.ActiveSkills;
 using OctoGame.OctoGame.SpellHandling.BonusDmgHandling;
+using OctoGame.OctoGame.SpellHandling.Buffs;
 using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 using OctoGame.OctoGame.SpellHandling.PassiveSkills;
 using OctoGame.OctoGame.UpdateMessages;
@@ -84,6 +85,7 @@ namespace OctoGame
                 .AddTransient<DefencePassiveTree>()
                 .AddTransient<MagicActiveTree>()
                 .AddTransient<MagicPassiveTree>()
+                .AddTransient<AllBuffs>()
                 //.AddTransient<666666666>()
 
                 .AddTransient<OctoGameReaction>()
