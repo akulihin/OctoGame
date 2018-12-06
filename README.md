@@ -1,6 +1,6 @@
 # OctoGame
 
-[![Build Status](https://travis-ci.org/petrspelos/Community-Discord-BOT.svg?branch=master)](https://travis-ci.org/mylorik/OctoBot-Core)
+[![Build Status](https://travis-ci.org/mylorik/OctoGame.svg?branch=master)](https://travis-ci.org/mylorik/OctoGame)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mylorik/OctoGame/blob/master/LICENSE)
 
 
