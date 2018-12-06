@@ -48,7 +48,8 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     break;
 
-                // (ад ветка) Грязный прием - пропускает один ход, и через еще ход бьет 228% от ад. 1005
+                // (ад ветка) Грязный прием - пропускает один ход, и через еще ход бьет 228% от ад. 1005 
+                // -Пропускает ход1, может ходить на ход2, и тратит ход3 на удар
                 case 1005:
 
                     dmg = 2.28 * myAccount.AD_Stats;
@@ -71,7 +72,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     dmg = 0.25 >= enemyAccount.Health / enemyAccount.MaxHealth ? 99999999 : 1;
                     if (!check)
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 10));
-                    //finish game!!! ( I will implement gameEnd() later)
+                    //finish game!!! ( I will implement gameEnd() later) -Да, добавь gameEnd.
                     break;
 
                 // (ад ветка) Кулак богатыря - дамажит 20% от ад за каждые 10 силы. (кд 5 ходов) 1009
@@ -96,7 +97,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                         enemyAccount.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 0, 1));
                         dmg = 0;
                     }
-
+                    // -Здесь должна быть +1 армор пенетры на удар. так же этот удар не критует, но считается критом для игры (есть там пара скиллов на этой механнике)
                     break;
 
                 //1017 (ад ветка) Внезапный выпад - дамажит 120% от ад (нельзя увернуться) (кд 7 ходов) 
@@ -105,7 +106,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     if(!check)
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 7));
-
+                     // -Нельзя увернутся от этого удара
                     break;
 
                // 1019(ад ветка) Решительность - повышает ад на 50 % на следующий ход.
@@ -117,6 +118,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
   //1021 (ад ветка) Кромсатель - наносит 3 удара 30%+50%+70% от ад.  пропуская следующих ход, но получая онхит на 5 ходов (20% уровня + вражеский уровень армора * 10% от уровня)
                     // hvatit ebu davat
+                    // -Нормальный спел...
                 case 2021:
 
                     break;
@@ -126,10 +128,11 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 2023:
                     myAccount.LifeStealPrec = 0.5;
                     break;
+                // -На 5 ходов?
             }
 
-
-
+               
+                // -Это чё такое?
             if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.FirstHit)
                 dmg = dmg * (1 + myAccount.PrecentBonusDmg);
 
