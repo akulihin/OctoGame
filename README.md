@@ -1,5 +1,8 @@
 # OctoGame
 
+[![Build Status](https://travis-ci.org/petrspelos/Community-Discord-BOT.svg?branch=master)](https://travis-ci.org/mylorik/OctoBot-Core)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mylorik/OctoGame/blob/master/LICENSE)
+
 
 # Bext based RPG Game using Discord API
 **logic is kind of finished**
