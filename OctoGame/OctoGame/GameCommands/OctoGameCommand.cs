@@ -155,7 +155,7 @@ namespace OctoGame.OctoGame.GameCommands
             account.Health = Math.Ceiling(100.0); //  ONLY ITEMS + SKILLS
             account.Stamina = Math.Ceiling(100 + 3 * Convert.ToDouble(account.OctoLvL - 1));
             account.Strength = Math.Ceiling(20.0); // ONLY ITEMS + SKILLS
-            account.Base_AD_Stats = Math.Ceiling(account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
+            account.Base_AD_Stats = Math.Ceiling(account.Strength + account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
             account.AP_Stats = Math.Ceiling(10 + 0.1 * account.OctoLvL); // +  ITEMS + SKILLS
             account.AG_Stats = Math.Ceiling(1.0); // ONLY ITEMS + SKILLS
             account.CritDmg = Math.Ceiling(150.0); // 250 MAX ONLY ITEMS + SKILLS
