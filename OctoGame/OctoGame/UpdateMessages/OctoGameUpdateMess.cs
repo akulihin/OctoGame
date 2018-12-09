@@ -253,7 +253,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _agilityActiveTree.AgiActiveSkills(skill.SpellId, account);
+                    dmg = _agilityActiveTree.AgiActiveSkills(skill.SpellId, account, enemy, true);
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
@@ -269,7 +269,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg = _magicActiveTree.ApSkills(skill.SpellId, account);
+                    dmg = _magicActiveTree.ApSkills(skill.SpellId, account, enemy, true);
                     
                         skillString += ReturnSkillString(i, dmg, skill, account);
                 }

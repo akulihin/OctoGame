@@ -15,7 +15,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
             _accounts = accounts;
             _armorReduction = armorReduction;
         }
-
+        
         public double DefSkills(ulong skillId, AccountSettings account, AccountSettings enemy, bool check)
         {
             double dmg = 0;
@@ -92,8 +92,8 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     if (!check)
                     {
-                        account.Bonus_AD_Stats += (account.Armor + account.Resist) * account.OctoLvL * 0.2;
-                        account.Bonus_AP_Stats += (account.Armor + account.Resist) * account.OctoLvL * 0.2;
+                        account.AD_Stats += (account.Armor + account.Resist) * account.OctoLvL * 0.2;
+                        account.AP_Stats += (account.Armor + account.Resist) * account.OctoLvL * 0.2;
                         account.Armor = 0;
                         account.Resist = 0;
                     }

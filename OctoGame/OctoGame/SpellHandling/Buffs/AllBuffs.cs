@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
@@ -7,40 +8,53 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
     public class AllBuffs
     {
         private readonly IUserAccounts _accounts;
-        static Dictionary<List<>>
+
+        private  static readonly ConcurrentDictionary<ulong, double> TemporaryStrength1089  = new ConcurrentDictionary<ulong, double>();
+       // private static List<ulong, double>
+          
+
         public AllBuffs(IUserAccounts accounts)
         {
             _accounts = accounts;
         }
-
-        public async Task CheckForDeBuffs(AccountSettings account)
+        
+        public async Task CheckForBuffs(AccountSettings account)
         {
-            if (account.InstantDeBuff.Count > 0)
-                for (var i = 0; i < account.InstantDeBuff.Count; i++)
+            if(account.InstantBuff.Count > 0)
+                for (var i = 0; i < account.InstantBuff.Count; i++)
                 {
-                    account.InstantDeBuff[i].forHowManyTurns--;
+                    account.InstantBuff[i].forHowManyTurns--;
 
-
-                    switch (account.InstantDeBuff[i].skillId)
+                    switch (account.InstantBuff[i].skillId)
                     {
-                        case 1003:
-                            if (!account.InstantDeBuff[i].activated)
-                                account.Armor -= 2;
-                            if (account.InstantDeBuff[i].forHowManyTurns <= 0)
-                                account.Armor += 2;
+                        case 4856757499:
                             break;
+                        //1089 (танк ветка) Истинный воин - повышает силу в 2 раза на следующие 2 хода (но  дополнительная силна не влияет на авд) 
+                        case 1089:
+                            if (!account.InstantBuff[i].activated)
+                            {
+                                TemporaryStrength1089.GetOrAdd(account.DiscordId, account.Strength);
+                                account.Strength = account.Strength * 2;
+                                account.InstantBuff[i].activated = true;
+                            }
+
+                            if (account.InstantBuff[i].activated &&  account.InstantBuff[i].forHowManyTurns <=0)
+                            {                              
+                                TemporaryStrength1089.TryGetValue(account.DiscordId, out double extra);
+                                account.Strength -= extra;
+                                TemporaryStrength1089.TryRemove(account.DiscordId, out double val);
+                            }
+                            break;
+
                     }
 
-                    account.InstantDeBuff[i].activated = true;
-                    if (account.InstantDeBuff[i].forHowManyTurns <= 0)
+                    if (account.InstantBuff[i].forHowManyTurns <= 0)
                     {
-                        account.InstantDeBuff.RemoveAt(i);
+                        account.InstantBuff.RemoveAt(i);
                         _accounts.SaveAccounts(account.DiscordId);
                     }
                 }
-
             _accounts.SaveAccounts(account.DiscordId);
-           await CheckForBuffsToBeActivatedLater(account);
             await Task.CompletedTask;
         }
 
@@ -69,39 +83,38 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
             await Task.CompletedTask;
         }
 
-        public async Task CheckForDeBuffsToBeActivatedLater(AccountSettings account)
+        public async Task CheckForDeBuffs(AccountSettings account)
         {
+            if (account.InstantDeBuff.Count > 0)
+                for (var i = 0; i < account.InstantDeBuff.Count; i++)
+                {
+                    account.InstantDeBuff[i].forHowManyTurns--;
+
+
+                    switch (account.InstantDeBuff[i].skillId)
+                    {
+                        case 1003:
+                            if (!account.InstantDeBuff[i].activated)
+                                account.Armor -= 2;
+                            if (account.InstantDeBuff[i].forHowManyTurns <= 0)
+                                account.Armor += 2;
+                            break;
+                    }
+
+                    account.InstantDeBuff[i].activated = true;
+                    if (account.InstantDeBuff[i].forHowManyTurns <= 0)
+                    {
+                        account.InstantDeBuff.RemoveAt(i);
+                        _accounts.SaveAccounts(account.DiscordId);
+                    }
+                }
+
+            _accounts.SaveAccounts(account.DiscordId);        
             await Task.CompletedTask;
         }
 
-        public async Task CheckForBuffs(AccountSettings account)
+        public async Task CheckForDeBuffsToBeActivatedLater(AccountSettings account)
         {
-            if(account.InstantBuff.Count > 0)
-                for (var i = 0; i < account.InstantBuff.Count; i++)
-                {
-                    account.InstantBuff[i].forHowManyTurns--;
-
-                    switch (account.InstantBuff[i].skillId)
-                    {
-                        case 4856757499:
-                            break;
-                        //1089 (танк ветка) Истинный воин - повышает силу в 2 раза на следующие 2 хода (но уменьшает скейл ад от силы в 2 раза) 
-                        case 1089:
-                            if (!account.InstantBuff[i].activated)
-                            {
-                                account.Strength = account.Strength * 2;
-                                account.InstantBuff[i].activated = true;
-                            }
-
-                            if (account.InstantBuff[i].activated)
-                            {
-
-                            }
-                            break;
-
-                    }
-                }
-            _accounts.SaveAccounts(account.DiscordId);
             await Task.CompletedTask;
         }
 

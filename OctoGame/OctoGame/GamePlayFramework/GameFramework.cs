@@ -83,7 +83,23 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             Console.WriteLine($"{skill.SpellNameEn} + {skill.SpellId}");
 
-            var dmg = _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, false);
+            double dmg = 0;
+            switch (account.MoveListPage)
+            {
+                    case 1:
+                        dmg = _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, false);
+                        break;
+                    case 2:
+                        dmg = _defenceActiveTree.DefSkills(skill.SpellId, account, enemy, false);
+                        break;
+                    case 3:
+                        dmg = _agilityActiveTree.AgiActiveSkills(skill.SpellId, account, enemy, false);
+                        break;
+                    case 4:
+                        dmg = _magicActiveTree.ApSkills(skill.SpellId, account, enemy, false);
+                        break;
+            }
+            
 
             if (account.IsCrit)
                 dmg = _crit.CritHandling(account.AG_Stats,
@@ -100,18 +116,13 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
         public async Task UpdateTurn(AccountSettings account, AccountSettings enemy)
         {
-            if (account.InstantBuff.Count > 0)
-                for (var i = 0; i < account.InstantBuff.Count; i++)
-                {
-                    account.InstantBuff[i].forHowManyTurns--;
-                    if (account.InstantBuff[i].forHowManyTurns <= 0)
-                    {
-                        account.InstantBuff.RemoveAt(i);
-                        _accounts.SaveAccounts(account.DiscordId);
-                    }
-                }
 
+            //TODO figure out who to update and when 
+            await _allDebuffs.CheckForBuffs(account);
             await _allDebuffs.CheckForDeBuffs(enemy);
+            await _allDebuffs.CheckForBuffsToBeActivatedLater(account);
+            await _allDebuffs.CheckForDeBuffsToBeActivatedLater(enemy);
+
 
             if (account.SkillCooldowns != null)
                 for (var i = 0; i < account.SkillCooldowns.Count; i++)
@@ -299,10 +310,10 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             }
 
-            account.Base_AD_Stats = Math.Ceiling(account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
+           // account.Base_AD_Stats = Math.Ceiling(account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
 
-            account.AD_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
-            account.Bonus_AD_Stats = 0;
+        //    account.AD_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
+       //     account.Bonus_AD_Stats = 0;
 
             account.IsCrit = false;
 

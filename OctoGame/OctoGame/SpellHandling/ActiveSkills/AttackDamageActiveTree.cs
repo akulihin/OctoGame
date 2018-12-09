@@ -49,6 +49,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     break;
 
                 // (ад ветка) Грязный прием - пропускает один ход, и через еще ход бьет 228% от ад. 1005 
+                
                 // -Пропускает ход1, может ходить на ход2, и тратит ход3 на удар
                 case 1005:
 
@@ -111,14 +112,14 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                // 1019(ад ветка) Решительность - повышает ад на 50 % на следующий ход.
                 case 1019:
-                    myAccount.Bonus_AD_Stats += myAccount.AD_Stats * 0.5;
+                    myAccount.AD_Stats += myAccount.AD_Stats * 0.5;
                     myAccount.StatsForTime.Add(new AccountSettings.StatsForTimeClass(myAccount.AD_Stats * 0.5, 2));
                     break;
 
 
   //1021 (ад ветка) Кромсатель - наносит 3 удара 30%+50%+70% от ад.  пропуская следующих ход, но получая онхит на 5 ходов (20% уровня + вражеский уровень армора * 10% от уровня)
-                    // hvatit ebu davat
-                    // -Нормальный спел...
+                    
+                    
                 case 2021:
 
                     break;
@@ -128,11 +129,11 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 2023:
                     myAccount.LifeStealPrec = 0.5;
                     break;
-                // -На 5 ходов?
+
             }
 
                
-                // -Это чё такое?
+               
             if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.FirstHit)
                 dmg = dmg * (1 + myAccount.PrecentBonusDmg);
 
@@ -142,7 +143,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
             _accounts.SaveAccounts(enemyAccount.DiscordId);
 
             // Я два раза армор использую*?????? Проверь в DmgHandling пидор
-               // арсор не то чем кажется 
+               // армор не то чем кажется 
             dmg = _armorReduction.ArmorHandling(myAccount.ArmPen, enemyAccount.Armor, dmg);
 
             return dmg;

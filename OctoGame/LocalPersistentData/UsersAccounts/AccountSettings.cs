@@ -45,12 +45,10 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         // ReSharper disable once InconsistentNaming
 
         public double AD_Stats { get; set; } //0
-        public double Base_AD_Stats { get; set; } //0
-        public double Bonus_AD_Stats { get; set; } //0
+
         // ReSharper disable once InconsistentNaming
         public double AP_Stats { get; set; } //0
-        public double Base_AP_Stats { get; set; } //0
-        public double Bonus_AP_Stats { get; set; } //0
+
         // ReSharper disable once InconsistentNaming
         public double AG_Stats { get; set; } //0
         public double CritDmg { get; set; }

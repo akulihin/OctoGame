@@ -155,7 +155,7 @@ namespace OctoGame.OctoGame.GameCommands
             account.Health = Math.Ceiling(100.0); //  ONLY ITEMS + SKILLS
             account.Stamina = Math.Ceiling(100 + 3 * Convert.ToDouble(account.OctoLvL - 1));
             account.Strength = Math.Ceiling(20.0); // ONLY ITEMS + SKILLS
-            account.Base_AD_Stats = Math.Ceiling(account.Strength + account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
+            account.AD_Stats = Math.Ceiling(account.Strength + account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
             account.AP_Stats = Math.Ceiling(10 + 0.1 * account.OctoLvL); // +  ITEMS + SKILLS
             account.AG_Stats = Math.Ceiling(1.0); // ONLY ITEMS + SKILLS
             account.CritDmg = Math.Ceiling(150.0); // 250 MAX ONLY ITEMS + SKILLS
@@ -170,14 +170,14 @@ namespace OctoGame.OctoGame.GameCommands
                              (account.AG_Stats / 4 + 1)); // lvl/100 * (1(agility/2)) + ITEMS + SKILLS
             account.CurrentLogString = "";
             
-            account.BuffToBeActivatedLater = new List<AccountSettings.OnTimeBuffClass>();
+           
             account.DamageOnTimer = new List<AccountSettings.DmgWithTimer>();
             account.PoisonDamage = new List<AccountSettings.Poison>();
             account.OctoItems = new List<AccountSettings.ArtifactEntities>();
             account.SkillCooldowns = new List<AccountSettings.CooldownClass>();
             account.Inventory = new List<AccountSettings.ArtifactEntities>();
-            account.Bonus_AD_Stats = 0;
-            account.AD_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
+  
+          //  account.AD_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
             account.MaxStamina = account.Stamina;
             account.FirstHit = true;
             account.dmgDealedLastTime = 0;
@@ -194,7 +194,9 @@ namespace OctoGame.OctoGame.GameCommands
             var passives = account.Passives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
 
             account.InstantBuff = new List<AccountSettings.InstantBuffClass>();
-
+            account.InstantDeBuff = new List<AccountSettings.InstantBuffClass>();
+            account.BuffToBeActivatedLater = new List<AccountSettings.OnTimeBuffClass>();
+            account.DeBuffToBeActivatedLater = new List<AccountSettings.OnTimeBuffClass>();
             account.PassiveList = new List<AccountSettings.CooldownClass>();
             foreach (var passive in passives)
                 account.PassiveList.Add(new AccountSettings.CooldownClass(Convert.ToUInt64(passive), 9999));
