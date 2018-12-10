@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+// Attack power | Magical power
 
 namespace OctoGame.LocalPersistentData.UsersAccounts
 {
