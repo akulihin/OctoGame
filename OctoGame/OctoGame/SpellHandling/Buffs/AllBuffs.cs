@@ -95,9 +95,9 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                     {
                         case 1003:
                             if (!account.InstantDeBuff[i].activated)
-                                account.Armor -= 2;
+                                account.PhysicalResistance -= 2;
                             if (account.InstantDeBuff[i].forHowManyTurns <= 0)
-                                account.Armor += 2;
+                                account.PhysicalResistance += 2;
                             break;
                     }
 

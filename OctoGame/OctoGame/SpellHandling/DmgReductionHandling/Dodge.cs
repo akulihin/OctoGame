@@ -30,7 +30,7 @@ namespace OctoGame.OctoGame.SpellHandling.DmgReductionHandling
             if (agi >= randDodge + 1)
             {
                 dmg = 0;
-                enemy.Dodged = 1;
+                enemy.IsDodged = true;
                 _accounts.SaveAccounts(enemy.DiscordId);
                 return dmg;
             }

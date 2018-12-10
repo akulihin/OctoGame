@@ -211,10 +211,10 @@ namespace OctoGame.OctoGame.UpdateMessages
             var skillString = "404";
 
 
-            if (account.MoveListPage == 1 && account.AD_Tree != null)
+            if (account.MoveListPage == 1 && account.Attack_Tree != null)
             {
                 skillString = null;
-                skills = account.AD_Tree.Split(new[] {'|'},
+                skills = account.Attack_Tree.Split(new[] {'|'},
                     StringSplitOptions.RemoveEmptyEntries);
                 //  tree = "AD";
 
@@ -227,10 +227,10 @@ namespace OctoGame.OctoGame.UpdateMessages
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
-            else if (account.MoveListPage == 2 && account.DEF_Tree != null)
+            else if (account.MoveListPage == 2 && account.Defensive_Tree != null)
             {
                 skillString = null;
-                skills = account.DEF_Tree.Split(new[] {'|'},
+                skills = account.Defensive_Tree.Split(new[] {'|'},
                     StringSplitOptions.RemoveEmptyEntries);
                 //tree = "DEF";
                 for (var i = 0; i < skills.Length; i++)
@@ -242,10 +242,10 @@ namespace OctoGame.OctoGame.UpdateMessages
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
-            else if (account.MoveListPage == 3 && account.AG_Tree != null)
+            else if (account.MoveListPage == 3 && account.Agility_Tree != null)
             {
                 skillString = null;
-                skills = account.AG_Tree.Split(new[] {'|'},
+                skills = account.Agility_Tree.Split(new[] {'|'},
                     StringSplitOptions.RemoveEmptyEntries);
                 // tree = "AGI";
                 for (var i = 0; i < skills.Length; i++)
@@ -257,10 +257,10 @@ namespace OctoGame.OctoGame.UpdateMessages
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
-            else if (account.MoveListPage == 4 && account.AP_Tree != null)
+            else if (account.MoveListPage == 4 && account.Magic_Tree != null)
             {
                 skillString = null;
-                skills = account.AP_Tree.Split(new[] {'|'},
+                skills = account.Magic_Tree.Split(new[] {'|'},
                     StringSplitOptions.RemoveEmptyEntries);
                 //tree = "AP";
 
@@ -274,10 +274,10 @@ namespace OctoGame.OctoGame.UpdateMessages
                         skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
-            else if (account.MoveListPage == 5 && account.Passives != null)
+            else if (account.MoveListPage == 5 && account.AllPassives != null)
             {
                 skillString = null;
-                skills = account.Passives.Split(new[] {'|'},
+                skills = account.AllPassives.Split(new[] {'|'},
                     StringSplitOptions.RemoveEmptyEntries);
                 //tree = "PASS";
 
@@ -332,24 +332,24 @@ namespace OctoGame.OctoGame.UpdateMessages
                                         $"**Name:** {enemy.DiscordUserName}\n" +
                                         $"**LVL:** {enemy.OctoLvL}\n" +
                                         $"**Strength:** {enemy.Strength}\n" +
-                                        $"**AD:** {enemy.AD_Stats + enemy.Strength}  **AP:** {enemy.AP_Stats}\n" +
+                                        $"**AD:** {enemy.AttackPower_Stats + enemy.Strength}  **AP:** {enemy.MagicPower_Stats}\n" +
                                         $"**Health:** {enemy.Health} {shieldString}\n" +
                                         $"**Stamina:** {enemy.Stamina}\n" +
-                                        $"**Armor:** {enemy.Armor} **MagRes:** {enemy.Resist}\n" +
-                                        $"**ArmPen:** {enemy.ArmPen}  **MagPen:** {enemy.MagPen}\n" +
-                                        $"**Agility:** {enemy.AG_Stats}\n" +
+                                        $"**PhysicalResistance:** {enemy.PhysicalResistance} **MagRes:** {enemy.MagicalResistance}\n" +
+                                        $"**PhysicalPenetration:** {enemy.PhysicalPenetration}  **MagicalPenetration:** {enemy.MagicalPenetration}\n" +
+                                        $"**Agility:** {enemy.Agility_Stats}\n" +
                                         "**________________**");
 
             mainPage.AddField($"Your octopus:",
                 $"**Name:** {account.OctoName}\n" +
                 $"**LVL:** {account.OctoLvL}\n" +
                 $"**Strength:** {account.Strength}\n" +
-                $"**AD:** {account.AD_Stats + account.Strength}  **AP:** {account.AP_Stats}\n" +
+                $"**AD:** {account.AttackPower_Stats + account.Strength}  **AP:** {account.MagicPower_Stats}\n" +
                 $"**Health:** {account.Health}\n" +            
                 $"**Stamina:** {account.Stamina}\n" +            
-                $"**Armor:** {account.Armor} **MagRes:** {account.Resist}\n" +
-                $"**ArmPen:** {account.ArmPen}  **MagPen:** {account.MagPen}\n" +
-                $"**Agility:** {account.AG_Stats}\n" +
+                $"**PhysicalResistance:** {account.PhysicalResistance} **MagRes:** {account.MagicalResistance}\n" +
+                $"**PhysicalPenetration:** {account.PhysicalPenetration}  **MagicalPenetration:** {account.MagicalPenetration}\n" +
+                $"**Agility:** {account.Agility_Stats}\n" +
                 $"**________________**\n" +
                 $"{new Emoji("⬅")} - Move List Page Left , {new Emoji("➡")} - Move List Page Right {new Emoji("📖")} - History, {new Emoji("❌")} - **END GAME**");
             mainPage.AddField($"{GetTree(account)} Move List:", 

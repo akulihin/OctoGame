@@ -102,11 +102,11 @@ namespace OctoGame.OctoGame.GamePlayFramework
             
 
             if (account.IsCrit)
-                dmg = _crit.CritHandling(account.AG_Stats,
+                dmg = _crit.CritHandling(account.Agility_Stats,
                     dmg, account);
 
 
-            dmg = _dodge.DodgeHandling(account.AG_Stats, dmg,
+            dmg = _dodge.DodgeHandling(account.Agility_Stats, dmg,
                 account, enemy);
 
 
@@ -157,12 +157,12 @@ namespace OctoGame.OctoGame.GamePlayFramework
             switch (dmgType)
             {
                 case 0:
-                    dmg = _armorReduction.ArmorHandling(myAccount.ArmPen, enemyAccount.Armor, dmg);
+                    dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
                     myAccount.Health += dmg * myAccount.LifeStealPrec;
                     if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth;
                     break;
                 case 1:
-                    dmg = _magicReduction.ResistHandling(myAccount.MagPen, enemyAccount.Resist, dmg);
+                    dmg = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg);
                     myAccount.Health += dmg * myAccount.LifeStealPrec;
                     if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth;
                     break;
@@ -287,7 +287,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
                 var t = account.StatsForTime[i];
                 t.timer--;
 
-                if (t.timer <= 0) account.AD_Stats -= t.AD_STATS;
+                if (t.timer <= 0) account.AttackPower_Stats -= t.AD_STATS;
             }
 
             await Task.CompletedTask;
@@ -312,7 +312,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
            // account.Base_AD_Stats = Math.Ceiling(account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
 
-        //    account.AD_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
+        //    account.AttackPower_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
        //     account.Bonus_AD_Stats = 0;
 
             account.IsCrit = false;
@@ -339,19 +339,19 @@ namespace OctoGame.OctoGame.GamePlayFramework
             switch (account.MoveListPage)
             {
                 case 1:
-                    skills = account.AD_Tree.Split(new[] {'|'},
+                    skills = account.Attack_Tree.Split(new[] {'|'},
                         StringSplitOptions.RemoveEmptyEntries);
                     break;
                 case 2:
-                    skills = account.DEF_Tree.Split(new[] {'|'},
+                    skills = account.Defensive_Tree.Split(new[] {'|'},
                         StringSplitOptions.RemoveEmptyEntries);
                     break;
                 case 3:
-                    skills = account.AG_Tree.Split(new[] {'|'},
+                    skills = account.Agility_Tree.Split(new[] {'|'},
                         StringSplitOptions.RemoveEmptyEntries);
                     break;
                 case 4:
-                    skills = account.AP_Tree.Split(new[] {'|'},
+                    skills = account.Magic_Tree.Split(new[] {'|'},
                         StringSplitOptions.RemoveEmptyEntries);
                     break;
             }

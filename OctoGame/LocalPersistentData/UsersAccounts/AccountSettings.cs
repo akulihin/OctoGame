@@ -24,11 +24,11 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public string OctoAvatar { get; set; }
         public List<ArtifactEntities> Inventory { get; set; }
         public List<ArtifactEntities> OctoItems { get; set; }
-        public string AD_Tree { get; set; }
-        public string DEF_Tree { get; set; }
-        public string AG_Tree { get; set; }
-        public string AP_Tree { get; set; }
-        public string Passives { get; set; }
+        public string Attack_Tree { get; set; }
+        public string Defensive_Tree { get; set; }
+        public string Agility_Tree { get; set; }
+        public string Magic_Tree { get; set; }
+        public string AllPassives { get; set; }
 
         /// <summary>
         /// Fight:
@@ -44,48 +44,47 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public double Strength { get; set; } // 20
         // ReSharper disable once InconsistentNaming
 
-        public double AD_Stats { get; set; } //0
+        public double AttackPower_Stats { get; set; } //0
 
         // ReSharper disable once InconsistentNaming
-        public double AP_Stats { get; set; } //0
+        public double MagicPower_Stats { get; set; } //0
 
         // ReSharper disable once InconsistentNaming
-        public double AG_Stats { get; set; } //0
-        public double CritDmg { get; set; }
-        public double CritChance { get; set; }
+        public double Agility_Stats { get; set; } //0
+        public double CriticalDamage { get; set; }
+        public double CriticalChance { get; set; }
         public double DodgeChance { get; set; }
-        public double Armor { get; set; } //1 LVL (1-6)
-        public double Resist { get; set; } //1 LVL
+        public double PhysicalResistance { get; set; } //1 LVL (1-6)
+        public double MagicalResistance { get; set; } //1 LVL
         public double Health { get; set; } //100
         public double MaxHealth { get; set; }
         public double Stamina { get; set; } //200    
         public double MaxStamina { get; set; } //200    
-        public double ArmPen { get; set; } // 0 LVL
-        public double MagPen { get; set; } // 0 LVL      
-        public double OnHit { get; set; }
+        public double PhysicalPenetration { get; set; } // 0 LVL
+        public double MagicalPenetration { get; set; } // 0 LVL      
+        public double OnHitDamage { get; set; }
         public bool IsCrit { get; set; }
         public string CurrentLogString { get; set; }
         public List<CooldownClass> PassiveList { get; set; }
         public List<CooldownClass> SkillCooldowns { get; set; }
 
-        public List<InstantBuffClass> InstantBuff { get; set; }
+        public List<InstantBuffClass> InstantBuff { get; set; } //buffs you get as soon as you press them or activate from passives
 
         public List<InstantBuffClass> InstantDeBuff { get; set; }
 
-        public List<OnTimeBuffClass> BuffToBeActivatedLater { get; set; }
+        public List<OnTimeBuffClass> BuffToBeActivatedLater { get; set; } //buffs to be activated only after timer, like 3 rounds
 
         public List<OnTimeBuffClass> DeBuffToBeActivatedLater { get; set; }
 
 
 
-        public double PrecentBonusDmg { get; set; }
-        public double NumberBonusDmg { get; set; }
-        public List<DmgWithTimer> DamageOnTimer { get; set; }
-        public List<Poison> PoisonDamage { get; set; }
-        public int Dodged { get; set; }
-        public bool FirstHit { get; set; }
+        public double PrecentBonusDmg { get; set; }   
+        public List<DmgWithTimer> DamageOnTimer { get; set; } // damage you get only after timer
+        public List<Poison> PoisonDamage { get; set; } // poison you get dmg every turn
+        public bool IsDodged { get; set; }
+        public bool IsFirstHit { get; set; }
         public int MessageIdInList { get; set; }
-        public double dmgDealedLastTime { get; set; }
+        public double dmgDealtLastTime { get; set; } // damage you dealt last time  
         public double PhysShield { get; set; }
         public double MagShield { get; set; }
         public int HowManyTimesCrited { get; set; }
@@ -224,13 +223,13 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 
 /*
 CREATE TABLE UserAccounts(DiscordUserName VARCHAR(50), userId decimal (20, 0), MyPrefix VARCHAR(50), MyLanguage VARCHAR(50), 
-OctoName VARCHAR(50), OctoLvL bigint, OctoInfo VARCHAR(2000), OctoAvatar VARCHAR(100), AD_Tree VARCHAR(1000),
-DEF_Tree VARCHAR(1000), AG_Tree VARCHAR(1000), AP_Tree VARCHAR(1000), Passives VARCHAR(1000),
+OctoName VARCHAR(50), OctoLvL bigint, OctoInfo VARCHAR(2000), OctoAvatar VARCHAR(100), Attack_Tree VARCHAR(1000),
+Defensive_Tree VARCHAR(1000), Agility_Tree VARCHAR(1000), Magic_Tree VARCHAR(1000), AllPassives VARCHAR(1000),
 Turn INTEGER, Round float, CurrentEnemy decimal (20, 0), MoveListPage INTEGER, PlayingStatus INTEGER,
-Strength decimal (20, 0), Bonus_AD_Stats decimal (20, 0), Base_AD_Stats decimal (20, 0), AD_Stats decimal (20, 0), 
-AP_Stats decimal (20, 0), AG_Stats decimal (20, 0), CritDmg decimal (20, 0), CritChance decimal (20, 0), 
-DodgeChance decimal (20, 0), Armor decimal (20, 0), Resist decimal (20, 0), Health decimal (20, 0), 
-MaxHealth decimal (20, 0), Stamina decimal (20, 0), MaxStamina decimal (20, 0), ArmPen decimal (20, 0), 
-MagPen decimal (20, 0), OnHit decimal (20, 0), PrecentBonusDmg decimal (20, 0),  NumberBonusDmg decimal (20, 0),
-IsCrit INTEGER, Dodged INTEGER, CurrentLogString VARCHAR(10000));
+Strength decimal (20, 0), Bonus_AD_Stats decimal (20, 0), Base_AD_Stats decimal (20, 0), AttackPower_Stats decimal (20, 0), 
+MagicPower_Stats decimal (20, 0), Agility_Stats decimal (20, 0), CriticalDamage decimal (20, 0), CriticalChance decimal (20, 0), 
+DodgeChance decimal (20, 0), PhysicalResistance decimal (20, 0), MagicalResistance decimal (20, 0), Health decimal (20, 0), 
+MaxHealth decimal (20, 0), Stamina decimal (20, 0), MaxStamina decimal (20, 0), PhysicalPenetration decimal (20, 0), 
+MagicalPenetration decimal (20, 0), OnHitDamage decimal (20, 0), PrecentBonusDmg decimal (20, 0),  NumberBonusDmg decimal (20, 0),
+IsCrit INTEGER, IsDodged INTEGER, CurrentLogString VARCHAR(10000));
 */

@@ -72,10 +72,10 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     if (!check)
                     {
-                        if (account.InstantBuff.Any(x => x.skillId == 1000) && account.FirstHit)
+                        if (account.InstantBuff.Any(x => x.skillId == 1000) && account.IsFirstHit)
                         {
                             dmg = dmg * (1 + account.PrecentBonusDmg);
-                            account.FirstHit = false;
+                            account.IsFirstHit = false;
                         }
 
                         account.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 3, 2));
@@ -92,10 +92,10 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     if (!check)
                     {
-                        account.AD_Stats += (account.Armor + account.Resist) * account.OctoLvL * 0.2;
-                        account.AP_Stats += (account.Armor + account.Resist) * account.OctoLvL * 0.2;
-                        account.Armor = 0;
-                        account.Resist = 0;
+                        account.AttackPower_Stats += (account.PhysicalResistance + account.MagicalResistance) * account.OctoLvL * 0.2;
+                        account.MagicPower_Stats += (account.PhysicalResistance + account.MagicalResistance) * account.OctoLvL * 0.2;
+                        account.PhysicalResistance = 0;
+                        account.MagicalResistance = 0;
                     }
 
                     break;
@@ -114,9 +114,9 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     //AdStast = AdStast *0.52 *0.52
 
 
-                    // account.AD_Stats ЭТО УРОН СЛЕДУЮЩЕГО СКИЛЛА! это не ад статы!
-                    dmg = account.AD_Stats *
-                          (_armorReduction.GetArmorPercentDependsOnLvl(Convert.ToInt32(account.Armor) + _armorReduction.GetArmorPercentDependsOnLvl(Convert.ToInt32(account.Resist))));
+                    // account.AttackPower_Stats ЭТО УРОН СЛЕДУЮЩЕГО СКИЛЛА! это не ад статы!
+                    dmg = account.AttackPower_Stats *
+                          (_armorReduction.GetArmorPercentDependsOnLvl(Convert.ToInt32(account.PhysicalResistance) + _armorReduction.GetArmorPercentDependsOnLvl(Convert.ToInt32(account.MagicalResistance))));
                     
                     break;
 
@@ -124,7 +124,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 1093:
                     if (!check)
                     {
-                        dmg = account.AD_Stats*1.5 + (account.OctoLvL * 0.4 + account.AP_Stats * 1.5) + account.Stamina * 0.26;
+                        dmg = account.AttackPower_Stats*1.5 + (account.OctoLvL * 0.4 + account.MagicPower_Stats * 1.5) + account.Stamina * 0.26;
                         account.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 3, 3));
                     }
                     break;
@@ -144,7 +144,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                         : enemy.Health;
 
                     dmg = scale * (1 + account.Strength * 0.01 / 20 / 100) + account.Stamina * 0.15 +
-                          account.AD_Stats * 0.2 + account.AP_Stats * 0.25;
+                          account.AttackPower_Stats * 0.2 + account.MagicPower_Stats * 0.25;
                     break;
             }
 

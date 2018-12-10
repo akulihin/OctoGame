@@ -31,7 +31,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 //(ад ветка) Убийца гигантов = (вражеское хп / 100 *5) * (сила/20 +1) + ад/100*(100-сила)
                 case 1001:
                     dmg = enemyAccount.Health / 100 * 5 * (myAccount.Strength / 20 + 1) +
-                          myAccount.AD_Stats / 100 * (100 - myAccount.Strength);
+                          myAccount.AttackPower_Stats / 100 * (100 - myAccount.Strength);
 
                     if (!check)
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 6));
@@ -53,13 +53,13 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 // -Пропускает ход1, может ходить на ход2, и тратит ход3 на удар
                 case 1005:
 
-                    dmg = 2.28 * myAccount.AD_Stats;
+                    dmg = 2.28 * myAccount.AttackPower_Stats;
                     if (!check)
                     {
-                        if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.FirstHit)
+                        if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
                         {
                             dmg = dmg * (1 + myAccount.PrecentBonusDmg);
-                            myAccount.FirstHit = false;
+                            myAccount.IsFirstHit = false;
                         }
 
                         enemyAccount.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 0, 1));
@@ -78,7 +78,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                 // (ад ветка) Кулак богатыря - дамажит 20% от ад за каждые 10 силы. (кд 5 ходов) 1009
                 case 1009:
-                    dmg = myAccount.AD_Stats * 0.2 * (myAccount.Strength / 10);
+                    dmg = myAccount.AttackPower_Stats * 0.2 * (myAccount.Strength / 10);
                     if (!check)
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 5));
                     break;
@@ -86,13 +86,13 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 // (ад ветка-ульта) Замах ненависти - пропускает ход, следующих ходом наносит сокрушительный удар на 300% от ад и игнорирует 1 уровень физ защиты. 1015
                 //    Дамаг считается за крит и не может быть увеличен крит уроном.
                 case 1015:
-                    dmg = myAccount.AD_Stats * 3;
+                    dmg = myAccount.AttackPower_Stats * 3;
                     if (!check)
                     {
-                        if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.FirstHit)
+                        if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
                         {
                             dmg = dmg * (1 + myAccount.PrecentBonusDmg);
-                            myAccount.FirstHit = false;
+                            myAccount.IsFirstHit = false;
                         }
 
                         enemyAccount.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 0, 1));
@@ -103,7 +103,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                 //1017 (ад ветка) Внезапный выпад - дамажит 120% от ад (нельзя увернуться) (кд 7 ходов) 
                 case 1017:
-                    dmg = myAccount.AD_Stats * 1.2;
+                    dmg = myAccount.AttackPower_Stats * 1.2;
 
                     if(!check)
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 7));
@@ -112,8 +112,8 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                // 1019(ад ветка) Решительность - повышает ад на 50 % на следующий ход.
                 case 1019:
-                    myAccount.AD_Stats += myAccount.AD_Stats * 0.5;
-                    myAccount.StatsForTime.Add(new AccountSettings.StatsForTimeClass(myAccount.AD_Stats * 0.5, 2));
+                    myAccount.AttackPower_Stats += myAccount.AttackPower_Stats * 0.5;
+                    myAccount.StatsForTime.Add(new AccountSettings.StatsForTimeClass(myAccount.AttackPower_Stats * 0.5, 2));
                     break;
 
 
@@ -134,17 +134,17 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                
                
-            if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.FirstHit)
+            if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
                 dmg = dmg * (1 + myAccount.PrecentBonusDmg);
 
-            if (!check && dmg >= 1) myAccount.FirstHit = false;
+            if (!check && dmg >= 1) myAccount.IsFirstHit = false;
 
             _accounts.SaveAccounts(myAccount.DiscordId);
             _accounts.SaveAccounts(enemyAccount.DiscordId);
 
             // Я два раза армор использую*?????? Проверь в DmgHandling пидор
                // армор не то чем кажется 
-            dmg = _armorReduction.ArmorHandling(myAccount.ArmPen, enemyAccount.Armor, dmg);
+            dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
 
             return dmg;
         }

@@ -12,7 +12,7 @@ namespace OctoGame.OctoGame.SpellHandling.BonusDmgHandling
 
             if (agi >= randCrit + 1)
             {
-                dmg = dmg * account.CritDmg;
+                dmg = dmg * account.CriticalDamage;
                 return dmg;
             }
 

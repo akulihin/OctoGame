@@ -81,18 +81,18 @@ namespace OctoGame.OctoGame.GameCommands
 
 
                 account.Strength = 20;
-                account.AD_Stats = 0;
-                account.AP_Stats = 0;
-                account.AG_Stats = 0;
-                account.CritDmg = 1.5;
+                account.AttackPower_Stats = 0;
+                account.MagicPower_Stats = 0;
+                account.Agility_Stats = 0;
+                account.CriticalDamage = 1.5;
                 account.DodgeChance = 0;
-                account.Armor = 1;
-                account.Resist = 1;
+                account.PhysicalResistance = 1;
+                account.MagicalResistance = 1;
                 account.Health = 100;
                 account.Stamina = 200;
                 account.OctoLvL = 1;
-                account.ArmPen = 0;
-                account.MagPen = 0;
+                account.PhysicalPenetration = 0;
+                account.MagicalPenetration = 0;
 
                 _accounts.SaveAccounts(Context.User);
                 await _command.ReplyAsync(Context, "Готово! Ты создал или обновил информацию о своем осьминоге!");
@@ -155,19 +155,19 @@ namespace OctoGame.OctoGame.GameCommands
             account.Health = Math.Ceiling(100.0); //  ONLY ITEMS + SKILLS
             account.Stamina = Math.Ceiling(100 + 3 * Convert.ToDouble(account.OctoLvL - 1));
             account.Strength = Math.Ceiling(20.0); // ONLY ITEMS + SKILLS
-            account.AD_Stats = Math.Ceiling(account.Strength + account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
-            account.AP_Stats = Math.Ceiling(10 + 0.1 * account.OctoLvL); // +  ITEMS + SKILLS
-            account.AG_Stats = Math.Ceiling(1.0); // ONLY ITEMS + SKILLS
-            account.CritDmg = Math.Ceiling(150.0); // 250 MAX ONLY ITEMS + SKILLS
-            account.CritChance = Math.Ceiling(account.AG_Stats); // + SKILLS
-            account.DodgeChance = Math.Ceiling(account.AG_Stats - 1); // + SKILLS
-            account.Armor = Math.Ceiling(1.0); // 1-6 MAX + ITEMS + SKILLS
-            account.Resist = Math.Ceiling(1.0); // 1-6 MAX + ITEMS + SKILLS
-            account.ArmPen = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
-            account.MagPen = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
-            account.OnHit =
+            account.AttackPower_Stats = Math.Ceiling(account.Strength + account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
+            account.MagicPower_Stats = Math.Ceiling(10 + 0.1 * account.OctoLvL); // +  ITEMS + SKILLS
+            account.Agility_Stats = Math.Ceiling(1.0); // ONLY ITEMS + SKILLS
+            account.CriticalDamage = Math.Ceiling(150.0); // 250 MAX ONLY ITEMS + SKILLS
+            account.CriticalChance = Math.Ceiling(account.Agility_Stats); // + SKILLS
+            account.DodgeChance = Math.Ceiling(account.Agility_Stats - 1); // + SKILLS
+            account.PhysicalResistance = Math.Ceiling(1.0); // 1-6 MAX + ITEMS + SKILLS
+            account.MagicalResistance = Math.Ceiling(1.0); // 1-6 MAX + ITEMS + SKILLS
+            account.PhysicalPenetration = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
+            account.MagicalPenetration = Math.Ceiling(0.0); // 1-5 MAX ONLY ITEMS + SKILLS
+            account.OnHitDamage =
                 Math.Ceiling((account.OctoLvL / 80 + 1) *
-                             (account.AG_Stats / 4 + 1)); // lvl/100 * (1(agility/2)) + ITEMS + SKILLS
+                             (account.Agility_Stats / 4 + 1)); // lvl/100 * (1(agility/2)) + ITEMS + SKILLS
             account.CurrentLogString = "";
             
            
@@ -177,21 +177,21 @@ namespace OctoGame.OctoGame.GameCommands
             account.SkillCooldowns = new List<AccountSettings.CooldownClass>();
             account.Inventory = new List<AccountSettings.ArtifactEntities>();
   
-          //  account.AD_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
+          //  account.AttackPower_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
             account.MaxStamina = account.Stamina;
-            account.FirstHit = true;
-            account.dmgDealedLastTime = 0;
+            account.IsFirstHit = true;
+            account.dmgDealtLastTime = 0;
             account.PhysShield = 0;
             account.MagShield = 0;
             account.HowManyTimesCrited = 0;
             account.LifeStealPrec = 0;
             account.StatsForTime = new List<AccountSettings.StatsForTimeClass>();
             account.BlockShield = new List<AccountSettings.FullDmgBlock>();
-            if (account.Passives == null)
-                account.Passives = "";
+            if (account.AllPassives == null)
+                account.AllPassives = "";
 
 
-            var passives = account.Passives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+            var passives = account.AllPassives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
 
             account.InstantBuff = new List<AccountSettings.InstantBuffClass>();
             account.InstantDeBuff = new List<AccountSettings.InstantBuffClass>();
@@ -223,8 +223,8 @@ namespace OctoGame.OctoGame.GameCommands
                 // return;
             }
 
-            if (account.AD_Tree == null && account.DEF_Tree == null &&
-                account.AG_Tree == null && account.AP_Tree == null)
+            if (account.Attack_Tree == null && account.Defensive_Tree == null &&
+                account.Agility_Tree == null && account.Magic_Tree == null)
             {
                 await _command.ReplyAsync(Context, "You dont have any moves. You can get them using **boole** command");
                 return;

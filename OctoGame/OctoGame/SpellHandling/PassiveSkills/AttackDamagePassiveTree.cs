@@ -30,7 +30,7 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 
                     // (ад ветка) Меткость - пассивно если враг увернлся - то следующий ход он не может увернутся. (кд 8 ходов) 
                     //Not done
-                    case 1002 when enemy.Dodged >= 1:
+                    case 1002 when enemy.IsDodged:
                         enemy.DodgeChance = 0;
 
                         account.SkillCooldowns.Add(new AccountSettings.CooldownClass(1002, 8));
@@ -43,10 +43,10 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 
                         if (TemporaryAd1004.TryGetValue(account.DiscordId, out double trying1004))
                         {
-                            account.AD_Stats -= trying1004;
+                            account.AttackPower_Stats -= trying1004;
                         }
                         
-                        account.AD_Stats += dmgValue1004;
+                        account.AttackPower_Stats += dmgValue1004;
                         TemporaryAd1004.AddOrUpdate(account.DiscordId, dmgValue1004, (key, oldValue) => dmgValue1004);
 
                         break;
@@ -55,23 +55,23 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                     //not done
                     case 1006 when account.OctoItems.Count == 0 || !account.OctoItems.Any(x => x.Armor >= 1) &&
                                    !account.OctoItems.Any(x => x.Resist >= 1):
-                        account.Armor++;
-                        account.Resist++;
+                        account.PhysicalResistance++;
+                        account.MagicalResistance++;
                         account.SkillCooldowns.Add(new AccountSettings.CooldownClass(1006, 999));
                         break;
                     //1008 (ад ветка) Battle trans - пассивно дает дамаг от потеряннх своих хп. 1% к ад за 5% потерянных хп. 
                     //WORKING!
                     case 1008:
                         
-                        var dmgValue1008 = Math.Round((1 - account.Health / account.MaxHealth) / 0.5 / 10 * account.AD_Stats);
+                        var dmgValue1008 = Math.Round((1 - account.Health / account.MaxHealth) / 0.5 / 10 * account.AttackPower_Stats);
 
 
                         if (TemporaryAd1008.TryGetValue(account.DiscordId, out double trying1008))
                         {
-                            account.AD_Stats -= trying1008;
+                            account.AttackPower_Stats -= trying1008;
                         }
                         
-                        account.AD_Stats += dmgValue1008;
+                        account.AttackPower_Stats += dmgValue1008;
 
                         TemporaryAd1008.AddOrUpdate(account.DiscordId, dmgValue1008, (key, oldValue) => dmgValue1008);
                         break;
@@ -85,7 +85,7 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                     //1012 (ад ветка) Мастер фехтования - пассивно получает щит на стамину, который блокает физ урон (100% от ад) 
                     //WORKING!
                     case 1012:
-                        account.PhysShield = account.AD_Stats;
+                        account.PhysShield = account.AttackPower_Stats;
                         break;
 
                     //1014 (ад ветка) Безумец - пассивно повышает урон на 10%, но теряет 10% стамины.
@@ -102,14 +102,14 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                     case 1016:
                         //WORKING!
 
-                        var dmgValue1016 = Math.Round((1 - enemy.Health / enemy.MaxHealth) / 0.5 / 10 * account.AD_Stats);
+                        var dmgValue1016 = Math.Round((1 - enemy.Health / enemy.MaxHealth) / 0.5 / 10 * account.AttackPower_Stats);
 
                         if (TemporaryAd1016.TryGetValue(account.DiscordId, out double trying1016))
                         {
-                            account.AD_Stats -= trying1016;
+                            account.AttackPower_Stats -= trying1016;
                         }
                         
-                        account.AD_Stats += dmgValue1016;
+                        account.AttackPower_Stats += dmgValue1016;
 
                         TemporaryAd1016.AddOrUpdate(account.DiscordId, dmgValue1016, (key, oldValue) => dmgValue1016);
                         break;
@@ -119,7 +119,7 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                         //notDOne
                         //TODO change "HowManyTimesCrited" to local static variable (dictionary)
                         if (account.IsCrit)
-                            account.AD_Stats += account.AD_Stats * 0.01 * account.HowManyTimesCrited;
+                            account.AttackPower_Stats += account.AttackPower_Stats * 0.01 * account.HowManyTimesCrited;
                         break;
 
                     //1020 (ад ветка) Храбрость - пассивно дает +10 к силе. 
