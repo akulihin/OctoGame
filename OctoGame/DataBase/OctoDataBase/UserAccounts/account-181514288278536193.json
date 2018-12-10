@@ -1,0 +1,108 @@
+[
+  {
+    "DiscordUserName": "mylorik",
+    "DiscordId": 181514288278536193,
+    "MyPrefix": null,
+    "MyLanguage": "en",
+    "OctoName": "буль",
+    "OctoLvL": 100,
+    "OctoInfo": "буль|3|вредный|вф|",
+    "OctoAvatar": null,
+    "Inventory": [],
+    "OctoItems": [],
+    "AD_Tree": "1001|1003|1005|1007|1009|1015|",
+    "DEF_Tree": "1089|",
+    "AG_Tree": null,
+    "AP_Tree": null,
+    "Passives": "1000|1002|1004|1006|1008|1016|1024|1026|",
+    "Turn": 1,
+    "Round": 0.0,
+    "CurrentEnemy": 1,
+    "MoveListPage": 1,
+    "PlayingStatus": 2,
+    "Strength": 20.0,
+    "AD_Stats": 293848.7,
+    "AP_Stats": 20.0,
+    "AG_Stats": 1.0,
+    "CritDmg": 150.0,
+    "CritChance": 1.0,
+    "DodgeChance": 0.0,
+    "Armor": 2.0,
+    "Resist": 2.0,
+    "Health": 100.0,
+    "MaxHealth": 100.0,
+    "Stamina": 397.0,
+    "MaxStamina": 397.0,
+    "ArmPen": 0.0,
+    "MagPen": 0.0,
+    "OnHit": 3.0,
+    "IsCrit": false,
+    "CurrentLogString": "",
+    "PassiveList": [
+      {
+        "skillId": 1000,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1002,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1004,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1006,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1008,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1016,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1024,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1026,
+        "cooldown": 19998
+      }
+    ],
+    "SkillCooldowns": [
+      {
+        "skillId": 1000,
+        "cooldown": 1997
+      },
+      {
+        "skillId": 1006,
+        "cooldown": 1997
+      },
+      {
+        "skillId": 1009,
+        "cooldown": 9
+      }
+    ],
+    "InstantBuff": [],
+    "InstantDeBuff": [],
+    "BuffToBeActivatedLater": [],
+    "DeBuffToBeActivatedLater": [],
+    "PrecentBonusDmg": 0.2,
+    "NumberBonusDmg": 0.0,
+    "DamageOnTimer": [],
+    "PoisonDamage": [],
+    "Dodged": 0,
+    "FirstHit": false,
+    "MessageIdInList": 0,
+    "dmgDealedLastTime": 0.0,
+    "PhysShield": 0.0,
+    "MagShield": 0.0,
+    "HowManyTimesCrited": 0,
+    "StatsForTime": [],
+    "LifeStealPrec": 0.0,
+    "BlockShield": []
+  }
+]

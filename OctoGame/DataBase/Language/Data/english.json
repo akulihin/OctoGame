@@ -1,0 +1,49 @@
+﻿{
+  "LanguageId": 0,
+  "LanguageName": "English",
+  "Resources": {
+    "TEST_STRING": "Hello, World!",
+    "EXCEPTION_RESPONSE_TEMPLATE(@REASON)": ":anger: **Couldn't complete the operation**\nApparently, {0}",
+    "COMMAND_ERROR_DOUBLE_SPACES": ":question: Your command contains two or more consecutive spaces. This usually isn't correct.",
+    "SUMMARY_DATA_DELETE": "Deletes all collected data about you and also removes your consent to further data collection. (You cannot take this action back)",
+    "SUMMARY_DATA_VIEW": "Returns a direct unedited copy of all data collected about you in json form.",
+    "SUMMARY_DATA_ACCEPT": "Giving consent to data collection for the purposes of providing features.",
+    "DM_DELETABLE": "React with :x: to delete this message. _(If nothing happens, try to send a message in this channel first.)_",
+    "PRECONDITION_COLLECTION_DENIED": "To use this command, I need your consent to data collection.\n\n:lock: Don't worry, you can get a copy of the collected data, or delete it at any time.\n\nTo give consent, you need to send the following message `@Justine I agree with my data being collected`. Make sure the mention is valid before sending it.",
+    "PRIVACY_MESSAGE_HEADER": ":white_check_mark: **Your data collection settings were updated**",
+    "PRIVACY_CMD_HINT": ":keyboard: **Control what I collect:**\n`<Mention/Prefix> data-view` - Full copy of what I know about you.\n`<Mention/Prefix> data-delete` - Delete all data about you. :warning: Cannot be taken back!",
+    "PRIVACY_AGREE_RESPONSE": ":closed_lock_with_key: I can now store data about you.",
+    "PRIVACY_DATA_REPORT_TEMPLATE(@DATA)": ":clipboard: **Data collection report**This is the full copy of the data stored about you:\n```json\n{0}\n```",
+    "PRIVACY_DATA_REPORT_SUCCESS": "I sent you a copy of your data through private messages.",
+    "PRIVACY_DATA_REPORT_FAIL": ":thinking: **The message couldn't be sent**\nThis usually happens when a user has their DMs disabled. Please make sure people not in your friends list can message you.\nIf you want, I can send your information here, **however**, keep in mind everyone in this channel will be able to see your information!\nOn the other hand, you will be able to delete it if you have enough privileges (unlike DMs).\nTo force public report, use `data-view public`. **But really think about it before you do it!**",
+    "PRIVACY_DELETE_RESPONSE": ":shield: I deleted all data I've collected about you.\n\nYour consent was also removed and I will not continue collecting your data unless you specifically give consent again.\nShould you find the need for some data collection dependent features again, feel free to give your consent.\n\n:slight_smile: _You were my favorite, ... ehm... I forgot your name..._",
+    "TUTORIAL_WELCOME_STATIC": "\n\nWhile you wait for 10 minutes, please read the #rules to see how to get access to other channels.\n\nMy name is <@370963330782986250>, the local server management BOT!\n\nI'm the BOT COP 👮🏻‍ along with <@!411505318124847114> (the community made BOT)",
+    "TUTORIAL_WELCOME_WAITING": "It is important that you read the #rules to see how to get access to other channels.",
+    "TUTORIAL_WELCOME_BOT_REGISTER": "The owner of this BOT must verify the BOT. (check the #rules for instructions)",
+    "TUTORIAL_WELCOME_BOT_PROVECS": "The owner of this BOT must prove the BOT is written in C#. This can be done by providing the source code, or a significant snippet of it.",
+    "TUTORIAL_WELCOME_BOT_FAILURE": "Should the owner fail to verify or provide proof of C#, the BOT will be kicked (And author's C# BOT DEV role removed)."
+  },
+  "ResourcePools": {
+    "TEST_POOL": ["ONE", "TWO", "THREE"],
+    "WAITING_ROOM_REMINDER": [
+      "Make sure you read the rules. They contain vital information about how to get access to other channels.",
+      "Please read all of the #rules. It contains information you need to become a server member.",
+      "<a:Confused_Dog:448550985326133262> Read all of the rules to become a server member, please.",
+      "<a:finger_wave:460014969895911424> Not like this... Make sure you read the rules to understand how to get access to other channels."
+    ],
+    "TUTORIAL_WELCOME": [
+      "<a:DiscordHype:417596574076764172> **Oh! You're like... my favorite programmer!**",
+      "<:squee:409429426774736896> **Oh oh oh... I know you! You're the cool programmer!**",
+      "**<:happytighteyes:409434066396643328> Ah, a new programmer! That means I get to do my job again.**",
+      "**<:ThinkSmirk:438951533955121152> You remind of someone... Have we met before?**"
+    ],
+    "TUTORIAL_FUN_SERVER_FACTS": [
+      "A big portion of problems are solved by <@!240905093929500674>. Apparently you can no-life helping. :thinking:",
+      "<@199969241531678720> is the silent Administrator. Hiding in the shadows, but always ready to punish rules breaking.",
+      "<@181514288278536193> owns a bot called <@423593006436712458>. It's pretty cute. :octopus:",
+      "A bunch of users are working on a bot called <@458722701218021391>, which looks pretty good.",
+      "<@411505318124847114> is a Community BOT that you can contribute to [here](https://github.com/petrspelos/Community-Discord-BOT).",
+      "<@411505318124847114> is currently being hosted on a Raspberry Pi in <@!240905093929500674> ' house."
+    ]
+  }
+}
