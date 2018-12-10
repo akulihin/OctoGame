@@ -318,11 +318,17 @@ namespace OctoGame.OctoGame.UpdateMessages
         {
             //{new Emoji("<:Steampunk:445276776676196353>")} 
 
-            var shieldString = "";
+            var accountShields = "";
             if (account.PhysShield > 0)
-                shieldString += $"Shields: ({account.PhysShield} Phys)";
+                accountShields += $"Shields: ({account.PhysShield} Phys)";
             if (account.MagShield > 0)
-                shieldString += $" ({account.MagShield} Mag)";
+                accountShields += $" ({account.MagShield} Mag)";
+
+            var enemyShields = "";
+            if (enemy.PhysShield > 0)
+                enemyShields += $"Shields: ({enemy.PhysShield} Phys)";
+            if (enemy.MagShield > 0)
+                enemyShields += $" ({enemy.MagShield} Mag)";
 
             var mainPage = new EmbedBuilder();
             mainPage.WithAuthor(globalAccount);
@@ -332,11 +338,11 @@ namespace OctoGame.OctoGame.UpdateMessages
                                         $"**Name:** {enemy.DiscordUserName}\n" +
                                         $"**LVL:** {enemy.OctoLvL}\n" +
                                         $"**Strength:** {enemy.Strength}\n" +
-                                        $"**AD:** {enemy.AttackPower_Stats + enemy.Strength}  **AP:** {enemy.MagicPower_Stats}\n" +
-                                        $"**Health:** {enemy.Health} {shieldString}\n" +
-                                        $"**Stamina:** {enemy.Stamina}\n" +
-                                        $"**PhysicalResistance:** {enemy.PhysicalResistance} **MagRes:** {enemy.MagicalResistance}\n" +
-                                        $"**PhysicalPenetration:** {enemy.PhysicalPenetration}  **MagicalPenetration:** {enemy.MagicalPenetration}\n" +
+                                        $"**Attack:** {enemy.AttackPower_Stats + enemy.Strength}  **Magic:** {enemy.MagicPower_Stats}\n" +
+                                        $"**Health:** {enemy.Health}\n" +
+                                        $"**Stamina:** {enemy.Stamina} {enemyShields}\n" +
+                                        $"**Physical Resistance:** {enemy.PhysicalResistance} **Magical Resistance:** {enemy.MagicalResistance}\n" +
+                                        $"**Physical Penetration:** {enemy.PhysicalPenetration}  **Magical Penetration:** {enemy.MagicalPenetration}\n" +
                                         $"**Agility:** {enemy.Agility_Stats}\n" +
                                         "**________________**");
 
@@ -344,11 +350,11 @@ namespace OctoGame.OctoGame.UpdateMessages
                 $"**Name:** {account.OctoName}\n" +
                 $"**LVL:** {account.OctoLvL}\n" +
                 $"**Strength:** {account.Strength}\n" +
-                $"**AD:** {account.AttackPower_Stats + account.Strength}  **AP:** {account.MagicPower_Stats}\n" +
+                $"**Attack:** {account.AttackPower_Stats + account.Strength}  **Magic:** {account.MagicPower_Stats}\n" +
                 $"**Health:** {account.Health}\n" +            
-                $"**Stamina:** {account.Stamina}\n" +            
-                $"**PhysicalResistance:** {account.PhysicalResistance} **MagRes:** {account.MagicalResistance}\n" +
-                $"**PhysicalPenetration:** {account.PhysicalPenetration}  **MagicalPenetration:** {account.MagicalPenetration}\n" +
+                $"**Stamina:** {account.Stamina} {accountShields}\n" +            
+                $"**Physical Resistance:** {account.PhysicalResistance} **Mag Resistance:** {account.MagicalResistance}\n" +
+                $"**Physical Penetration:** {account.PhysicalPenetration}  **Magical Penetration:** {account.MagicalPenetration}\n" +
                 $"**Agility:** {account.Agility_Stats}\n" +
                 $"**________________**\n" +
                 $"{new Emoji("⬅")} - Move List Page Left , {new Emoji("➡")} - Move List Page Right {new Emoji("📖")} - History, {new Emoji("❌")} - **END GAME**");
@@ -365,7 +371,7 @@ namespace OctoGame.OctoGame.UpdateMessages
             switch (user.MoveListPage)
             {
                 case 1:
-                    tree = "Attack Damage";
+                    tree = "Attack";
                     break;
                 case 2:
                     tree = "Defensive";
@@ -374,7 +380,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                     tree = "Agility";
                     break;
                 case 4:
-                    tree = "Ability Power";
+                    tree = "Magic";
                     break;
                 case 5:
                     tree = "Passive";
