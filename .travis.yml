@@ -1,8 +1,0 @@
-language: csharp
-mono: none
-dotnet: 2.0.0
-script:
-  - dotnet restore
-  - dotnet add package Discord -s https://www.myget.org/F/discord-net/api/v3/index.json
-  - dotnet build ./OctoGame/
-  before_install:
