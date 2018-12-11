@@ -42,7 +42,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                             {                              
                                 TemporaryStrength1089.TryGetValue(account.DiscordId, out double extra);
                                 account.Strength -= extra;
-                                TemporaryStrength1089.TryRemove(account.DiscordId, out double val);
+                                TemporaryStrength1089.TryRemove(account.DiscordId, out _);
                             }
                             break;
 
@@ -58,6 +58,12 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
             await Task.CompletedTask;
         }
 
+
+        /*
+         * if spell will be activated only in 20 turns, and it gives a stats buff for 5 turns, make it 25 turns.
+         * 20 => activate shit,
+         * 0 => remove shit and delete buff
+         */
         public async Task CheckForBuffsToBeActivatedLater(AccountSettings account)
         {
             if (account.BuffToBeActivatedLater.Count > 0)
@@ -71,7 +77,8 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                         case 1079:
                             if (account.BuffToBeActivatedLater[i].afterHowManyTurns <= 0)
                             {
-                                account.Stamina = account.MaxStamina + (account.OctoLvL / 20) * account.MaxStamina / 100;
+                                // ReSharper disable once PossibleLossOfFraction
+                                account.Stamina = account.MaxStamina + account.OctoLvL / 20 * account.MaxStamina / 100;
                                 account.InstantDeBuff = new List<AccountSettings.InstantBuffClass>();
                                 account.DeBuffToBeActivatedLater = new List<AccountSettings.OnTimeBuffClass>();
                             }
@@ -102,6 +109,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                     }
 
                     account.InstantDeBuff[i].activated = true;
+
                     if (account.InstantDeBuff[i].forHowManyTurns <= 0)
                     {
                         account.InstantDeBuff.RemoveAt(i);
@@ -117,6 +125,5 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
         {
             await Task.CompletedTask;
         }
-
     }
 }

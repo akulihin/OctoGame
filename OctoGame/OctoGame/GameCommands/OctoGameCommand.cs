@@ -213,7 +213,8 @@ namespace OctoGame.OctoGame.GameCommands
             var enemy = SetupOctopusStats(account.CurrentEnemy);
 
 
-            var logs = _loggingSystem.CreateNewLog(account.DiscordId, enemy.DiscordId);
+            // tis is a test of logging system. it does work btw
+            _loggingSystem.CreateNewLog(account.DiscordId, enemy.DiscordId);
             _loggingSystem.SaveCurrentFightLog(account.DiscordId, enemy.DiscordId);
             _loggingSystem.SaveCompletedFight(account.DiscordId, enemy.DiscordId);
 
