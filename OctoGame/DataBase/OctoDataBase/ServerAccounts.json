@@ -19,5 +19,12 @@
     "Prefix": "*",
     "Language": "en",
     "ServerActivityLog": 0
+  },
+  {
+    "ServerName": "OctoGame",
+    "ServerId": 521832752400826427,
+    "Prefix": "*",
+    "Language": "en",
+    "ServerActivityLog": 0
   }
 ]
