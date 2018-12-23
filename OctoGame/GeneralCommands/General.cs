@@ -23,9 +23,9 @@ namespace OctoGame.GeneralCommands
         private readonly OctoPicPull _octoPicPull;
         private readonly OctoNamePull _octoNmaNamePull;
         private readonly HelperFunctions _helperFunctions;
+        private readonly AudioService _service;
 
-
-        public General(ILocalization lang, IUserAccounts accounts, CommandHandeling command, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions)
+        public General(ILocalization lang, IUserAccounts accounts, CommandHandeling command, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service)
         {
             _lang = lang;
             _accounts = accounts;
@@ -34,6 +34,7 @@ namespace OctoGame.GeneralCommands
             _octoPicPull = octoPicPull;
             _octoNmaNamePull = octoNmaNamePull;
             _helperFunctions = helperFunctions;
+            _service = service;
         }
 
         [Command("upd")]
@@ -44,6 +45,23 @@ namespace OctoGame.GeneralCommands
             _command.ReplyAsync(Context, $"updated");
         }
 
+        [Command("join", RunMode = RunMode.Async)]
+        public async Task JoinCmd()
+        {
+            await _service.JoinAudio(Context.Guild, (Context.User as IVoiceState).VoiceChannel);
+        }
+
+        [Command("leave", RunMode = RunMode.Async)]
+        public async Task LeaveCmd()
+        {
+           await _service.LeaveAudio(Context.Guild);
+        }
+    
+        [Command("play", RunMode = RunMode.Async)]
+        public async Task PlayCmd([Remainder] string song)
+        {
+            await _service.SendAudioAsync(Context.Guild, Context.Channel, song);
+        }
 
         [Command("myPrefix")]
         public async Task SetMyPrefix([Remainder] string prefix = null)

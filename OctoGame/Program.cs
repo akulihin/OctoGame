@@ -6,6 +6,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.Language;
+using OctoGame.GeneralCommands;
 using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.GameSpellsAccounts;
 using OctoGame.LocalPersistentData.LoggingSystemJson;
@@ -76,22 +77,24 @@ namespace OctoGame
                 .AddSingleton<Dodge>()
                 .AddSingleton<Crit>()
 
-                .AddTransient<AgilityActiveTree>()
-                .AddTransient<AgilityPassiveTree>()
-                .AddTransient<AttackDamageActiveTree>()
-                .AddTransient<AttackDamagePassiveTree>()
-                .AddTransient<DefenceActiveTree>()
-                .AddTransient<DefencePassiveTree>()
-                .AddTransient<MagicActiveTree>()
-                .AddTransient<MagicPassiveTree>()
-                .AddTransient<AllBuffs>()
+                .AddSingleton<AgilityActiveTree>()
+                .AddSingleton<AgilityPassiveTree>()
+                .AddSingleton<AttackDamageActiveTree>()
+                .AddSingleton<AttackDamagePassiveTree>()
+                .AddSingleton<DefenceActiveTree>()
+                .AddSingleton<DefencePassiveTree>()
+                .AddSingleton<MagicActiveTree>()
+                .AddSingleton<MagicPassiveTree>()
+                .AddSingleton<AllBuffs>()
                 //.AddTransient<666666666>()
+                       .AddSingleton<AudioService>()
+            
 
-                .AddTransient<OctoGameReaction>()
-                .AddTransient<OctoGameUpdateMess>()
-                .AddTransient<AttackDamageActiveTree>()          
-                .AddTransient<CustomCalculator>()
-                .AddTransient<HelperFunctions>()
+                .AddSingleton<OctoGameReaction>()
+                .AddSingleton<OctoGameUpdateMess>()
+                .AddSingleton<AttackDamageActiveTree>()          
+                .AddSingleton<CustomCalculator>()
+                .AddSingleton<HelperFunctions>()
                 .AddTransient<SecureRandom>()
                 .AddTransient<AwaitForUserMessage>()
                 .AddSingleton<GameFramework>()
