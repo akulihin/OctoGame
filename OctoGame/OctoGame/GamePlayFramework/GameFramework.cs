@@ -112,6 +112,9 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             await DmgHealthHandeling(skill.WhereDmg, dmg, skill.SpellDmgType, account, enemy);
             await UpdateTurn(account, enemy);
+
+            await _octoGameUpdateMess.MainPage(account.DiscordId,
+                _global.OctopusGameMessIdList[account.MessageIdInList].SocketMsg);
         }
 
         public async Task UpdateTurn(AccountSettings account, AccountSettings enemy)
@@ -232,6 +235,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             }
 
 
+
             await UpdateIfWinOrContinue(status, myAccount.DiscordId, myAccount.MessageIdInList);
         }
 
@@ -327,9 +331,11 @@ namespace OctoGame.OctoGame.GamePlayFramework
             if (status == 1)
                 await _octoGameUpdateMess.VictoryPage(userId,
                     _global.OctopusGameMessIdList[i].SocketMsg);
+           /*
             else
                 await _octoGameUpdateMess.MainPage(userId,
                     _global.OctopusGameMessIdList[i].SocketMsg);
+                    */
         }
 
         public string[] GetSkillListFromTree(AccountSettings account)

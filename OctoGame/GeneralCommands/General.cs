@@ -37,6 +37,13 @@ namespace OctoGame.GeneralCommands
             _service = service;
         }
 
+
+        [Command("tt")]
+        public async Task Ttest()
+        {
+            await Task.CompletedTask;
+        }
+
         [Command("upd")]
         [RequireOwner]
         public async Task UpdateDiscordBotListGuildCount(int num)

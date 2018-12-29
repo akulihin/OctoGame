@@ -42,7 +42,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     if (!check)
                     {
-                        enemyAccount.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 2, false));
+                        enemyAccount.InstantDeBuff.Add(new AccountSettings.InstantBuffClass(skillId, 2, false));
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 4));
                     }
 

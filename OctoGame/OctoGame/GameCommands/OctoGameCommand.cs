@@ -263,8 +263,13 @@ namespace OctoGame.OctoGame.GameCommands
                 account.PlayingStatus = 1;
                 account.MessageIdInList = _global.OctopusGameMessIdList.Count - 1;
 
+
+                    //twice for a reason
                 await _gameFramework.CheckForPassivesAndUpdateStats(account, enemy);
                 await _gameFramework.CheckForPassivesAndUpdateStats(enemy, account);
+                await _gameFramework.CheckForPassivesAndUpdateStats(account, enemy);
+                await _gameFramework.CheckForPassivesAndUpdateStats(enemy, account);
+
                 _accounts.SaveAccounts(Context.User);
             }
             else

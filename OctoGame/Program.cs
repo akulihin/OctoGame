@@ -6,7 +6,6 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.Language;
-using OctoGame.GeneralCommands;
 using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.GameSpellsAccounts;
 using OctoGame.LocalPersistentData.LoggingSystemJson;

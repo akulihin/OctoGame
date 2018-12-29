@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Audio;
 
-namespace OctoGame.GeneralCommands
+namespace OctoGame.DiscordFramework
 {
     public class AudioService
     {
@@ -67,7 +67,7 @@ namespace OctoGame.GeneralCommands
             var ffmpeg = new ProcessStartInfo
             {
                 FileName = "ffmpeg",
-                Arguments = $"-i {path} -ac 2 -f s16le -ar 48000 pipe:1",
+                Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 48000 pipe:1",
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
