@@ -26,7 +26,7 @@ namespace OctoGame
     {
         private DiscordShardedClient _client;
         private IServiceProvider _services;
-        
+
         private readonly int[] _shardIds = {0, 1};
 
         private static void Main()
@@ -37,7 +37,7 @@ namespace OctoGame
         public async Task RunBotAsync()
         {
             if (string.IsNullOrEmpty(Config.Bot.Token)) return;
-            _client = new DiscordShardedClient(_shardIds,new DiscordSocketConfig
+            _client = new DiscordShardedClient(_shardIds, new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose,
                 DefaultRetryMode = RetryMode.AlwaysRetry,
@@ -48,23 +48,22 @@ namespace OctoGame
             _services = ConfigureServices();
             _services.GetRequiredService<DiscordEventHandler>().InitDiscordEvents();
             await _services.GetRequiredService<CommandHandeling>().InitializeAsync();
-            
+
             var botToken = Config.Bot.Token;
             await _client.SetGameAsync("Boole~");
 
             await _client.LoginAsync(TokenType.Bot, botToken);
             await _client.StartAsync();
-           
+
 
             SendMessagesUsingConsole.ConsoleInput(_client);
             await Task.Delay(-1);
         }
 
         private IServiceProvider ConfigureServices()
-        {            
+        {
             return new ServiceCollection()
                 .AddSingleton(_client)
-
                 .AddSingleton<OctoPicPull>()
                 .AddSingleton<OctoNamePull>()
                 .AddSingleton<Global>()
@@ -75,7 +74,6 @@ namespace OctoGame
                 .AddSingleton<ArmorReduction>()
                 .AddSingleton<Dodge>()
                 .AddSingleton<Crit>()
-
                 .AddSingleton<AgilityActiveTree>()
                 .AddSingleton<AgilityPassiveTree>()
                 .AddSingleton<AttackDamageActiveTree>()
@@ -86,18 +84,30 @@ namespace OctoGame
                 .AddSingleton<MagicPassiveTree>()
                 .AddSingleton<AllBuffs>()
                 //.AddTransient<666666666>()
-                       .AddSingleton<AudioService>()
-            
-
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                //.AddTransient<666666666>()
+                .AddSingleton<DiscordHelpModule>()
+                .AddSingleton<AudioService>()
                 .AddSingleton<OctoGameReaction>()
                 .AddSingleton<OctoGameUpdateMess>()
-                .AddSingleton<AttackDamageActiveTree>()          
+                .AddSingleton<AttackDamageActiveTree>()
                 .AddSingleton<CustomCalculator>()
                 .AddSingleton<HelperFunctions>()
                 .AddTransient<SecureRandom>()
                 .AddTransient<AwaitForUserMessage>()
                 .AddSingleton<GameFramework>()
-
                 .AddTransient<IDataStorage, JsonLocalStorage>()
                 .AddTransient<ILocalization, JsonLocalization>()
                 .AddTransient<IUserAccounts, UserAccounts>()

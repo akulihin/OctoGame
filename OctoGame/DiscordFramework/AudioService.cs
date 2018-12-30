@@ -48,7 +48,7 @@ namespace OctoGame.DiscordFramework
                 path = @"gs.mp3"; //this is hardcoded example to check if it's working. This file have to exist in `bin\Debug\netcoreapp2.1` if you use windows
                 if (!File.Exists(path))
                 {
-                    await channel.SendMessageAsync("File does not exist.");
+                    await channel.SendMessageAsync("File does not exist."); 
                     return;
                 }
 

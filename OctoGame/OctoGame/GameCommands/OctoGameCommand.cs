@@ -42,6 +42,7 @@ namespace OctoGame.OctoGame.GameCommands
 
         [Command("CreateOcto", RunMode = RunMode.Async)]
         [Alias("UpdateOcto", "OctoCreate")]
+        [Summary("Creates your very own Octopus!")]
         public async Task CreateOctopusFighter()
         {
             var account = _accounts.GetAccount(Context.User);
@@ -101,7 +102,8 @@ namespace OctoGame.OctoGame.GameCommands
 
         [Command("OctoInfo")]
         [Alias("InfoOcto", "OctoInfo", "myOcto")]
-        public async Task CehckOctopusFighter(IGuildUser user = null)
+        [Summary("Shows octopus info, yours or someone else' ")]
+        public async Task CheckOctopusFighter(IGuildUser user = null)
         {
             AccountSettings account;
             if (user == null)
@@ -135,6 +137,7 @@ namespace OctoGame.OctoGame.GameCommands
         }
 
         [Command("endGame")]
+        [Summary("Emergency only! Finish previous fight if there any problems.")]
         public async Task EndOctoGameCommand()
         {
             var account = _accounts.GetAccount(Context.User);
@@ -207,6 +210,7 @@ namespace OctoGame.OctoGame.GameCommands
         }
 
         [Command("Fight")]
+        [Summary("A demo for a fight vs Shark")]
         public async Task CreateFight()
         {
             var account = SetupOctopusStats(Context.User.Id);
@@ -280,6 +284,7 @@ namespace OctoGame.OctoGame.GameCommands
 
         [Command("CreateSkill", RunMode = RunMode.Async)]
         [Alias("CSS")]
+        [Summary("OLD. Adds a skill to the DataBase, only for staff")]
         public async Task CreateSkill(ulong skillId)
         {
             var skill = _spellAccounts.GetAccount(skillId);
@@ -374,6 +379,7 @@ namespace OctoGame.OctoGame.GameCommands
 
 
         [Command("CS", RunMode = RunMode.Async)]
+        [Summary("NEW. Adds a skill to the DataBase, only for staff")]
         public async Task CreateSkillDev(ulong skillId, [Remainder] string skillNameRu)
         {
             var skill = _spellAccounts.GetAccount(skillId);
@@ -522,6 +528,7 @@ namespace OctoGame.OctoGame.GameCommands
 
 
         [Command("SeeSkill")]
+        [Summary("Get details about a spell")]
         public async Task SeeSkill(ulong skillId)
         {
             try
@@ -544,6 +551,7 @@ namespace OctoGame.OctoGame.GameCommands
 
         [Command("AllSkill")]
         [Alias("AllSkills")]
+        [Summary("Get details about all spells")]
         public async Task AllSkill()
         {
             string result;

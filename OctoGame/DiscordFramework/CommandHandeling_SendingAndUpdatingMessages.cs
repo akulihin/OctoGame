@@ -172,7 +172,6 @@ namespace OctoGame.DiscordFramework
 
 
         public async Task HandleCommandAsync(SocketMessage msg)
-
         {
             var message = msg as SocketUserMessage;
             if (message == null) return;

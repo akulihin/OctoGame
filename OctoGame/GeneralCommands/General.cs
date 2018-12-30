@@ -39,6 +39,7 @@ namespace OctoGame.GeneralCommands
 
 
         [Command("tt")]
+        [Summary("doing absolutely nothing. That's right - NOTHING")]
         public async Task Ttest()
         {
             await Task.CompletedTask;
@@ -46,6 +47,7 @@ namespace OctoGame.GeneralCommands
 
         [Command("upd")]
         [RequireOwner]
+        [Summary("RequireOwner")]
         public async Task UpdateDiscordBotListGuildCount(int num)
         {
             _dblApi.UpdateStats(num);
@@ -53,32 +55,38 @@ namespace OctoGame.GeneralCommands
         }
 
         [Command("join", RunMode = RunMode.Async)]
+        [Summary("Joins a voice channel")]
         public async Task JoinCmd()
         {
             await _service.JoinAudio(Context.Guild, (Context.User as IVoiceState).VoiceChannel);
         }
 
         [Command("leave", RunMode = RunMode.Async)]
+        [Summary("leaves a voice channel")]
         public async Task LeaveCmd()
         {
            await _service.LeaveAudio(Context.Guild);
         }
     
         [Command("play", RunMode = RunMode.Async)]
-        public async Task PlayCmd([Remainder] string song)
+        [Summary("plays only 1 song. for now. Just because.")]
+        public async Task PlayCmd([Remainder] string song = "nothing")
         {
             await _service.SendAudioAsync(Context.Guild, Context.Channel, song);
         }
 
         [Command("myPrefix")]
+        [Summary("Shows or sets YOUR OWN prefix for the bot")]
         public async Task SetMyPrefix([Remainder] string prefix = null)
         {
             var account = _accounts.GetAccount(Context.User);
 
             if (prefix == null)
             {
+                var myAccountPrefix = account.MyPrefix ?? "You don't have own prefix yet";
+
                 await _command.ReplyAsync(Context,
-                    $"Your prefix: **{account.MyPrefix}**");
+                    $"Your prefix: **{myAccountPrefix}**");
                 return;
             }
 
@@ -88,7 +96,7 @@ namespace OctoGame.GeneralCommands
                 if (prefix.Contains("everyone") || prefix.Contains("here"))
                 {
                     await _command.ReplyAsync(Context,
-                        "Boooooo! no `here` or `everyone` prefix!");
+                        "No `here` or `everyone` prefix allowed.");
                     return;
                 }
 
@@ -105,6 +113,7 @@ namespace OctoGame.GeneralCommands
 
         [Command("octo")]
         [Alias("окто", "octopus", "Осьминог", "Осьминожка", "Осьминога", "o", "oct", "о")]
+        [Summary("Show a random oct. The pull contains only my own pictures.")]
         public async Task OctopusPicture()
         {
             var octoIndex = _secureRandom.Random(0, _octoPicPull.OctoPics.Length-1);
@@ -153,6 +162,7 @@ namespace OctoGame.GeneralCommands
 
 
         [Command("test")]
+        [Summary("just a test of a multiple language shit")]
         public async Task TestLanguges([Remainder] string rem)
         {
             var kek = _lang.Resolve($"{Context.User.Mention}\n[PRIVACY_DATA_REPORT_TEMPLATE(@DATA)]");

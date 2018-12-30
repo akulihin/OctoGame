@@ -23,6 +23,7 @@ namespace OctoGame.GeneralCommands
 
         [Command("roll")]
         [Alias("Роллл", "Ролл")]
+        [Summary("Rolling a dice multiple times")]
         public async Task Roll(int number, int times)
         {
             try
@@ -69,6 +70,7 @@ namespace OctoGame.GeneralCommands
 
         [Command("roll")]
         [Alias("Роллл", "Ролл")]
+        [Summary("Rolling a dice 1 time")]
         public async Task Roll(int number)
         {
             try
@@ -86,9 +88,10 @@ namespace OctoGame.GeneralCommands
         }
 
         [Command("roll")]
-        public async Task CalculateStuf([Remainder] string yyyy)
+        [Summary("Rolling a dice like `1d4` or `2d4 + 3d2` etc.")]
+        public async Task CalculateStuf([Remainder] string textFormula)
         {
-            var low = yyyy.ToLower();
+            var low = textFormula.ToLower();
             low = low.Replace(" ", string.Empty);
 
             var embed = new EmbedBuilder();
