@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using OctoGame.Helpers;
@@ -31,11 +32,12 @@ namespace OctoGame.OctoGame.ReactionHandling
         public async Task ReactionAddedForOctoGameAsync(Cacheable<IUserMessage, ulong> cash,
             ISocketMessageChannel channel, SocketReaction reaction)
         {
-            if (cash.Value.Channel is IGuildChannel)
                 for (var i = 0; i < _global.OctopusGameMessIdList.Count; i++)
                 {
-                    if (reaction.MessageId != _global.OctopusGameMessIdList[i].OctoGameMessIdToTrack ||
-                        reaction.UserId != _global.OctopusGameMessIdList[i].OctoGameUserIdToTrack) continue;
+
+                    if(!_global.OctopusGameMessIdList[i].Any( x => x.Player1.Id == reaction.UserId && x.BotGamingMsg1.Id == reaction.MessageId))
+                        continue;
+
                     var globalAccount = _global.Client.GetUser(reaction.UserId);
                     var account = _accounts.GetAccount(globalAccount);
                     var enemy = _accounts.GetAccount(account.CurrentEnemy);
@@ -45,34 +47,34 @@ namespace OctoGame.OctoGame.ReactionHandling
                         case "🐙":
 
                             await _octoGameUpdateMess.MainPage(reaction.UserId,
-                                _global.OctopusGameMessIdList[i].SocketMsg);
+                                reaction.Message.Value);
                             break;
                         case "⬅":
                             await _octoGameUpdateMess.SkillPageLeft(reaction,
-                                _global.OctopusGameMessIdList[i].SocketMsg);
+                                reaction.Message.Value);
                             break;
                         case "➡":
                             await _octoGameUpdateMess.SkillPageRight(reaction,
-                                _global.OctopusGameMessIdList[i].SocketMsg);
+                                reaction.Message.Value);
                             break;
                         case "📖":
                             //  await _octoGameUpdateMess.OctoGameLogs(reaction,
-                            //       _global.OctopusGameMessIdList[i].SocketMsg);
+                            //       _global.OctopusGameMessIdList[i].bot_gaming_msg_1);
                             account.MoveListPage = 5;
                             await _octoGameUpdateMess.MainPage(reaction.UserId,
-                                _global.OctopusGameMessIdList[i].SocketMsg);
+                                reaction.Message.Value);
                             break;
                         case "❌":
                             if (await _awaitForUserMessage.FinishTheGame(reaction))
                                 await _octoGameUpdateMess.EndGame(reaction,
-                                    _global.OctopusGameMessIdList[i].SocketMsg);
+                                    reaction.Message.Value);
                             break;
                         case "1⃣":
                         {
                             if (account.PlayingStatus == 1)
                             {
-                                await _octoGameUpdateMess.WaitMess(reaction,
-                                    _global.OctopusGameMessIdList[i].SocketMsg);
+                                await _octoGameUpdateMess.WaitMess(reaction.UserId,
+                                    reaction.Message.Value);
                                 break;
                             }
 
@@ -86,8 +88,8 @@ namespace OctoGame.OctoGame.ReactionHandling
                         {
                             if (account.PlayingStatus == 1)
                             {
-                                await _octoGameUpdateMess.WaitMess(reaction,
-                                    _global.OctopusGameMessIdList[i].SocketMsg);
+                                await _octoGameUpdateMess.WaitMess(reaction.UserId,
+                                    reaction.Message.Value);
                                 break;
                             }
 
@@ -100,8 +102,8 @@ namespace OctoGame.OctoGame.ReactionHandling
                         {
                             if (account.PlayingStatus == 1)
                             {
-                                await _octoGameUpdateMess.WaitMess(reaction,
-                                    _global.OctopusGameMessIdList[i].SocketMsg);
+                                await _octoGameUpdateMess.WaitMess(reaction.UserId,
+                                    reaction.Message.Value);
                                 break;
                             }
 
@@ -142,9 +144,12 @@ namespace OctoGame.OctoGame.ReactionHandling
                         }
                     }
 
-                    await _global.OctopusGameMessIdList[i].SocketMsg.RemoveReactionAsync(reaction.Emote,
-                        _global.OctopusGameMessIdList[i].Iuser, RequestOptions.Default);
                 }
+
+
+            if(!(channel is IDMChannel))
+            await reaction.Message.Value.RemoveReactionAsync(reaction.Emote,
+                reaction.User.Value, RequestOptions.Default);
         }
     }
 }

@@ -18,26 +18,25 @@ namespace OctoGame
 
         public int OctoGamePlaying { get; set; }
 
-        public  List<OctoGameMessAndUserTrack> OctopusGameMessIdList { get; internal set; } =
-            new List<OctoGameMessAndUserTrack>();
+        public  List<List<OctoGameMessAndUserTrack>> OctopusGameMessIdList { get; internal set; } =
+            new List<List<OctoGameMessAndUserTrack>>();
 
         public struct OctoGameMessAndUserTrack
         {           
-            public ulong OctoGameMessIdToTrack;
-            public ulong OctoGameUserIdToTrack;
-            public RestUserMessage SocketMsg;
-            public IUser Iuser;
+            public IUserMessage BotGamingMsg1;
+            public IUser Player1;
 
 
-            public OctoGameMessAndUserTrack(ulong octoGameMessIdToTrack, ulong octoGameUserIdToTrack,
-                RestUserMessage socketMsg, IUser iuser)
+            public OctoGameMessAndUserTrack(
+                IUserMessage botGamingMsg1, IUser player1)
             {
-                OctoGameMessIdToTrack = octoGameMessIdToTrack;
-                OctoGameUserIdToTrack = octoGameUserIdToTrack;
-                SocketMsg = socketMsg;
-                Iuser = iuser;
+
+                BotGamingMsg1 = botGamingMsg1;
+                Player1 = player1;
+
             }
         }
+
 
         public List<CommandRam> CommandList { get; set; } = new List<CommandRam>();
 
@@ -55,6 +54,19 @@ namespace OctoGame
                 BotSocketMsg = botSocketMsg;
             }
         }
+
+        public List<OctoGameMessAndUserTrack> CreateNewGame(IUserMessage botGamingMsg1, IUserMessage botGamingMsg2, IUser player1, IUser player2)
+        {
+
+            var gameDataList = new List<OctoGameMessAndUserTrack>
+            {
+                new OctoGameMessAndUserTrack(botGamingMsg1, player1),
+                new OctoGameMessAndUserTrack(botGamingMsg2, player2)
+            };
+
+            return gameDataList;
+        }
+
     }
 
     internal class Config

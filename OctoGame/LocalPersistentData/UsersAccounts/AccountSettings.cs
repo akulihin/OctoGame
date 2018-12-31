@@ -41,25 +41,21 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public int PlayingStatus { get; set; }   // 0 = not playing | 1 = play
 
 
+        public double Health { get; set; } //100
+        public double MaxHealth { get; set; }
+        public double Stamina { get; set; } //200    
+        public double MaxStamina { get; set; } //200    
         public double Strength { get; set; } // 20
-        // ReSharper disable once InconsistentNaming
-
-        public double AttackPower_Stats { get; set; } //0
-
-        // ReSharper disable once InconsistentNaming
-        public double MagicPower_Stats { get; set; } //0
-
-        // ReSharper disable once InconsistentNaming
+        public double AttackPower_Stats { get; set; } //0  
+        public double MagicPower_Stats { get; set; } //0  
         public double Agility_Stats { get; set; } //0
         public double CriticalDamage { get; set; }
         public double CriticalChance { get; set; }
         public double DodgeChance { get; set; }
         public double PhysicalResistance { get; set; } //1 LVL (1-6)
         public double MagicalResistance { get; set; } //1 LVL
-        public double Health { get; set; } //100
-        public double MaxHealth { get; set; }
-        public double Stamina { get; set; } //200    
-        public double MaxStamina { get; set; } //200    
+
+
         public double PhysicalPenetration { get; set; } // 0 LVL
         public double MagicalPenetration { get; set; } // 0 LVL      
         public double OnHitDamage { get; set; }

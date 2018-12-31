@@ -38,10 +38,10 @@ namespace OctoGame.OctoGame.UpdateMessages
         }
 
 
-        public async Task WaitMess(SocketReaction reaction, RestUserMessage socketMsg)
+        public async Task WaitMess(ulong userId, IUserMessage socketMsg)
         {
-            var userId = reaction.User.Value.Id;
-            var globalAccount = _global.Client.GetUser(reaction.UserId);
+
+            var globalAccount = _global.Client.GetUser(userId);
             var account = _accounts.GetAccount(globalAccount);
             var mainPage = new EmbedBuilder();
 
@@ -56,6 +56,8 @@ namespace OctoGame.OctoGame.UpdateMessages
                 message.Embed = mainPage.Build();
             });
 
+     
+            if(!(socketMsg.Channel is IDMChannel))
             await socketMsg.RemoveAllReactionsAsync();
 
             await socketMsg.AddReactionAsync(new Emoji("⬅"));
@@ -76,11 +78,11 @@ namespace OctoGame.OctoGame.UpdateMessages
             account.PlayingStatus = 2;
             _accounts.SaveAccounts(userId);
 
-            await MainPage(reaction.UserId, socketMsg);
+            await MainPage(userId, socketMsg);
         }
 
 
-        public async Task MainPage(ulong userId, RestUserMessage socketMsg)
+        public async Task MainPage(ulong userId, IUserMessage socketMsg)
         {
             var globalAccount = _global.Client.GetUser(userId);
             var account = _accounts.GetAccount(globalAccount);
@@ -98,7 +100,7 @@ namespace OctoGame.OctoGame.UpdateMessages
         }
 
 
-        public async Task VictoryPage(ulong userId, RestUserMessage socketMsg)
+        public async Task VictoryPage(ulong userId, IUserMessage socketMsg)
         {
 
 
@@ -106,7 +108,7 @@ namespace OctoGame.OctoGame.UpdateMessages
 
         }
 
-        public async Task SkillPageLeft(SocketReaction reaction, RestUserMessage socketMsg)
+        public async Task SkillPageLeft(SocketReaction reaction, IUserMessage socketMsg)
         {
             var userId = reaction.User.Value.Id;
             var globalAccount = _global.Client.GetUser(reaction.UserId);
@@ -135,7 +137,7 @@ namespace OctoGame.OctoGame.UpdateMessages
         }
 
 
-        public async Task SkillPageRight(SocketReaction reaction, RestUserMessage socketMsg)
+        public async Task SkillPageRight(SocketReaction reaction, IUserMessage socketMsg)
         {
             var userId = reaction.User.Value.Id;
             var globalAccount = _global.Client.GetUser(reaction.UserId);
@@ -193,7 +195,7 @@ namespace OctoGame.OctoGame.UpdateMessages
         }
 
 
-        public async Task EndGame(SocketReaction reaction, RestUserMessage socketMsg)
+        public async Task EndGame(SocketReaction reaction, IUserMessage socketMsg)
         {
             var userId = reaction.User.Value.Id;
             var globalAccount = _global.Client.GetUser(reaction.UserId);
@@ -359,9 +361,12 @@ namespace OctoGame.OctoGame.UpdateMessages
                 $"**________________**\n" +
                 $"{new Emoji("⬅")} - Move List Page Left , {new Emoji("➡")} - Move List Page Right {new Emoji("📖")} - History, {new Emoji("❌")} - **END GAME**");
             mainPage.AddField($"{GetTree(account)} Move List:", 
-                                                                $"{skillString}\n");
+                      
+                $"{skillString}\n");
+            
             if (IsImageUrl(enemy.OctoAvatar))
             mainPage.WithThumbnailUrl(enemy.OctoAvatar);
+            
             return mainPage;
         }
 

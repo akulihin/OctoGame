@@ -1,0 +1,111 @@
+[
+    {
+      "DiscordUserName": "DeepList",
+      "DiscordId": 238337696316129280,
+      "MyPrefix": null,
+      "MyLanguage": "en",
+      "OctoName": "буль",
+      "OctoLvL": 100,
+      "OctoInfo": "буль|3|вредный|вф|",
+      "OctoAvatar": "https://i.imgur.com/wqB54af.png",
+      "Inventory": [],
+      "OctoItems": [],
+      "Attack_Tree": "1001|1003|1005|1007|1009|1015|",
+      "Defensive_Tree": "1089|",
+      "Agility_Tree": null,
+      "Magic_Tree": null,
+      "AllPassives": "1000|1002|1004|1006|1008|1016|1024|1026|",
+      "Turn": 1,
+      "Round": 0.0,
+      "CurrentEnemy": 1,
+      "MoveListPage": 1,
+      "PlayingStatus": 2,
+      "Strength": 20.0,
+      "AttackPower_Stats": 293848.7,
+      "MagicPower_Stats": 20.0,
+      "Agility_Stats": 1.0,
+      "CriticalDamage": 150.0,
+      "CriticalChance": 1.0,
+      "DodgeChance": 0.0,
+      "PhysicalResistance": 2.0,
+      "MagicalResistance": 2.0,
+      "Health": 100.0,
+      "MaxHealth": 100.0,
+      "Stamina": 397.0,
+      "MaxStamina": 397.0,
+      "PhysicalPenetration": 0.0,
+      "MagicalPenetration": 0.0,
+      "OnHitDamage": 3.0,
+      "IsCrit": false,
+      "CurrentLogString": "",
+      "PassiveList": [
+        {
+          "skillId": 1000,
+          "cooldown": 19998
+        },
+        {
+          "skillId": 1002,
+          "cooldown": 19998
+        },
+        {
+          "skillId": 1004,
+          "cooldown": 19998
+        },
+        {
+          "skillId": 1006,
+          "cooldown": 19998
+        },
+        {
+          "skillId": 1008,
+          "cooldown": 19998
+        },
+        {
+          "skillId": 1016,
+          "cooldown": 19998
+        },
+        {
+          "skillId": 1024,
+          "cooldown": 19998
+        },
+        {
+          "skillId": 1026,
+          "cooldown": 19998
+        }
+      ],
+      "SkillCooldowns": [
+        {
+          "skillId": 1000,
+          "cooldown": 1996
+        },
+        {
+          "skillId": 1006,
+          "cooldown": 1996
+        },
+        {
+          "skillId": 1003,
+          "cooldown": 6
+        },
+        {
+          "skillId": 1009,
+          "cooldown": 9
+        }
+      ],
+      "InstantBuff": [],
+      "InstantDeBuff": [],
+      "BuffToBeActivatedLater": [],
+      "DeBuffToBeActivatedLater": [],
+      "PrecentBonusDmg": 0.2,
+      "DamageOnTimer": [],
+      "PoisonDamage": [],
+      "IsDodged": false,
+      "IsFirstHit": false,
+      "MessageIdInList": 0,
+      "dmgDealtLastTime": 0.0,
+      "PhysShield": 0.0,
+      "MagShield": 0.0,
+      "HowManyTimesCrited": 0,
+      "StatsForTime": [],
+      "LifeStealPrec": 0.0,
+      "BlockShield": []
+    }
+  ]

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.Rest;
+using Discord.WebSocket;
 using Newtonsoft.Json;
 using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.CustomLibrary;
@@ -12,6 +15,7 @@ using OctoGame.LocalPersistentData.GameSpellsAccounts;
 using OctoGame.LocalPersistentData.LoggingSystemJson;
 using OctoGame.LocalPersistentData.UsersAccounts;
 using OctoGame.OctoGame.GamePlayFramework;
+using OctoGame.OctoGame.UpdateMessages;
 
 namespace OctoGame.OctoGame.GameCommands
 {
@@ -24,10 +28,12 @@ namespace OctoGame.OctoGame.GameCommands
         private readonly AwaitForUserMessage _awaitForUserMessage;
         private readonly CommandHandeling _command;
         private readonly GameFramework _gameFramework;
+        private readonly DiscordShardedClient _client;
+        private readonly OctoGameUpdateMess _octoGameUpdateMess;
 
         public OctoGameCommand(IUserAccounts accounts, ISpellAccounts spellAccounts, Global global,
             AwaitForUserMessage awaitForUserMessage, CommandHandeling command, ILoggingSystem loggingSystem,
-            GameFramework gameFramework)
+            GameFramework gameFramework, DiscordShardedClient client, OctoGameUpdateMess octoGameUpdateMess)
         {
             _accounts = accounts;
             _spellAccounts = spellAccounts;
@@ -37,6 +43,8 @@ namespace OctoGame.OctoGame.GameCommands
 
             _loggingSystem = loggingSystem;
             _gameFramework = gameFramework;
+            _client = client;
+            _octoGameUpdateMess = octoGameUpdateMess;
         }
 
 
@@ -152,12 +160,14 @@ namespace OctoGame.OctoGame.GameCommands
         {
             var account = _accounts.GetAccount(userId);
 
-            account.MoveListPage = 1;
-            account.MaxHealth = account.Health;
+            account.MoveListPage = 1;      
             account.CurrentEnemy = 1;
             account.Health = Math.Ceiling(100.0); //  ONLY ITEMS + SKILLS
+            account.MaxHealth = account.Health;
             account.Stamina = Math.Ceiling(100 + 3 * Convert.ToDouble(account.OctoLvL - 1));
+            account.MaxStamina = account.Stamina;
             account.Strength = Math.Ceiling(20.0); // ONLY ITEMS + SKILLS
+
             account.AttackPower_Stats = Math.Ceiling(account.Strength + account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
             account.MagicPower_Stats = Math.Ceiling(10 + 0.1 * account.OctoLvL); // +  ITEMS + SKILLS
             account.Agility_Stats = Math.Ceiling(1.0); // ONLY ITEMS + SKILLS
@@ -174,14 +184,10 @@ namespace OctoGame.OctoGame.GameCommands
             account.CurrentLogString = "";
             
            
-            account.DamageOnTimer = new List<AccountSettings.DmgWithTimer>();
-            account.PoisonDamage = new List<AccountSettings.Poison>();
-            account.OctoItems = new List<AccountSettings.ArtifactEntities>();
-            account.SkillCooldowns = new List<AccountSettings.CooldownClass>();
-            account.Inventory = new List<AccountSettings.ArtifactEntities>();
+
   
           //  account.AttackPower_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
-            account.MaxStamina = account.Stamina;
+
             account.IsFirstHit = true;
             account.dmgDealtLastTime = 0;
             account.PhysShield = 0;
@@ -190,17 +196,20 @@ namespace OctoGame.OctoGame.GameCommands
             account.LifeStealPrec = 0;
             account.StatsForTime = new List<AccountSettings.StatsForTimeClass>();
             account.BlockShield = new List<AccountSettings.FullDmgBlock>();
-            if (account.AllPassives == null)
-                account.AllPassives = "";
-
-
-            var passives = account.AllPassives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
-
             account.InstantBuff = new List<AccountSettings.InstantBuffClass>();
             account.InstantDeBuff = new List<AccountSettings.InstantBuffClass>();
             account.BuffToBeActivatedLater = new List<AccountSettings.OnTimeBuffClass>();
             account.DeBuffToBeActivatedLater = new List<AccountSettings.OnTimeBuffClass>();
             account.PassiveList = new List<AccountSettings.CooldownClass>();
+            account.DamageOnTimer = new List<AccountSettings.DmgWithTimer>();
+            account.PoisonDamage = new List<AccountSettings.Poison>();
+            account.OctoItems = new List<AccountSettings.ArtifactEntities>();
+            account.SkillCooldowns = new List<AccountSettings.CooldownClass>();
+            account.Inventory = new List<AccountSettings.ArtifactEntities>();
+
+            if (account.AllPassives == null)
+                account.AllPassives = "";
+            var passives = account.AllPassives.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var passive in passives)
                 account.PassiveList.Add(new AccountSettings.CooldownClass(Convert.ToUInt64(passive), 9999));
 
@@ -211,10 +220,11 @@ namespace OctoGame.OctoGame.GameCommands
 
         [Command("Fight")]
         [Summary("A demo for a fight vs Shark")]
-        public async Task CreateFight()
+        public async Task CreateFight(SocketUser enemyUser = null)
         {
+
             var account = SetupOctopusStats(Context.User.Id);
-            var enemy = SetupOctopusStats(account.CurrentEnemy);
+            var enemy = SetupOctopusStats(enemyUser?.Id ?? account.CurrentEnemy);
 
 
             // tis is a test of logging system. it does work btw
@@ -258,9 +268,16 @@ namespace OctoGame.OctoGame.GameCommands
                 await message.AddReactionAsync(new Emoji("3⃣"));
                 await message.AddReactionAsync(new Emoji("❌"));
 
-                var newOctoGame =
-                    new Global.OctoGameMessAndUserTrack(message.Id, Context.User.Id, message, Context.User);
+                var newOctoGame = _global.CreateNewGame(message, null, Context.User, null);
 
+                foreach (var c in  _global.OctopusGameMessIdList)
+                {
+                    if (c.Any(x => x.Player1.Id == Context.User.Id || x.Player1.Id == enemy.DiscordId))
+                    {
+                        _global.OctopusGameMessIdList.Remove(c);
+                        break;
+                    }
+                }
 
                 _global.OctopusGameMessIdList.Add(newOctoGame);
                 _global.OctoGamePlaying += 1;
@@ -280,7 +297,113 @@ namespace OctoGame.OctoGame.GameCommands
             {
                 await _command.ReplyAsync(Context, "У тебя нет осьминога! создай его командой **CreateOcto**");
             }
+
+            _accounts.SaveAccounts(Context.User);
+            if (enemyUser != null) _accounts.SaveAccounts(enemyUser.Id);
         }
+
+
+
+        [Command("Fightv")]
+        [Summary("A demo for a fight vs a player")]
+        public async Task CreateFightV(SocketUser enemyUser)
+        {
+
+            var account = SetupOctopusStats(Context.User.Id);
+            var enemy = SetupOctopusStats(enemyUser.Id);
+
+            account.CurrentEnemy = enemyUser.Id;
+            enemy.CurrentEnemy = Context.User.Id;
+
+
+            // tis is a test of logging system. it does work btw
+            _loggingSystem.CreateNewLog(account.DiscordId, enemy.DiscordId);
+            _loggingSystem.SaveCurrentFightLog(account.DiscordId, enemy.DiscordId);
+            _loggingSystem.SaveCompletedFight(account.DiscordId, enemy.DiscordId);
+
+
+            if (account.PlayingStatus >= 1 || enemy.PlayingStatus >=1 )
+            {
+                //  await ReplyAsync("you are already playing");
+                // return;
+            }
+
+            if (account.Attack_Tree == null && account.Defensive_Tree == null &&
+                account.Agility_Tree == null && account.Magic_Tree == null)
+            {
+                await _command.ReplyAsync(Context, "You dont have any moves. You can get them using **boole** command");
+                return;
+            }
+
+            if (account.OctoInfo != null)
+            {
+                account.PlayingStatus = 1;
+                _accounts.SaveAccounts(Context.User);
+
+                var embed = new EmbedBuilder();
+                embed.WithAuthor(Context.User);
+                embed.WithFooter("Enemy choice");
+                embed.WithColor(Color.DarkGreen);
+                embed.AddField("Choose enemy lvl : ",
+                    $"Who are you?");
+
+
+                var messageToPlayer1 = _client.GetUser(Context.User.Id).GetOrCreateDMChannelAsync().Result.SendMessageAsync("", false, embed.Build());
+                var messageToPlayer2 =  _client.GetUser(enemyUser.Id).GetOrCreateDMChannelAsync().Result.SendMessageAsync("", false, embed.Build());
+
+                var newOctoGame = _global.CreateNewGame(messageToPlayer1.Result, messageToPlayer2.Result, Context.User, enemyUser);
+
+
+                foreach (var c in  _global.OctopusGameMessIdList)
+                {
+                    if (c.Any(x => x.Player1.Id == Context.User.Id || x.Player1.Id == enemy.DiscordId))
+                    {
+                        _global.OctopusGameMessIdList.Remove(c);
+                        break;
+                    }
+                }
+
+                _global.OctopusGameMessIdList.Add(newOctoGame);
+                _global.OctoGamePlaying += 1;
+                account.PlayingStatus = 1;
+                account.MessageIdInList = _global.OctopusGameMessIdList.Count - 1;
+                enemy.MessageIdInList = _global.OctopusGameMessIdList.Count - 1;
+
+
+                    //twice for a reason
+                await _gameFramework.CheckForPassivesAndUpdateStats(account, enemy);
+                await _gameFramework.CheckForPassivesAndUpdateStats(enemy, account);
+                await _gameFramework.CheckForPassivesAndUpdateStats(account, enemy);
+                await _gameFramework.CheckForPassivesAndUpdateStats(enemy, account);
+
+
+                var someList = new List<ulong>
+                {
+                    Context.User.Id,
+                    enemyUser.Id
+                };
+
+                Parallel.For(0, someList.Count, async i =>
+                {
+                    if(someList[i] == Context.User.Id)
+                        await _octoGameUpdateMess.WaitMess(Context.User.Id,
+                            messageToPlayer1.Result as RestUserMessage);
+                    else
+                        await _octoGameUpdateMess.WaitMess(enemyUser.Id,
+                            messageToPlayer2.Result as RestUserMessage);
+                });
+
+
+            }
+            else
+            {
+                await _command.ReplyAsync(Context, "У тебя нет осьминога! создай его командой **CreateOcto**");
+            }
+
+            _accounts.SaveAccounts(Context.User);
+            _accounts.SaveAccounts(enemyUser.Id);
+        }
+
 
         [Command("CreateSkill", RunMode = RunMode.Async)]
         [Alias("CSS")]
