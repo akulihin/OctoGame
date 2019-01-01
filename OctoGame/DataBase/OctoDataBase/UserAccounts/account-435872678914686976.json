@@ -1,7 +1,7 @@
 [
   {
-    "DiscordUserName": "DeepList",
-    "DiscordId": 238337696316129280,
+    "DiscordUserName": "StrangeOctopus",
+    "DiscordId": 435872678914686976,
     "MyPrefix": null,
     "MyLanguage": "en",
     "OctoName": "буль",
@@ -20,19 +20,19 @@
     "CurrentEnemy": 181514288278536193,
     "MoveListPage": 1,
     "PlayingStatus": 2,
+    "Health": 100.0,
+    "MaxHealth": 100.0,
+    "Stamina": 397.0,
+    "MaxStamina": 397.0,
     "Strength": 20.0,
-    "AttackPower_Stats": 573.7,
+    "AttackPower_Stats": 504.0,
     "MagicPower_Stats": 20.0,
     "Agility_Stats": 1.0,
     "CriticalDamage": 150.0,
     "CriticalChance": 1.0,
     "DodgeChance": 0.0,
-    "PhysicalResistance": 0.0,
+    "PhysicalResistance": 2.0,
     "MagicalResistance": 2.0,
-    "Health": 100.0,
-    "MaxHealth": 100.0,
-    "Stamina": 213.0,
-    "MaxStamina": 397.0,
     "PhysicalPenetration": 0.0,
     "MagicalPenetration": 0.0,
     "OnHitDamage": 3.0,
@@ -82,29 +82,19 @@
         "cooldown": 1995
       },
       {
-        "skillId": 1001,
-        "cooldown": 9
-      },
-      {
         "skillId": 1003,
-        "cooldown": 6
+        "cooldown": 5
       }
     ],
     "InstantBuff": [],
-    "InstantDeBuff": [
-      {
-        "skillId": 1003,
-        "forHowManyTurns": 2,
-        "activated": true
-      }
-    ],
+    "InstantDeBuff": [],
     "BuffToBeActivatedLater": [],
     "DeBuffToBeActivatedLater": [],
     "PrecentBonusDmg": 0.2,
     "DamageOnTimer": [],
     "PoisonDamage": [],
     "IsDodged": false,
-    "IsFirstHit": false,
+    "IsFirstHit": true,
     "MessageIdInList": 0,
     "dmgDealtLastTime": 0.0,
     "PhysShield": 0.0,
