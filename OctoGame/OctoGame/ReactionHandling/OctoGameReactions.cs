@@ -35,7 +35,7 @@ namespace OctoGame.OctoGame.ReactionHandling
                 for (var i = 0; i < _global.OctopusGameMessIdList.Count; i++)
                 {
 
-                    if(!_global.OctopusGameMessIdList[i].Any( x => x.Player1.Id == reaction.UserId && x.BotGamingMsg1.Id == reaction.MessageId))
+                    if(!_global.OctopusGameMessIdList[i].Any( x => x.PlayerDiscordAccount.Id == reaction.UserId && x.GamingWindowFromBot.Id == reaction.MessageId))
                         continue;
 
                     var globalAccount = _global.Client.GetUser(reaction.UserId);

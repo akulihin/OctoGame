@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Discord;
-using Discord.Rest;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 
@@ -23,16 +22,16 @@ namespace OctoGame
 
         public struct OctoGameMessAndUserTrack
         {           
-            public IUserMessage BotGamingMsg1;
-            public IUser Player1;
+            public IUserMessage GamingWindowFromBot;
+            public IUser PlayerDiscordAccount;
 
 
             public OctoGameMessAndUserTrack(
-                IUserMessage botGamingMsg1, IUser player1)
+                IUserMessage gamingWindowFromBot, IUser playerDiscordAccount)
             {
 
-                BotGamingMsg1 = botGamingMsg1;
-                Player1 = player1;
+                GamingWindowFromBot = gamingWindowFromBot;
+                PlayerDiscordAccount = playerDiscordAccount;
 
             }
         }
@@ -55,13 +54,13 @@ namespace OctoGame
             }
         }
 
-        public List<OctoGameMessAndUserTrack> CreateNewGame(IUserMessage botGamingMsg1, IUserMessage botGamingMsg2, IUser player1, IUser player2)
+        public List<OctoGameMessAndUserTrack> CreateNewGame(IUserMessage gamingWindowFromBot1, IUserMessage gamingWindowFromBot2, IUser playerDiscordAccount1, IUser playerDiscordAccount2)
         {
 
             var gameDataList = new List<OctoGameMessAndUserTrack>
             {
-                new OctoGameMessAndUserTrack(botGamingMsg1, player1),
-                new OctoGameMessAndUserTrack(botGamingMsg2, player2)
+                new OctoGameMessAndUserTrack(gamingWindowFromBot1, playerDiscordAccount1),
+                new OctoGameMessAndUserTrack(gamingWindowFromBot2, playerDiscordAccount2)
             };
 
             return gameDataList;

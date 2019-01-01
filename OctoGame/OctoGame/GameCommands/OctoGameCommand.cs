@@ -272,7 +272,7 @@ namespace OctoGame.OctoGame.GameCommands
 
                 foreach (var c in  _global.OctopusGameMessIdList)
                 {
-                    if (c.Any(x => x.Player1.Id == Context.User.Id || x.Player1.Id == enemy.DiscordId))
+                    if (c.Any(x => x.PlayerDiscordAccount.Id == Context.User.Id || x.PlayerDiscordAccount.Id == enemy.DiscordId))
                     {
                         _global.OctopusGameMessIdList.Remove(c);
                         break;
@@ -356,7 +356,7 @@ namespace OctoGame.OctoGame.GameCommands
 
                 foreach (var c in  _global.OctopusGameMessIdList)
                 {
-                    if (c.Any(x => x.Player1.Id == Context.User.Id || x.Player1.Id == enemy.DiscordId))
+                    if (c.Any(x => x.PlayerDiscordAccount.Id == Context.User.Id || x.PlayerDiscordAccount.Id == enemy.DiscordId))
                     {
                         _global.OctopusGameMessIdList.Remove(c);
                         break;
