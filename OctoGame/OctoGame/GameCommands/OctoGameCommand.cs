@@ -26,13 +26,13 @@ namespace OctoGame.OctoGame.GameCommands
         private readonly ILoggingSystem _loggingSystem;
         private readonly Global _global;
         private readonly AwaitForUserMessage _awaitForUserMessage;
-        private readonly CommandHandeling _command;
+        private readonly CommandHandling _command;
         private readonly GameFramework _gameFramework;
         private readonly DiscordShardedClient _client;
         private readonly OctoGameUpdateMess _octoGameUpdateMess;
 
         public OctoGameCommand(IUserAccounts accounts, ISpellAccounts spellAccounts, Global global,
-            AwaitForUserMessage awaitForUserMessage, CommandHandeling command, ILoggingSystem loggingSystem,
+            AwaitForUserMessage awaitForUserMessage, CommandHandling command, ILoggingSystem loggingSystem,
             GameFramework gameFramework, DiscordShardedClient client, OctoGameUpdateMess octoGameUpdateMess)
         {
             _accounts = accounts;

@@ -28,6 +28,10 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
             double dmg = 0;
             switch (skillId)
             {
+                //1096 (ад ветка) - 100% от АД
+                case 1096:
+                    dmg = myAccount.AttackPower_Stats;
+                    break;
                 //(ад ветка) Убийца гигантов = (вражеское хп / 100 *5) * (сила/20 +1) + ад/100*(100-сила)
                 case 1001:
                     dmg = enemyAccount.Health / 100 * 5 * (myAccount.Strength / 20 + 1) +

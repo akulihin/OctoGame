@@ -18,14 +18,14 @@ namespace OctoGame.GeneralCommands
         readonly AuthDiscordBotListApi _dblApi = new AuthDiscordBotListApi(423593006436712458, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQyMzU5MzAwNjQzNjcxMjQ1OCIsImJvdCI6dHJ1ZSwiaWF0IjoxNTMxODgwOTA3fQ.iFFl7gft4yI_ZysVbFoXW_VEUS_kUddQLlLb0kqG9mM");
         private readonly ILocalization _lang;
         private readonly IUserAccounts _accounts;
-        private readonly CommandHandeling _command;
+        private readonly CommandHandling _command;
         private readonly SecureRandom _secureRandom;
         private readonly OctoPicPull _octoPicPull;
         private readonly OctoNamePull _octoNmaNamePull;
         private readonly HelperFunctions _helperFunctions;
         private readonly AudioService _service;
 
-        public General(ILocalization lang, IUserAccounts accounts, CommandHandeling command, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service)
+        public General(ILocalization lang, IUserAccounts accounts, CommandHandling command, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service)
         {
             _lang = lang;
             _accounts = accounts;

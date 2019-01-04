@@ -21,7 +21,7 @@ namespace OctoGame.DiscordFramework
             }
         }
 
-        private static async void ConsoleSendMessage(DiscordShardedClient client)
+        private static async void ConsoleSendMessage(BaseSocketClient client)
         {
             try
             {
@@ -63,13 +63,13 @@ namespace OctoGame.DiscordFramework
         private static SocketTextChannel GetSelectedTextChannel(IEnumerable<SocketTextChannel> channels)
         {
             var textChannels = channels.ToList();
-            var maxIntex = textChannels.Count - 1;
-            for (var i = 0; i <= maxIntex; i++) Console.WriteLine($"{i} - {textChannels[i].Name}");
+            var index = textChannels.Count - 1;
+            for (var i = 0; i <= index; i++) Console.WriteLine($"{i} - {textChannels[i].Name}");
             var selectedIndex = -1;
-            while (selectedIndex < 0 || selectedIndex > maxIntex)
+            while (selectedIndex < 0 || selectedIndex > index)
             {
                 var success = int.TryParse(Console.ReadLine()?.Trim(), out selectedIndex);
-                if (!success || selectedIndex < 0 || selectedIndex > maxIntex)
+                if (!success || selectedIndex < 0 || selectedIndex > index)
                 {
                     Console.WriteLine("Incorrect index.");
                     selectedIndex = -1;
@@ -82,17 +82,15 @@ namespace OctoGame.DiscordFramework
         private static SocketGuild GetSelectedGuild(IEnumerable<SocketGuild> guilds)
         {
             var socketGuilds = guilds.ToList();
-            var maxIntex = socketGuilds.Count - 1;
-            for (var i = 0; i <= maxIntex; i++) Console.WriteLine($"{i} - {socketGuilds[i].Name}");
+            var index = socketGuilds.Count - 1;
+            for (var i = 0; i <= index; i++) Console.WriteLine($"{i} - {socketGuilds[i].Name}");
             var selectedIndex = -1;
-            while (selectedIndex < 0 || selectedIndex > maxIntex)
+            while (selectedIndex < 0 || selectedIndex > index)
             {
                 var success = int.TryParse(Console.ReadLine()?.Trim(), out selectedIndex);
-                if (!success || selectedIndex < 0 || selectedIndex > maxIntex)
-                {
-                    Console.WriteLine("Incorrect index.");
-                    selectedIndex = -1;
-                }
+                if (success && selectedIndex >= 0 && selectedIndex <= index) continue;
+                Console.WriteLine("Incorrect index.");
+                selectedIndex = -1;
             }
 
             return socketGuilds[selectedIndex];

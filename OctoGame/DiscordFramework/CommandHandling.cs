@@ -11,7 +11,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.DiscordFramework
 {
-    public class CommandHandeling
+    public class CommandHandling
     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
@@ -24,7 +24,7 @@ namespace OctoGame.DiscordFramework
         private readonly IServerAccounts _serverAccounts;
         private const string LogFile = @"OctoDataBase/Log.json";
 
-        public CommandHandeling(IServiceProvider services, CommandService commands,
+        public CommandHandling(IServiceProvider services, CommandService commands,
             DiscordShardedClient client, IUserAccounts accounts, IServerAccounts serverAccounts, Global global)
         {
             _commands = commands;
@@ -100,13 +100,13 @@ namespace OctoGame.DiscordFramework
                                                                       || message.HasStringPrefix(account.MyPrefix,
                                                                           ref argPos))
                 {
-                    var resultTaskk = await _commands.ExecuteAsync(
+                    var result = await _commands.ExecuteAsync(
                         context,
                         argPos,
                         _services);
 
 
-                    if (!resultTaskk.IsSuccess  && !resultTaskk.ErrorReason.Contains("Unknown command")) ReplyAsync(context, $"Booole! {resultTaskk.ErrorReason}");
+                    if (!result.IsSuccess  && !result.ErrorReason.Contains("Unknown command")) ReplyAsync(context, $"Booole! {result.ErrorReason}");
                 }
 
                 return;

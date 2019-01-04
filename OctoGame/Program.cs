@@ -47,7 +47,7 @@ namespace OctoGame
 
             _services = ConfigureServices();
             _services.GetRequiredService<DiscordEventHandler>().InitDiscordEvents();
-            await _services.GetRequiredService<CommandHandeling>().InitializeAsync();
+            await _services.GetRequiredService<CommandHandling>().InitializeAsync();
 
             var botToken = Config.Bot.Token;
             await _client.SetGameAsync("Boole~");
@@ -68,7 +68,7 @@ namespace OctoGame
                 .AddSingleton<OctoNamePull>()
                 .AddSingleton<Global>()
                 .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandeling>()
+                .AddSingleton<CommandHandling>()
                 .AddSingleton<DiscordEventHandler>()
                 .AddSingleton<MagicReduction>()
                 .AddSingleton<ArmorReduction>()
@@ -83,21 +83,7 @@ namespace OctoGame
                 .AddSingleton<MagicActiveTree>()
                 .AddSingleton<MagicPassiveTree>()
                 .AddSingleton<AllBuffs>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
-                //.AddTransient<666666666>()
+               //.AddSingleton<CommandServiceExtension>()
                 .AddSingleton<DiscordHelpModule>()
                 .AddSingleton<AudioService>()
                 .AddSingleton<OctoGameReaction>()

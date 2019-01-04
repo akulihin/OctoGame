@@ -10,11 +10,11 @@ namespace OctoGame.GeneralCommands
 {
     public class DiceRollCommands : ModuleBase<SocketCommandContextCustom>
     {
-        private readonly CommandHandeling _command;
+        private readonly CommandHandling _command;
         private readonly SecureRandom _secureRandom;
         private readonly CustomCalculator _customCalculator;
 
-        public DiceRollCommands(CommandHandeling command, SecureRandom secureRandom, CustomCalculator customCalculator)
+        public DiceRollCommands(CommandHandling command, SecureRandom secureRandom, CustomCalculator customCalculator)
         {
             _command = command;
             _secureRandom = secureRandom;

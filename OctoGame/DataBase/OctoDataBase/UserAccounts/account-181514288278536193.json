@@ -10,22 +10,22 @@
     "OctoAvatar": "https://i.imgur.com/wqB54af.png",
     "Inventory": [],
     "OctoItems": [],
-    "Attack_Tree": "1001|1003|1005|1007|1009|1015|",
+    "Attack_Tree": "1001|1003|1005|1007|1009|1011|1013|1015|1017|1019|1021|1023|1096|",
     "Defensive_Tree": "1089|",
     "Agility_Tree": null,
     "Magic_Tree": null,
-    "AllPassives": "1000|1002|1004|1006|1008|1016|1024|1026|",
+    "AllPassives": "1000|1002|1004|1006|1008|1010|1012|1014|1016|1018|1020|1022|",
     "Turn": 0,
     "Round": 0.0,
     "CurrentEnemy": 1,
-    "MoveListPage": 2,
+    "MoveListPage": 1,
     "PlayingStatus": 2,
     "Health": 100.0,
     "MaxHealth": 100.0,
     "Stamina": 397.0,
     "MaxStamina": 397.0,
-    "Strength": 20.0,
-    "AttackPower_Stats": 300429.4,
+    "Strength": 30.0,
+    "AttackPower_Stats": 689.55,
     "MagicPower_Stats": 20.0,
     "Agility_Stats": 1.0,
     "CriticalDamage": 150.0,
@@ -60,15 +60,31 @@
         "cooldown": 19998
       },
       {
+        "skillId": 1010,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1012,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1014,
+        "cooldown": 19998
+      },
+      {
         "skillId": 1016,
         "cooldown": 19998
       },
       {
-        "skillId": 1024,
+        "skillId": 1018,
         "cooldown": 19998
       },
       {
-        "skillId": 1026,
+        "skillId": 1020,
+        "cooldown": 19998
+      },
+      {
+        "skillId": 1022,
         "cooldown": 19998
       }
     ],
@@ -79,6 +95,10 @@
       },
       {
         "skillId": 1006,
+        "cooldown": 1998
+      },
+      {
+        "skillId": 1020,
         "cooldown": 1998
       }
     ],
@@ -93,10 +113,15 @@
     "IsFirstHit": true,
     "MessageIdInList": 0,
     "dmgDealtLastTime": 0.0,
-    "PhysShield": 0.0,
+    "PhysShield": 459.7,
     "MagShield": 0.0,
     "HowManyTimesCrited": 0,
-    "StatsForTime": [],
+    "StatsForTime": [
+      {
+        "AD_STATS": 344.775,
+        "timer": 2
+      }
+    ],
     "LifeStealPrec": 0.0,
     "BlockShield": []
   }

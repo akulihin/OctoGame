@@ -11,11 +11,11 @@ namespace OctoGame.DiscordFramework
 #pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
 
         private readonly DiscordShardedClient _client;
-        private readonly CommandHandeling _commandHandler;
+        private readonly CommandHandling _commandHandler;
         private readonly OctoGameReaction _octoGameReaction;
  
 
-        public DiscordEventHandler(DiscordShardedClient client, CommandHandeling commandHandler, OctoGameReaction octoGameReaction)
+        public DiscordEventHandler(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction)
         {
             _client = client;
             _commandHandler = commandHandler;
@@ -124,10 +124,9 @@ namespace OctoGame.DiscordFramework
 
         private async Task MessageDeleted(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
         {
-            if(!cacheMessage.HasValue)
-                return;
-            if(cacheMessage.Value.Author.IsBot)
-                return;
+            if (!cacheMessage.HasValue || cacheMessage.Value.Author.IsBot)
+            {
+            }
         }
 
         private async Task MessageReceived(SocketMessage message)
@@ -159,7 +158,9 @@ namespace OctoGame.DiscordFramework
         private async Task ReactionRemoved(Cacheable<IUserMessage, ulong> cacheMessage, ISocketMessageChannel channel,
             SocketReaction reaction)
         {
-            if (reaction.User.Value.IsBot) return;
+            if (reaction.User.Value.IsBot)
+            {
+            }
         }
 
         private async Task ReactionsCleared(Cacheable<IUserMessage, ulong> cacheMessage, ISocketMessageChannel channel)

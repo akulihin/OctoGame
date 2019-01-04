@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -68,12 +69,15 @@ namespace OctoGame.OctoGame.UpdateMessages
             await socketMsg.AddReactionAsync(new Emoji("2⃣"));
             await socketMsg.AddReactionAsync(new Emoji("3⃣"));
             await socketMsg.AddReactionAsync(new Emoji("4⃣"));
-             /* await socketMsg.AddReactionAsync(new Emoji("5⃣"));
-              await socketMsg.AddReactionAsync(new Emoji("6⃣"));
-              await socketMsg.AddReactionAsync(new Emoji("7⃣"));
-              await socketMsg.AddReactionAsync(new Emoji("8⃣"));
-            */
+            await socketMsg.AddReactionAsync(new Emoji("5⃣"));
+            await socketMsg.AddReactionAsync(new Emoji("6⃣"));
+            await socketMsg.AddReactionAsync(new Emoji("7⃣"));
+            await socketMsg.AddReactionAsync(new Emoji("8⃣"));
+            await socketMsg.AddReactionAsync(new Emoji("9⃣"));
+            await socketMsg.AddReactionAsync(new Emoji("🐙"));
+
             await socketMsg.AddReactionAsync(new Emoji("❌"));
+                
 
             account.PlayingStatus = 2;
             _accounts.SaveAccounts(userId);
@@ -319,18 +323,24 @@ namespace OctoGame.OctoGame.UpdateMessages
             string skillString)
         {
             //{new Emoji("<:Steampunk:445276776676196353>")} 
-
+         //   var clearEmoji = Emote.Parse("<:Clear:530625040006381579>");
             var accountShields = "";
             if (account.PhysShield > 0)
-                accountShields += $"Shields: ({account.PhysShield} Phys)";
+                accountShields += $"{new Emoji("<:Clear:530625040006381579>")} **Shields:** ({account.PhysShield} Phys)";
             if (account.MagShield > 0)
-                accountShields += $" ({account.MagShield} Mag)";
+                accountShields += $" {new Emoji("<:Clear:530625040006381579>")} ({account.MagShield} Mag)";
 
             var enemyShields = "";
             if (enemy.PhysShield > 0)
-                enemyShields += $"Shields: ({enemy.PhysShield} Phys)";
+                enemyShields += $"{new Emoji("<:Clear:530625040006381579>")} **Shields:** ({enemy.PhysShield} Phys)";
             if (enemy.MagShield > 0)
-                enemyShields += $" ({enemy.MagShield} Mag)";
+                enemyShields += $" {new Emoji("<:Clear:530625040006381579>")} ({enemy.MagShield} Mag)";
+
+            var skillStringList = new List<string> ();
+            if (skillString.Length > 950)
+                skillStringList = skillString.Split("7. ").ToList();
+ 
+
 
             var mainPage = new EmbedBuilder();
             mainPage.WithAuthor(globalAccount);
@@ -339,31 +349,52 @@ namespace OctoGame.OctoGame.UpdateMessages
             mainPage.AddField("Enemy:", 
                                         $"**Name:** {enemy.DiscordUserName}\n" +
                                         $"**LVL:** {enemy.OctoLvL}\n" +
-                                        $"**Strength:** {enemy.Strength}\n" +
-                                        $"**Attack:** {enemy.AttackPower_Stats + enemy.Strength}  **Magic:** {enemy.MagicPower_Stats}\n" +
+                                        $"-\n" +
+                                        $"**Strength:** {enemy.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Agility:** {enemy.Agility_Stats}\n" +
+                                        $"**Attack:** {enemy.AttackPower_Stats + enemy.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magic:** {enemy.MagicPower_Stats}\n" +
+
+                                         $"-\n" +
                                         $"**Health:** {enemy.Health}\n" +
                                         $"**Stamina:** {enemy.Stamina} {enemyShields}\n" +
-                                        $"**Physical Resistance:** {enemy.PhysicalResistance} **Magical Resistance:** {enemy.MagicalResistance}\n" +
-                                        $"**Physical Penetration:** {enemy.PhysicalPenetration}  **Magical Penetration:** {enemy.MagicalPenetration}\n" +
-                                        $"**Agility:** {enemy.Agility_Stats}\n" +
+                                         $"-\n" +
+                                        $"**Physical Resistance:** {enemy.PhysicalResistance} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magical Resistance:** {enemy.MagicalResistance}\n" +
+                                        $"**Physical Penetration:** {enemy.PhysicalPenetration} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")}  **Magical Penetration:** {enemy.MagicalPenetration}\n" +
+                                        $"{new Emoji("<:Clear:530625040006381579>")}\n" +
                                         "**________________**");
 
             mainPage.AddField($"Your octopus:",
                 $"**Name:** {account.OctoName}\n" +
                 $"**LVL:** {account.OctoLvL}\n" +
-                $"**Strength:** {account.Strength}\n" +
-                $"**Attack:** {account.AttackPower_Stats + account.Strength}  **Magic:** {account.MagicPower_Stats}\n" +
+                 $"-\n" +
+                $"**Strength:** {account.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Agility:** {account.Agility_Stats}\n" +
+                $"**Attack:** {account.AttackPower_Stats + account.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magic:** {account.MagicPower_Stats}\n" +
+
+                 $"-\n" +
                 $"**Health:** {account.Health}\n" +            
-                $"**Stamina:** {account.Stamina} {accountShields}\n" +            
-                $"**Physical Resistance:** {account.PhysicalResistance} **Mag Resistance:** {account.MagicalResistance}\n" +
-                $"**Physical Penetration:** {account.PhysicalPenetration}  **Magical Penetration:** {account.MagicalPenetration}\n" +
-                $"**Agility:** {account.Agility_Stats}\n" +
+                $"**Stamina:** {account.Stamina} {accountShields}\n" +  
+                 $"-\n" +
+                $"**Physical Resistance:** {account.PhysicalResistance} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Mag Resistance:** {account.MagicalResistance}\n" +
+                $"**Physical Penetration:** {account.PhysicalPenetration} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magical Penetration:** {account.MagicalPenetration}\n" +
+               
+                $"{new Emoji("<:Clear:530625040006381579>")}\n" +
                 $"**________________**\n" +
-                $"{new Emoji("⬅")} - Move List Page Left , {new Emoji("➡")} - Move List Page Right {new Emoji("📖")} - History, {new Emoji("❌")} - **END GAME**");
-            mainPage.AddField($"{GetTree(account)} Move List:", 
-                      
-                $"{skillString}\n");
+                $"{new Emoji("⬅")} - Move List Page Left , {new Emoji("➡")} - Move List Page Right {new Emoji("📖")} - History, {new Emoji("❌")} - **END GAME**\n" +
+                $"{new Emoji("<:Clear:530625040006381579>")}");
+            if(skillStringList.Count <= 1)
+                mainPage.AddField($"{GetTree(account)} Move List:",              
+                 $"{skillString}\n");
+            else
+            {
+                mainPage.AddField($"{GetTree(account)} Move List Part 1:",              
+                    $"{skillStringList[0]}\n");
+                mainPage.AddField($"{GetTree(account)} Move List Part 2:",              
+                    $"7. {skillStringList[1]}\n");
+            }
+
+
             
+ 
+
             if (IsImageUrl(enemy.OctoAvatar))
             mainPage.WithThumbnailUrl(enemy.OctoAvatar);
             

@@ -142,6 +142,12 @@ namespace OctoGame.OctoGame.ReactionHandling
                             await _gameFramework.GetSkillDependingOnMoveList(account, enemy, reaction, i);
                             break;
                         }
+
+                        case "9⃣":
+                        {
+                            await _gameFramework.GetSkillDependingOnMoveList(account, enemy, reaction, i);
+                            break;
+                        }
                     }
 
                 }
