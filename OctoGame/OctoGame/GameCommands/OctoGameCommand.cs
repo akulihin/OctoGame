@@ -8,7 +8,6 @@ using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
 using Newtonsoft.Json;
-using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.CustomLibrary;
 using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.GameSpellsAccounts;
@@ -26,20 +25,19 @@ namespace OctoGame.OctoGame.GameCommands
         private readonly ILoggingSystem _loggingSystem;
         private readonly Global _global;
         private readonly AwaitForUserMessage _awaitForUserMessage;
-        private readonly CommandHandling _command;
         private readonly GameFramework _gameFramework;
         private readonly DiscordShardedClient _client;
         private readonly OctoGameUpdateMess _octoGameUpdateMess;
 
         public OctoGameCommand(IUserAccounts accounts, ISpellAccounts spellAccounts, Global global,
-            AwaitForUserMessage awaitForUserMessage, CommandHandling command, ILoggingSystem loggingSystem,
+            AwaitForUserMessage awaitForUserMessage, ILoggingSystem loggingSystem,
             GameFramework gameFramework, DiscordShardedClient client, OctoGameUpdateMess octoGameUpdateMess)
         {
             _accounts = accounts;
             _spellAccounts = spellAccounts;
             _global = global;
             _awaitForUserMessage = awaitForUserMessage;
-            _command = command;
+
 
             _loggingSystem = loggingSystem;
             _gameFramework = gameFramework;
@@ -56,10 +54,9 @@ namespace OctoGame.OctoGame.GameCommands
             var account = _accounts.GetAccount(Context.User);
             var response = "бу";
 
-
             if (account.OctoInfo != null)
             {
-                await _command.ReplyAsync(Context,
+                await SendMessAsync(
                     "У тебя уже есть осьминожка! Если ты хочешь ПОЛНОСТЬЮ обновить информацию осьминожки напиши **да**");
                 var res = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 6000);
                 response = res.Content;
@@ -70,21 +67,21 @@ namespace OctoGame.OctoGame.GameCommands
                 account.OctoInfo = null;
 
 
-                await _command.ReplyAsync(Context, "Введи имя своего осьминожка, у тебя 1 минута.");
+                await SendMessAsync( "Введи имя своего осьминожка, у тебя 1 минута.");
                 var res = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 60000);
                 account.OctoInfo += res.Content + "|";
                 account.OctoName = res.Content;
 
-                await _command.ReplyAsync(Context, "Введи цвет своего осьминожка, у тебя 1 минута.");
+                await SendMessAsync( "Введи цвет своего осьминожка, у тебя 1 минута.");
                 res = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 60000);
                 account.OctoInfo += res.Content + "|";
 
 
-                await _command.ReplyAsync(Context, "Введи характер своего осьминожка, у тебя 2 минуты.");
+                await SendMessAsync( "Введи характер своего осьминожка, у тебя 2 минуты.");
                 res = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 120000);
                 account.OctoInfo += res.Content + "|";
 
-                await _command.ReplyAsync(Context, "Введи Лор своего осьминожка, у тебя 2 минуты.");
+                await SendMessAsync( "Введи Лор своего осьминожка, у тебя 2 минуты.");
                 res = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 120000);
                 account.OctoInfo += res.Content + "|";
 
@@ -104,7 +101,7 @@ namespace OctoGame.OctoGame.GameCommands
                 account.MagicalPenetration = 0;
 
                 _accounts.SaveAccounts(Context.User);
-                await _command.ReplyAsync(Context, "Готово! Ты создал или обновил информацию о своем осьминоге!");
+                await SendMessAsync( "Готово! Ты создал или обновил информацию о своем осьминоге!");
             }
         }
 
@@ -121,7 +118,7 @@ namespace OctoGame.OctoGame.GameCommands
             _accounts.SaveAccounts(Context.User);
             if (account.OctoInfo == null)
             {
-                await _command.ReplyAsync(Context,
+                await SendMessAsync(
                     "У тебя нет осьминожки все ещё! Чтобы создать, впиши команду **CreateOcto**");
                 return;
             }
@@ -141,7 +138,7 @@ namespace OctoGame.OctoGame.GameCommands
             embed.AddField("Твой осьминожка!",
                 $"**Имя:** {octoInfoArray[0]}\n**Цвет:** {octoInfoArray[1]}\n**Характер** {octoInfoArray[2]}\n**Лор:** {octoInfoArray[3]}");
 
-            await _command.ReplyAsync(Context, embed);
+            await SendMessAsync( embed);
         }
 
         [Command("endGame")]
@@ -151,7 +148,7 @@ namespace OctoGame.OctoGame.GameCommands
             var account = _accounts.GetAccount(Context.User);
             account.PlayingStatus = 0;
             _accounts.SaveAccounts(Context.User);
-            await _command.ReplyAsync(Context, "Мы закончили твою игру, можешь начинать другую");
+            await SendMessAsync( "Мы закончили твою игру, можешь начинать другую");
         }
 
 
@@ -241,7 +238,7 @@ namespace OctoGame.OctoGame.GameCommands
             if (account.Attack_Tree == null && account.Defensive_Tree == null &&
                 account.Agility_Tree == null && account.Magic_Tree == null)
             {
-                await _command.ReplyAsync(Context, "You dont have any moves. You can get them using **boole** command");
+                await SendMessAsync( "You dont have any moves. You can get them using **boole** command");
                 return;
             }
 
@@ -295,7 +292,7 @@ namespace OctoGame.OctoGame.GameCommands
             }
             else
             {
-                await _command.ReplyAsync(Context, "У тебя нет осьминога! создай его командой **CreateOcto**");
+                await SendMessAsync( "У тебя нет осьминога! создай его командой **CreateOcto**");
             }
 
             _accounts.SaveAccounts(Context.User);
@@ -331,7 +328,7 @@ namespace OctoGame.OctoGame.GameCommands
             if (account.Attack_Tree == null && account.Defensive_Tree == null &&
                 account.Agility_Tree == null && account.Magic_Tree == null)
             {
-                await _command.ReplyAsync(Context, "You dont have any moves. You can get them using **boole** command");
+                await SendMessAsync( "You dont have any moves. You can get them using **boole** command");
                 return;
             }
 
@@ -397,7 +394,7 @@ namespace OctoGame.OctoGame.GameCommands
             }
             else
             {
-                await _command.ReplyAsync(Context, "У тебя нет осьминога! создай его командой **CreateOcto**");
+                await SendMessAsync( "У тебя нет осьминога! создай его командой **CreateOcto**");
             }
 
             _accounts.SaveAccounts(Context.User);
@@ -420,29 +417,29 @@ namespace OctoGame.OctoGame.GameCommands
                     $"{skill.SpellNameEn}\nID: {skill.SpellId}\nTree: {skill.SpellTreeNum}\nRU: {skill.SpellDescriptionRu}\nEN: {skill.SpellDescriptionEn}\nFormula: {skill.SpellFormula}\nCD: {skill.SpellCd}\n" +
                     "Если хочешь полностью его изменить, напиши **да** (1 минута)");
 
-                await _command.ReplyAsync(Context, embed1);
+                await SendMessAsync( embed1);
 
                 var res = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 60000);
 
                 if (res.Content == "да")
                 {
-                    await _command.ReplyAsync(Context, $"Ты изменяешь скилл {skill.SpellNameEn}");
+                    await SendMessAsync( $"Ты изменяешь скилл {skill.SpellNameEn}");
                 }
                 else
                 {
-                    await _command.ReplyAsync(Context, $"никаких апдейтов. (ты сказал {res.Content})");
+                    await SendMessAsync( $"никаких апдейтов. (ты сказал {res.Content})");
                     return;
                 }
             }
 
-            await _command.ReplyAsync(Context, "Введи Назваие скилла, у тебя 5 минута.");
+            await SendMessAsync( "Введи Назваие скилла, у тебя 5 минута.");
             var response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
             skill.SpellNameEn = response.ToString();
 
             var embed = new EmbedBuilder();
             embed.AddField("Введи Номер дерева скилла, у тебя 5 минута", "1 - AD\n2 - DEF\n3 - AGI\n4 - AP");
 
-            await _command.ReplyAsync(Context, embed);
+            await SendMessAsync( embed);
 
 
             response = await _awaitForUserMessage.AwaitMessage(Context.User.Id, Context.Channel.Id, 3000000);
@@ -497,7 +494,7 @@ namespace OctoGame.OctoGame.GameCommands
             skill.DeBuff = response.ToString();
             */
             _spellAccounts.SaveAccounts();
-            await _command.ReplyAsync(Context, "Готово!");
+            await SendMessAsync( "Готово!");
         }
 
 
@@ -511,7 +508,7 @@ namespace OctoGame.OctoGame.GameCommands
 
             if (messSplit.Length >= 3)
             {
-                await ReplyAsync(" only one `-` can be in a string (between `SpellNameRu` and `SpellDescriptionRu`)");
+                await SendMessAsync(" only one `-` can be in a string (between `SpellNameRu` and `SpellDescriptionRu`)");
                 return;
             }
 
@@ -595,7 +592,7 @@ namespace OctoGame.OctoGame.GameCommands
                         skill.SpellTreeString = "AP";
                         break;
                     default:
-                        await ReplyAsync("You fucked up. change `SpellTreeNum` later");
+                        await SendMessAsync("You fucked up. change `SpellTreeNum` later");
                         skill.SpellTreeString = "ERROR";
                         break;
                 }
@@ -664,7 +661,7 @@ namespace OctoGame.OctoGame.GameCommands
                     $"ID: {skill.SpellId}\nTree: {skill.SpellTreeNum}\nRU: {skill.SpellDescriptionRu}\nEN: {skill.SpellDescriptionEn}\nFormula: {skill.SpellFormula}\nCD: {skill.SpellCd}");
 
 
-                await _command.ReplyAsync(Context, embed);
+                await SendMessAsync( embed);
             }
             catch
             {
@@ -697,7 +694,7 @@ namespace OctoGame.OctoGame.GameCommands
             embed.WithAuthor(Context.User);
             embed.AddField("Все скилы:", $"{allSkills}");
 
-            await _command.ReplyAsync(Context, embed);
+            await SendMessAsync( embed);
         }
     }
 }

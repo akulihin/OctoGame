@@ -10,7 +10,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.GeneralCommands
 {
-    public class General : ModuleBase<SocketCommandContextCustom>
+    public class General : ModuleBaseCustom
     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
@@ -18,18 +18,18 @@ namespace OctoGame.GeneralCommands
         readonly AuthDiscordBotListApi _dblApi = new AuthDiscordBotListApi(423593006436712458, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQyMzU5MzAwNjQzNjcxMjQ1OCIsImJvdCI6dHJ1ZSwiaWF0IjoxNTMxODgwOTA3fQ.iFFl7gft4yI_ZysVbFoXW_VEUS_kUddQLlLb0kqG9mM");
         private readonly ILocalization _lang;
         private readonly IUserAccounts _accounts;
-        private readonly CommandHandling _command;
+
         private readonly SecureRandom _secureRandom;
         private readonly OctoPicPull _octoPicPull;
         private readonly OctoNamePull _octoNmaNamePull;
         private readonly HelperFunctions _helperFunctions;
         private readonly AudioService _service;
 
-        public General(ILocalization lang, IUserAccounts accounts, CommandHandling command, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service)
+        public General(ILocalization lang, IUserAccounts accounts, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service)
         {
             _lang = lang;
             _accounts = accounts;
-            _command = command;
+
             _secureRandom = secureRandom;
             _octoPicPull = octoPicPull;
             _octoNmaNamePull = octoNmaNamePull;
@@ -40,9 +40,10 @@ namespace OctoGame.GeneralCommands
 
         [Command("tt")]
         [Summary("doing absolutely nothing. That's right - NOTHING")]
-        public async Task Ttest()
+        public async Task Ttest([Remainder]string st)
         {
-            await Task.CompletedTask;
+            await SendMessAsync(st);
+            await Task.CompletedTask;    
         }
 
         [Command("upd")]
@@ -51,7 +52,7 @@ namespace OctoGame.GeneralCommands
         public async Task UpdateDiscordBotListGuildCount(int num)
         {
             _dblApi.UpdateStats(num);
-            _command.ReplyAsync(Context, $"updated");
+            SendMessAsync( $"updated");
         }
 
         [Command("join", RunMode = RunMode.Async)]
@@ -85,7 +86,7 @@ namespace OctoGame.GeneralCommands
             {
                 var myAccountPrefix = account.MyPrefix ?? "You don't have own prefix yet";
 
-                await _command.ReplyAsync(Context,
+                await SendMessAsync(
                     $"Your prefix: **{myAccountPrefix}**");
                 return;
             }
@@ -95,18 +96,18 @@ namespace OctoGame.GeneralCommands
                 account.MyPrefix = prefix;
                 if (prefix.Contains("everyone") || prefix.Contains("here"))
                 {
-                    await _command.ReplyAsync(Context,
+                    await SendMessAsync(
                         "No `here` or `everyone` prefix allowed.");
                     return;
                 }
 
                 _accounts.SaveAccounts(Context.User);
-                await _command.ReplyAsync(Context,
+                await SendMessAsync(
                     $"Booole~, your own prefix is now **{prefix}**");
             }
             else
             {
-                await _command.ReplyAsync(Context,
+                await SendMessAsync(
                     "Booooo! Prefix have to be less than 100 characters");
             }
         }
@@ -134,7 +135,7 @@ namespace OctoGame.GeneralCommands
             embed.WithAuthor(Context.User);
             embed.WithImageUrl("" + octoToPost);
 
-            await _command.ReplyAsync(Context, embed);
+            await SendMessAsync( embed);
 
             switch (octoIndex)
             {
@@ -166,7 +167,7 @@ namespace OctoGame.GeneralCommands
         public async Task TestLanguges([Remainder] string rem)
         {
             var kek = _lang.Resolve($"{Context.User.Mention}\n[PRIVACY_DATA_REPORT_TEMPLATE(@DATA)]");
-            _command.ReplyAsync(Context, $"{kek}");
+            SendMessAsync( $"{kek}");
         }
     }
 }

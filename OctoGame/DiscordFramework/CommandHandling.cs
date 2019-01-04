@@ -11,7 +11,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.DiscordFramework
 {
-    public class CommandHandling
+    public class CommandHandling : ModuleBaseCustom
     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
@@ -74,7 +74,7 @@ namespace OctoGame.DiscordFramework
                 if (t.BotSocketMsg == null)
                     return;
                 var account = _accounts.GetAccount(messageAfter.Author);
-                var context = new SocketCommandContextCustom(_client, message, "edit", account.MyLanguage);
+                var context = new SocketCommandContextCustom(_client, message, _global, "edit", account.MyLanguage);
                 var argPos = 0;
 
 
@@ -85,12 +85,14 @@ namespace OctoGame.DiscordFramework
                         argPos,
                         _services);
                   
-                    if (!resultTask.IsSuccess  && !resultTask.ErrorReason.Contains("Unknown command")) ReplyAsync(context, $"Booole! {resultTask.ErrorReason}");
+                    if (!resultTask.IsSuccess  && !resultTask.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {resultTask.ErrorReason}");
                     return;
                 }
 
                 var guild = _serverAccounts.GetServerAccount(context.Guild);
                 
+
+
                 if (message.HasStringPrefix(guild.Prefix, ref argPos) || message.HasStringPrefix(guild.Prefix + " ",
                                                                           ref argPos)
                                                                       || message.HasMentionPrefix(_client.CurrentUser,
@@ -106,7 +108,7 @@ namespace OctoGame.DiscordFramework
                         _services);
 
 
-                    if (!result.IsSuccess  && !result.ErrorReason.Contains("Unknown command")) ReplyAsync(context, $"Booole! {result.ErrorReason}");
+                    if (!result.IsSuccess  && !result.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {result.ErrorReason}");
                 }
 
                 return;
@@ -116,67 +118,13 @@ namespace OctoGame.DiscordFramework
             await HandleCommandAsync(messageAfter); 
         }
 
-        public async Task ReplyAsync(SocketCommandContextCustom context, EmbedBuilder embed)
-        {
-            if (context.MessageContentForEdit == null)
-            {
-                var message = await context.Channel.SendMessageAsync("", false, embed.Build());
-                var kek = new Global.CommandRam(context.User, context.Message, message);
-                _global.CommandList.Add(kek);
-            }
-            else if (context.MessageContentForEdit == "edit")
-            {
-                foreach (var t in _global.CommandList)
-                    if (t.UserSocketMsg.Id == context.Message.Id)
-                    {
-                        if (context.Message.Content.Contains("top"))
-                            await t.BotSocketMsg.ModifyAsync(message =>
-                            {
-                                message.Content = "";
-                                message.Embed = null;
-                                //  message.Embed = embed.Build();
-                            });
-
-                        await t.BotSocketMsg.ModifyAsync(message =>
-                        {
-                            message.Content = "";
-                            message.Embed = null;
-                            message.Embed = embed.Build();
-                        });
-                    }
-            }
-        }
-
-
-        public async Task ReplyAsync(SocketCommandContextCustom context, [Remainder] string regularMess = null)
-        {
-            if (context.MessageContentForEdit == null)
-            {
-                var message = await context.Channel.SendMessageAsync($"{regularMess}");
-                var kek = new Global.CommandRam(context.User, context.Message, message);
-                
-                _global.CommandList.Add(kek);
-            }
-            else if (context.MessageContentForEdit == "edit")
-            {
-                foreach (var t in _global.CommandList)
-                    if (t.UserSocketMsg.Id == context.Message.Id)
-                        await t.BotSocketMsg.ModifyAsync(message =>
-                        {
-                            message.Content = "";
-                            message.Embed = null;
-                            if (regularMess != null) message.Content = regularMess.ToString();
-                        });
-            }
-        }
-
 
         public async Task HandleCommandAsync(SocketMessage msg)
         {
             var message = msg as SocketUserMessage;
             if (message == null) return;
             var account = _accounts.GetAccount(msg.Author);
-            var context = new SocketCommandContextCustom(_client, message, null, account.MyLanguage);
+            var context = new SocketCommandContextCustom(_client, message, _global, null, account.MyLanguage);
             var argPos = 0;
 
             if (message.Author is SocketGuildUser userCheck && userCheck.IsMuted)
@@ -207,7 +155,7 @@ namespace OctoGame.DiscordFramework
                                 $"{DateTime.Now.ToLongTimeString()} - DM: ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason} \n");
 
                             if(!task.Result.ErrorReason.Contains("Unknown command"))
-                            ReplyAsync(context, $"Booole! {task.Result.ErrorReason}");
+                                SendMessAsync( $"Booole! {task.Result.ErrorReason}");
                         }
                         else
                         {
@@ -253,7 +201,7 @@ namespace OctoGame.DiscordFramework
                             $"{DateTime.Now.ToLongTimeString()} - ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason} \n");
 
                         if(!task.Result.ErrorReason.Contains("Unknown command"))
-                        ReplyAsync(context, $"Booole! {task.Result.ErrorReason}");
+                            SendMessAsync($"Booole! {task.Result.ErrorReason}");
                     }
                     else
                     {

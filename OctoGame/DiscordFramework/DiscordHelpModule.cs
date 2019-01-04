@@ -9,7 +9,7 @@ namespace OctoGame.DiscordFramework
 {
     public class DiscordHelpModule
     {
-        public Embed GetDefaultHelpEmbed(CommandService commandService, string command, string prefix)
+        public EmbedBuilder GetDefaultHelpEmbed(CommandService commandService, string command, string prefix)
         {
             EmbedBuilder helpEmbedBuilder;
             var commandModules = GetModulesWithCommands(commandService);
@@ -23,7 +23,7 @@ namespace OctoGame.DiscordFramework
                 helpEmbedBuilder = GenerateSpecificCommandHelpEmbed(commandService, command, prefix);
 
             helpEmbedBuilder.WithFooter(GenerateUsageFooterMessage(prefix));
-            return helpEmbedBuilder.Build();
+            return helpEmbedBuilder;
         }
 
         private string GenerateUsageFooterMessage(string botPrefix)

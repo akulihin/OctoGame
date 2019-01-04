@@ -2,21 +2,18 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.CustomLibrary;
 using OctoGame.Helpers;
 
 namespace OctoGame.GeneralCommands
 {
-    public class DiceRollCommands : ModuleBase<SocketCommandContextCustom>
+    public class DiceRollCommands : ModuleBaseCustom
     {
-        private readonly CommandHandling _command;
         private readonly SecureRandom _secureRandom;
         private readonly CustomCalculator _customCalculator;
 
-        public DiceRollCommands(CommandHandling command, SecureRandom secureRandom, CustomCalculator customCalculator)
+        public DiceRollCommands(SecureRandom secureRandom, CustomCalculator customCalculator)
         {
-            _command = command;
             _secureRandom = secureRandom;
             _customCalculator = customCalculator;
         }
@@ -31,7 +28,7 @@ namespace OctoGame.GeneralCommands
                 var mess = "";
                 if (times > 100)
                 {
-                    await _command.ReplyAsync(Context,
+                    await SendMessAsync(
                         "Boole! We are not going to roll that many times!");
 
 
@@ -40,7 +37,7 @@ namespace OctoGame.GeneralCommands
 
                 if (number > 999999999)
                 {
-                    await _command.ReplyAsync(Context,
+                    await SendMessAsync(
                         "Boole! This numbers is way too big for us :c");
 
 
@@ -58,7 +55,7 @@ namespace OctoGame.GeneralCommands
                 embed.WithTitle($"Roll {times} times:");
                 embed.WithDescription($"{mess}");
 
-                await _command.ReplyAsync(Context, embed);
+                await SendMessAsync( embed);
             }
             catch
             {
@@ -77,7 +74,7 @@ namespace OctoGame.GeneralCommands
             {
                 var randomIndexRoll = _secureRandom.Random(1, number);
 
-                await _command.ReplyAsync(Context, $"It's a {randomIndexRoll}!");
+                await SendMessAsync( $"It's a {randomIndexRoll}!");
             }
             catch
             {
@@ -190,7 +187,7 @@ namespace OctoGame.GeneralCommands
                                     embed.AddField($"It's a {answer}!", $"{results}");
 
 
-                                await _command.ReplyAsync(Context, embed);
+                                await SendMessAsync( embed);
 
                                 return;
                             }
@@ -273,7 +270,7 @@ namespace OctoGame.GeneralCommands
                 }
             }
 
-            await _command.ReplyAsync(Context, $"It's a {answer}!");
+            await SendMessAsync( $"It's a {answer}!");
         }
     }
 }
