@@ -52,7 +52,7 @@ namespace OctoGame.DiscordFramework.CustomLibrary
        }
 
 
-       protected virtual async Task SendMessAsync([Remainder] string regularMess, bool error, SocketCommandContextCustom context)
+       protected virtual async Task SendMessAsync([Remainder] string regularMess, SocketCommandContextCustom context)
        {
            if (context.MessageContentForEdit == null )
            {
