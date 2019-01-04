@@ -347,37 +347,31 @@ namespace OctoGame.OctoGame.UpdateMessages
             mainPage.WithFooter($"Move List Page {account.MoveListPage} from 5");
             mainPage.WithColor(Color.DarkGreen);
             mainPage.AddField("Enemy:", 
-                                        $"**Name:** {enemy.DiscordUserName}\n" +
-                                        $"**LVL:** {enemy.OctoLvL}\n" +
-                                        $"-\n" +
+                                        $"**Name:** {enemy.DiscordUserName} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **LVL:** {enemy.OctoLvL}\n" +
+                                        $"-\n" +                                  
                                         $"**Strength:** {enemy.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Agility:** {enemy.Agility_Stats}\n" +
                                         $"**Attack:** {enemy.AttackPower_Stats + enemy.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magic:** {enemy.MagicPower_Stats}\n" +
-
-                                         $"-\n" +
-                                        $"**Health:** {enemy.Health}\n" +
-                                        $"**Stamina:** {enemy.Stamina} {enemyShields}\n" +
-                                         $"-\n" +
+                                        $"-\n" +
+                                        $"__**Health:** {enemy.Health}__\n" +
+                                        $"__**Stamina:** {enemy.Stamina} {enemyShields}__\n" +
+                                        $"-\n" +
                                         $"**Physical Resistance:** {enemy.PhysicalResistance} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magical Resistance:** {enemy.MagicalResistance}\n" +
                                         $"**Physical Penetration:** {enemy.PhysicalPenetration} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")}  **Magical Penetration:** {enemy.MagicalPenetration}\n" +
                                         $"{new Emoji("<:Clear:530625040006381579>")}\n" +
                                         "**________________**");
 
             mainPage.AddField($"Your octopus:",
-                $"**Name:** {account.OctoName}\n" +
-                $"**LVL:** {account.OctoLvL}\n" +
-                 $"-\n" +
+                $"**Name:** {account.OctoName} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **LVL:** {account.OctoLvL}\n" +
+                $"-\n" +
                 $"**Strength:** {account.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Agility:** {account.Agility_Stats}\n" +
                 $"**Attack:** {account.AttackPower_Stats + account.Strength} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magic:** {account.MagicPower_Stats}\n" +
-
-                 $"-\n" +
-                $"**Health:** {account.Health}\n" +            
-                $"**Stamina:** {account.Stamina} {accountShields}\n" +  
-                 $"-\n" +
+                $"-\n" +
+                $"__**Health:** {account.Health}__\n" +            
+                $"__**Stamina:** {account.Stamina} {accountShields}__\n" +  
+                $"-\n" +
                 $"**Physical Resistance:** {account.PhysicalResistance} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Mag Resistance:** {account.MagicalResistance}\n" +
-                $"**Physical Penetration:** {account.PhysicalPenetration} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magical Penetration:** {account.MagicalPenetration}\n" +
-               
+                $"**Physical Penetration:** {account.PhysicalPenetration} {new Emoji("<:Clear:530625040006381579>")} {new Emoji("<:Clear:530625040006381579>")} **Magical Penetration:** {account.MagicalPenetration}\n" +      
                 $"{new Emoji("<:Clear:530625040006381579>")}\n" +
-                $"**________________**\n" +
                 $"{new Emoji("⬅")} - Move List Page Left , {new Emoji("➡")} - Move List Page Right {new Emoji("📖")} - History, {new Emoji("❌")} - **END GAME**\n" +
                 $"{new Emoji("<:Clear:530625040006381579>")}");
             if(skillStringList.Count <= 1)
