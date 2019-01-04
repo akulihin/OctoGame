@@ -18,7 +18,7 @@ using OctoGame.OctoGame.UpdateMessages;
 
 namespace OctoGame.OctoGame.GameCommands
 {
-    public class OctoGameCommand : ModuleBase<SocketCommandContextCustom>
+    public class OctoGameCommand : ModuleBaseCustom
     {
         private readonly IUserAccounts _accounts;
         private readonly ISpellAccounts _spellAccounts;

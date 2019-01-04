@@ -85,7 +85,7 @@ namespace OctoGame.DiscordFramework
                         argPos,
                         _services);
                   
-                    if (!resultTask.IsSuccess  && !resultTask.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {resultTask.ErrorReason}");
+                    if (!resultTask.IsSuccess  && !resultTask.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {resultTask.ErrorReason}", context);
                     return;
                 }
 
@@ -108,7 +108,7 @@ namespace OctoGame.DiscordFramework
                         _services);
 
 
-                    if (!result.IsSuccess  && !result.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {result.ErrorReason}");
+                    if (!result.IsSuccess  && !result.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {result.ErrorReason}", context);
                 }
 
                 return;
@@ -155,7 +155,7 @@ namespace OctoGame.DiscordFramework
                                 $"{DateTime.Now.ToLongTimeString()} - DM: ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason} \n");
 
                             if(!task.Result.ErrorReason.Contains("Unknown command"))
-                                SendMessAsync( $"Booole! {task.Result.ErrorReason}");
+                                SendMessAsync( $"Booole! {task.Result.ErrorReason}", context);
                         }
                         else
                         {
@@ -201,7 +201,7 @@ namespace OctoGame.DiscordFramework
                             $"{DateTime.Now.ToLongTimeString()} - ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason} \n");
 
                         if(!task.Result.ErrorReason.Contains("Unknown command"))
-                            SendMessAsync($"Booole! {task.Result.ErrorReason}");
+                            SendMessAsync($"Booole! {task.Result.ErrorReason}", context);
                     }
                     else
                     {
