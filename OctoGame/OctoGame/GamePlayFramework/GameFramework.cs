@@ -101,15 +101,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             }
 
 
-            if (account.IsCrit)
-                dmg = _crit.CritHandling(account.Agility_Stats,
-                    dmg, account);
-
-
-            dmg = _dodge.DodgeHandling(account.Agility_Stats, dmg,
-                account, enemy);
-
-            //TODO move crit, dodge, armor, resit etc to DmgHealthHandeling
+            
             await DmgHealthHandeling(skill.WhereDmg, dmg, skill.SpellDmgType, account, enemy);
             await UpdateTurn(account, enemy);
 
@@ -151,10 +143,13 @@ namespace OctoGame.OctoGame.GamePlayFramework
         }
 
 
-        //TODO move crit, dodge, armor, resit etc to DmgHealthHandeling
+       
         public async Task DmgHealthHandeling(int dmgWhere, double dmg, int dmgType, AccountSettings myAccount,
             AccountSettings enemyAccount)
         {
+            //TODO implemnt
+            // >on hit dmg
+
             /*
              0 = Regular
              1 = To health
@@ -162,22 +157,42 @@ namespace OctoGame.OctoGame.GamePlayFramework
              */
             // type 0 = physic, 1 = magic
 
-            switch (dmgType)
+            //yes, this is a passive skill, have no idea how to impement it better
+            //////////////////////////////////////////////////////////////////////////////////////////
+            if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
+                dmg = dmg * (1 + myAccount.PrecentBonusDmg);
+            if (dmg >= 1) myAccount.IsFirstHit = false;
+            //////////////////////////////////////////////////////////////////////////////////////////
+
+            if (dmg > 0)
+                if (myAccount.IsCrit)
+                dmg = _crit.CritHandling(myAccount.Agility_Stats,
+                    dmg, myAccount); // check crit
+
+
+            dmg = _dodge.DodgeHandling(myAccount.Agility_Stats, dmg,
+                myAccount, enemyAccount); // check block
+
+
+            if(dmg > 0)
+            dmg = CheckForBlock(dmgType, dmg, myAccount); // check for block, if dmg <= 0 than dont waste block
+
+            if (dmg > 0) // armor resist handling
+                switch (dmgType)
             {
                 case 0:
                     dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
-                    myAccount.Health += dmg * myAccount.LifeStealPrec;
-                    if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth;
                     break;
                 case 1:
-                    dmg = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg);
-                    myAccount.Health += dmg * myAccount.LifeStealPrec;
-                    if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth;
+                    dmg = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg);   
                     break;
+                //TODO implement mix dmg
             }
 
-            dmg = CheckForBlock(dmgType, dmg, myAccount);
+            if (dmg > 0)
+                myAccount.Health += dmg * myAccount.LifeStealPrec; //lifesteal
 
+            if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth; // hp cant be more than MAX hp
 
             var status = 0;
             var userId = myAccount.DiscordId;
@@ -239,7 +254,8 @@ namespace OctoGame.OctoGame.GamePlayFramework
                 status = 1;
             }
 
-
+            _accounts.SaveAccounts(myAccount.DiscordId);
+            _accounts.SaveAccounts(enemyAccount.DiscordId);
 
             await UpdateIfWinOrContinue(status, myAccount.DiscordId, myAccount.MessageIdInList);
         }

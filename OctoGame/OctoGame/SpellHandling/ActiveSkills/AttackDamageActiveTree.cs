@@ -172,21 +172,17 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
             if (check)
                 if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
                 dmg = dmg * (1 + myAccount.PrecentBonusDmg);
+            if(check)
+            dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
 
-            //TODO move this to DealDmg method
-            //  if (!check && dmg >= 1) myAccount.IsFirstHit = false;
 
             _accounts.SaveAccounts(myAccount.DiscordId);
             _accounts.SaveAccounts(enemyAccount.DiscordId);
 
-            // Я два раза армор использую*?????? Проверь в DmgHandling пидор
-            // армор не то чем кажется 
-            //TODO make this armor only for showcase. to deal actual dmg - calculate dmg in DealDmg method
-
-            if(check)
-            dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
 
             return dmg;
+
+            //if(check) this is only to show the dmg for display
         }
     }
 }
