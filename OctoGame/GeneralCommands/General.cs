@@ -42,6 +42,7 @@ namespace OctoGame.GeneralCommands
         [Summary("doing absolutely nothing. That's right - NOTHING")]
         public async Task Ttest([Remainder]string st)
         {
+
             await SendMessAsync(st);
             await Task.CompletedTask;    
         }
@@ -59,7 +60,7 @@ namespace OctoGame.GeneralCommands
         [Summary("Joins a voice channel")]
         public async Task JoinCmd()
         {
-            await _service.JoinAudio(Context.Guild, (Context.User as IVoiceState).VoiceChannel);
+            await _service.JoinAudio(Context.Guild, (Context.User as IVoiceState)?.VoiceChannel);
         }
 
         [Command("leave", RunMode = RunMode.Async)]

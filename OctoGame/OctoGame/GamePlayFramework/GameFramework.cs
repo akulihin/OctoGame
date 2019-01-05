@@ -87,7 +87,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             switch (account.MoveListPage)
             {
                     case 1:
-                        dmg = _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, false);
+                        dmg =   _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, false);
                         break;
                     case 2:
                         dmg = _defenceActiveTree.DefSkills(skill.SpellId, account, enemy, false);
@@ -99,7 +99,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
                         dmg = _magicActiveTree.ApSkills(skill.SpellId, account, enemy, false);
                         break;
             }
-            
+
 
             if (account.IsCrit)
                 dmg = _crit.CritHandling(account.Agility_Stats,
@@ -109,7 +109,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             dmg = _dodge.DodgeHandling(account.Agility_Stats, dmg,
                 account, enemy);
 
-
+            //TODO move crit, dodge, armor, resit etc to DmgHealthHandeling
             await DmgHealthHandeling(skill.WhereDmg, dmg, skill.SpellDmgType, account, enemy);
             await UpdateTurn(account, enemy);
 
@@ -151,6 +151,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
         }
 
 
+        //TODO move crit, dodge, armor, resit etc to DmgHealthHandeling
         public async Task DmgHealthHandeling(int dmgWhere, double dmg, int dmgType, AccountSettings myAccount,
             AccountSettings enemyAccount)
         {

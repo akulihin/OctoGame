@@ -34,7 +34,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         /// Fight:
         /// </summary>
         
-        public int Turn { get; set; }
+        public int Turn { get; set; } // 1 = not the turn | 1 = his turn to move
         public double Round { get; set; }
         public ulong CurrentEnemy { get; set; }
         public int MoveListPage { get; set; } 

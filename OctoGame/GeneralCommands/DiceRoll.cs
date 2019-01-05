@@ -70,18 +70,9 @@ namespace OctoGame.GeneralCommands
         [Summary("Rolling a dice 1 time")]
         public async Task Roll(int number)
         {
-            try
-            {
                 var randomIndexRoll = _secureRandom.Random(1, number);
 
                 await SendMessAsync( $"It's a {randomIndexRoll}!");
-            }
-            catch
-            {
-                //  await ReplyAsync(
-                //      "boo... An error just appear >_< \nTry to use this command properly: **roll [max_value_of_roll]**\n" +
-                //      "Alias: Роллл, Ролл");
-            }
         }
 
         [Command("roll")]

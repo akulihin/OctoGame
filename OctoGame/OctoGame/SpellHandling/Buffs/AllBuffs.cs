@@ -9,6 +9,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
     {
         private readonly IUserAccounts _accounts;
 
+
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryStrength1089  = new ConcurrentDictionary<ulong, double>();
        // private static List<ulong, double>
           
@@ -16,6 +17,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
         public AllBuffs(IUserAccounts accounts)
         {
             _accounts = accounts;
+     
         }
         
         public async Task CheckForBuffs(AccountSettings account)
@@ -46,6 +48,21 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                             }
                             break;
 
+                        // (ад ветка) Грязный прием - пропускает один ход, и через еще ход бьет 228% от ад. 1005 
+                        // -Пропускает ход1, может ходить на ход2, и тратит ход3 на удар
+                        case 1005:
+                            if (!account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
+                            {
+                                var dmg = account.AttackPower_Stats * 2.28;
+
+                                //TODO this 
+                              // await DmgHealthHandeling(0, dmg, 0, account, _accounts.GetAccount(account.CurrentEnemy));
+                               
+                                account.Turn = 1;
+                                _accounts.GetAccount(account.CurrentEnemy).Turn = 0;
+                            }
+                            break;
+
                     }
 
                     if (account.InstantBuff[i].forHowManyTurns <= 0)
@@ -55,6 +72,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                     }
                 }
             _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.CurrentEnemy);
             await Task.CompletedTask;
         }
 
@@ -89,6 +107,11 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
             _accounts.SaveAccounts(account.DiscordId);
             await Task.CompletedTask;
         }
+
+
+
+
+
 
         public async Task CheckForDeBuffs(AccountSettings account)
         {
