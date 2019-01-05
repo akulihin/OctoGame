@@ -116,8 +116,13 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                // 1019(ад ветка) Решительность - повышает ад на 50 % на следующий ход.
                 case 1019:
-                    myAccount.AttackPower_Stats += myAccount.AttackPower_Stats * 0.5;
-                    myAccount.StatsForTime.Add(new AccountSettings.StatsForTimeClass(myAccount.AttackPower_Stats * 0.5, 2));
+                    if (!check)
+                    {
+                        myAccount.AttackPower_Stats += myAccount.AttackPower_Stats * 0.5;
+                        myAccount.StatsForTime.Add(
+                            new AccountSettings.StatsForTimeClass(myAccount.AttackPower_Stats * 0.5, 2));
+                    }
+
                     break;
 
 
@@ -131,6 +136,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                 //1023 (ад ветка - ульта) Кровавая месть - дает 50% физ лайвстила на 5 ходов 
                 case 2023:
+                    if (!check)
                     myAccount.LifeStealPrec = 0.5;
                     break;
 
