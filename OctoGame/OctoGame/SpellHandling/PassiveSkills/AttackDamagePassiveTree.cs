@@ -10,6 +10,7 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1004 = new ConcurrentDictionary<ulong, double>();
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1008 = new ConcurrentDictionary<ulong, double>();
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1016 = new ConcurrentDictionary<ulong, double>();
+        private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1018 = new ConcurrentDictionary<ulong, double>();
         private readonly IUserAccounts _accounts;
 
         public AttackDamagePassiveTree(IUserAccounts accounts)
@@ -23,14 +24,16 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                 switch (skillId)
                 {
                     // (ад ветка) Выжидание - пассивно первая атака за бой будет усилена на 20% ||
-                    //Not done
+
+                    //Done
                     case 1000:
                         account.PrecentBonusDmg = 0.2;
                         account.SkillCooldowns.Add(new AccountSettings.CooldownClass(1000, 999));
                         break;
 
                     // (ад ветка) Меткость - пассивно если враг увернлся - то следующий ход он не может увернутся. (кд 8 ходов) 
-                    //Not done
+
+                    //TODO
                     case 1002 when enemy.IsDodged:
                         enemy.DodgeChance = 0;
 
@@ -38,7 +41,8 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                         break;
 
                     //пассивно увеличивает ад на 10% от вражеской текущей выносливости. 
-                    //WORKING!
+
+                    //DONE
                     case 1004:
                         var dmgValue1004 =   0.1 * enemy.Stamina;
 
@@ -53,15 +57,18 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                         break;
 
                     //(ад ветка) Без изъяна - пассивно дает 1 армор или резист, если на него не куплено ни одной вещи. 1006
-                    //not done
+
+                    //DONE
                     case 1006 when account.OctoItems.Count == 0 || !account.OctoItems.Any(x => x.Armor >= 1) &&
                                    !account.OctoItems.Any(x => x.Resist >= 1):
                         account.PhysicalResistance++;
                         account.MagicalResistance++;
                         account.SkillCooldowns.Add(new AccountSettings.CooldownClass(1006, 999));
                         break;
+
                     //1008 (ад ветка) Battle trans - пассивно дает дамаг от потеряннх своих хп. 1% к ад за 5% потерянных хп. 
-                    //WORKING!
+
+                    //Done
                     case 1008:
                         
                         var dmgValue1008 = Math.Round((1 - account.Health / account.MaxHealth) / 0.5 / 10 * account.AttackPower_Stats);
@@ -78,30 +85,31 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                         break;
 
                     //1010 (ад ветка) Мародер - пассивно каждый крит хилит 2% от максимальной стамины.
-                           //not done
+
+                    //DONE
                     case 1010 when account.IsCrit:
+                       
                         account.Stamina += account.MaxStamina * 0.02;
                         break;
 
                     //1012 (ад ветка) Мастер фехтования - пассивно получает щит на стамину, который блокает физ урон (100% от ад) 
-                    //WORKING!
+
+                    //Done
                     case 1012:
                         account.PhysShield = account.AttackPower_Stats;
                         break;
 
-                    //1014 (ад ветка) Безумец - пассивно повышает урон на 10%, но теряет 10% стамины.
+                    //1014 (ад ветка) Безумец - пассивно повышает урон на 10%, но теряет 10% стамины. ( урорн всем скиллам)
+                    //TODO урон != AD, добавить переменную "DmgToDeal" и работать с ней
                     case 1014:
-                        //TODO урон != AD, добавить переменную "DmgToDeal" и работать с ней
-                   //         account.Bonus_AD_Stats += account.Bonus_AD_Stats * 0.1;
-                    //    account.MaxStamina = account.MaxStamina - account.MaxStamina * 0.1;
-                   //     account.Stamina -= account.MaxStamina * 0.1;
-
-                //        account.SkillCooldowns.Add(new AccountSettings.CooldownClass(1014, 999));
+                        
                         break;
 
                     //1016 (ад ветка) Ассассин - пассивно дает дамаг по лоу хп. 1% к урону за 5% потерянных вражеских хп. 
+
+                    //Done
                     case 1016:
-                        //WORKING!
+                     
 
                         var dmgValue1016 = Math.Round((1 - enemy.Health / enemy.MaxHealth) / 0.5 / 10 * account.AttackPower_Stats);
 
@@ -116,21 +124,33 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                         break;
 
                     //1018 (ад ветка) Мясорубка - пассивно каждый крит увеличивает АД на 1% до конца боя.
+
+                    //DONE
                     case 1018:
-                        //notDOne
-                        //TODO change "HowManyTimesCrited" to local static variable (dictionary)
-                        if (account.IsCrit)
-                            account.AttackPower_Stats += account.AttackPower_Stats * 0.01 * account.HowManyTimesCrited;
+                      
+                        var dmgValue1018 = account.AttackPower_Stats * 0.01 * account.HowManyTimesCrited;
+
+                        if (TemporaryAd1018.TryGetValue(account.DiscordId, out double trying1018))
+                        {
+                            account.AttackPower_Stats -= trying1018;
+                        }
+
+                        account.AttackPower_Stats += dmgValue1018;
+                        TemporaryAd1018.AddOrUpdate(account.DiscordId, dmgValue1018, (key, oldValue) => dmgValue1018);
+
                         break;
 
                     //1020 (ад ветка) Храбрость - пассивно дает +10 к силе. 
-                    //WORKING!
+
+                    //Done
                     case 1020:
                         account.Strength += 10;
                         account.SkillCooldowns.Add(new AccountSettings.CooldownClass(1020, 999));
                         break;
+
                     //1022 (ад ветка) Бронебой - пассивно физический урон пробивает БЛОК из танк ветки, но наносит только 50% урона. Также повышает бафф урон скиллов на 25%
-                    // ti ebu dal?
+
+                    // TODO: dat' ebu
                     case 1022:
                         break;
                 }

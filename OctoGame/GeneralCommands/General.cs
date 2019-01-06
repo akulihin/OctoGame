@@ -42,7 +42,9 @@ namespace OctoGame.GeneralCommands
         [Summary("doing absolutely nothing. That's right - NOTHING")]
         public async Task Ttest([Remainder]string st)
         {
+          //  (Context.Guild as IGuildChannel).Guild.
             await Task.CompletedTask;
+
         }
 
 
