@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
+using OctoGame.OctoGame.GamePlayFramework;
 
 namespace OctoGame.OctoGame.SpellHandling.Buffs
 {
     public class AllBuffs
     {
         private readonly IUserAccounts _accounts;
-
+        private readonly DealDmgToEnemy _dealDmgToEnemy;
 
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryStrength1089  = new ConcurrentDictionary<ulong, double>();
        // private static List<ulong, double>
           
 
-        public AllBuffs(IUserAccounts accounts)
+        public AllBuffs(IUserAccounts accounts, DealDmgToEnemy dealDmgToEnemy)
         {
             _accounts = accounts;
-     
+            _dealDmgToEnemy = dealDmgToEnemy;
         }
         
         public async Task CheckForBuffs(AccountSettings account)
@@ -55,13 +56,28 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                             {
                                 var dmg = account.AttackPower_Stats * 2.28;
 
-                                //TODO this 
-                              // await DmgHealthHandeling(0, dmg, 0, account, _accounts.GetAccount(account.CurrentEnemy));
+                              
+                               await _dealDmgToEnemy.DmgHealthHandeling(0, dmg, 0, account, _accounts.GetAccount(account.CurrentEnemy));
                                
                                 account.Turn = 1;
                                 _accounts.GetAccount(account.CurrentEnemy).Turn = 0;
                             }
                             break;
+
+                        //1023 (ад ветка - ульта) Кровавая месть - дает 50% физ лайвстила на 5 ходов 
+
+                    case 1023:
+                        if (!account.InstantBuff[i].activated)
+                        {
+                            account.LifeStealPrec += 0.5;
+                            account.InstantBuff[i].activated = true;
+                        }
+
+                        if (account.InstantBuff[i].activated &&  account.InstantBuff[i].forHowManyTurns <=0)
+                        {       
+                            account.LifeStealPrec -= 0.5;
+                        }
+                        break;
 
                     }
 

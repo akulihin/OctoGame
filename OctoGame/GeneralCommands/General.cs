@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using DiscordBotsList.Api;
@@ -43,18 +42,10 @@ namespace OctoGame.GeneralCommands
         [Summary("doing absolutely nothing. That's right - NOTHING")]
         public async Task Ttest([Remainder]string st)
         {
-            try
-            {
-                IGuildUser user = null;
-                await user.KickAsync("because");
-            }
-            catch (Exception e)
-            {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine(e.Message);
-                Console.ResetColor();
-            }
+            await Task.CompletedTask;
         }
+
+
 
         [Command("upd")]
         [RequireOwner]

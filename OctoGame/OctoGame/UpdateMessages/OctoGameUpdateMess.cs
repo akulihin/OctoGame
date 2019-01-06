@@ -203,7 +203,7 @@ namespace OctoGame.OctoGame.UpdateMessages
             if (account.MoveListPage == 1 && account.Attack_Tree != null)
             {
                 skillString = null;
-                skills = account.Attack_Tree.Split(new[] {'|'},
+                skills = account.Attack_Tree.Split(new[] { '|' },
                     StringSplitOptions.RemoveEmptyEntries);
                 //  tree = "AD";
 
@@ -212,14 +212,14 @@ namespace OctoGame.OctoGame.UpdateMessages
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
 
-                    dmg =  _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, true);
+                    dmg = _attackDamageActiveTree.AttackDamageActiveSkills(skill.SpellId, account, enemy, true);
                     skillString += ReturnSkillString(i, dmg, skill, account);
                 }
             }
             else if (account.MoveListPage == 2 && account.Defensive_Tree != null)
             {
                 skillString = null;
-                skills = account.Defensive_Tree.Split(new[] {'|'},
+                skills = account.Defensive_Tree.Split(new[] { '|' },
                     StringSplitOptions.RemoveEmptyEntries);
                 //tree = "DEF";
                 for (var i = 0; i < skills.Length; i++)
@@ -234,7 +234,7 @@ namespace OctoGame.OctoGame.UpdateMessages
             else if (account.MoveListPage == 3 && account.Agility_Tree != null)
             {
                 skillString = null;
-                skills = account.Agility_Tree.Split(new[] {'|'},
+                skills = account.Agility_Tree.Split(new[] { '|' },
                     StringSplitOptions.RemoveEmptyEntries);
                 // tree = "AGI";
                 for (var i = 0; i < skills.Length; i++)
@@ -249,7 +249,7 @@ namespace OctoGame.OctoGame.UpdateMessages
             else if (account.MoveListPage == 4 && account.Magic_Tree != null)
             {
                 skillString = null;
-                skills = account.Magic_Tree.Split(new[] {'|'},
+                skills = account.Magic_Tree.Split(new[] { '|' },
                     StringSplitOptions.RemoveEmptyEntries);
                 //tree = "AP";
 
@@ -266,7 +266,7 @@ namespace OctoGame.OctoGame.UpdateMessages
             else if (account.MoveListPage == 5 && account.AllPassives != null)
             {
                 skillString = null;
-                skills = account.AllPassives.Split(new[] {'|'},
+                skills = account.AllPassives.Split(new[] { '|' },
                     StringSplitOptions.RemoveEmptyEntries);
                 //tree = "PASS";
 
@@ -274,7 +274,7 @@ namespace OctoGame.OctoGame.UpdateMessages
                 {
                     var ski = Convert.ToUInt64(skills[i]);
                     var skill = _spellAccounts.GetAccount(ski);
-                    
+
                     skillString += ReturnSkillString(i, 0, skill, account);
                 }
             }

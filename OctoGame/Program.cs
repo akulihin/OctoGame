@@ -84,10 +84,9 @@ namespace OctoGame
                 .AddSingleton<MagicPassiveTree>()
                 .AddSingleton<AllBuffs>()
 
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
+                .AddSingleton<DealDmgToEnemy>()
+                .AddSingleton<OctoGameUpdateMess>()
+                .AddSingleton<UpdateFightPage>()
                 //.AddSingleton<CommandServiceExtension>()
                 //.AddSingleton<CommandServiceExtension>()
                 //.AddSingleton<CommandServiceExtension>()

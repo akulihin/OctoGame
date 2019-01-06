@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using OctoGame.LocalPersistentData.UsersAccounts;
-using OctoGame.OctoGame.SpellHandling.BonusDmgHandling;
 using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
@@ -9,21 +8,13 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
     {
         private readonly IUserAccounts _accounts;
         private readonly ArmorReduction _armorReduction;
-        private readonly MagicReduction _magicReduction;
-        private readonly Dodge _dodge;
-        private readonly Crit _crit;
-        private readonly Global _global;
 
 
-        public AttackDamageActiveTree(IUserAccounts accounts, ArmorReduction armorReduction, MagicReduction magicReduction, Dodge dodge, Crit crit, Global global)
+        public AttackDamageActiveTree(IUserAccounts accounts, ArmorReduction armorReduction)
         {
             _accounts = accounts;
             _armorReduction = armorReduction;
-            _magicReduction = magicReduction;
-            _dodge = dodge;
-            _crit = crit;
-
-            _global = global;
+      
         }
 
         public double AttackDamageActiveSkills(ulong skillId, AccountSettings myAccount, AccountSettings enemyAccount, bool check)
@@ -80,16 +71,12 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                 // (ад ветка - ульта) Палач - добивает врага с 25% хп и ниже. (контрит перерождения) 1007
 
-                //TODO fix it
+                //DONE
                 case 1007:
                     dmg = 0.25 >= enemyAccount.Health / enemyAccount.MaxHealth ? 99999999.00 : 1;
                     if (!check)
                     {
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 10));
-                        //TODO this
-                        //   if(0.25 >= enemyAccount.Health / enemyAccount.MaxHealth)
-                        //   _octoGameUpdateMess.VictoryPage(myAccount.DiscordId,
-                        //         _global.OctopusGameMessIdList[myAccount.MessageIdInList][0].GamingWindowFromBot);
                     }
 
 
@@ -106,7 +93,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                 // (ад ветка-ульта) Замах ненависти - пропускает ход, следующих ходом наносит сокрушительный удар на 300% от ад и игнорирует 1 уровень физ защиты. 1015
                 //    Дамаг считается за крит и не может быть увеличен крит уроном.
-                
+
                 //TODO this
                 case 1015:
                     dmg = myAccount.AttackPower_Stats * 3;
@@ -152,17 +139,18 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 //1021 (ад ветка) Кромсатель - наносит 3 удара 30%+50%+70% от ад.  пропуская следующих ход, но получая онхит на 5 ходов (20% уровня + вражеский уровень армора * 10% от уровня)
 
                 //TODO this
-                case 2021:
+                case 1021:
 
                     break;
 
 
                 //1023 (ад ветка - ульта) Кровавая месть - дает 50% физ лайвстила на 5 ходов 
 
-                //TODO this
-                case 2023:
+                //DONE
+                case 1023:
                     if (!check)
-                        myAccount.LifeStealPrec = 0.5;
+                        enemyAccount.InstantDeBuff.Add(new AccountSettings.InstantBuffClass(skillId, 5, false));
+  
                     break;
 
             }
@@ -171,9 +159,9 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
             if (check)
                 if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
-                dmg = dmg * (1 + myAccount.PrecentBonusDmg);
-            if(check)
-            dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
+                    dmg = dmg * (1 + myAccount.PrecentBonusDmg);
+            if (check)
+                dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
 
 
             _accounts.SaveAccounts(myAccount.DiscordId);
