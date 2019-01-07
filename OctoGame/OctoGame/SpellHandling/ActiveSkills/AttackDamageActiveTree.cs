@@ -14,10 +14,10 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
         {
             _accounts = accounts;
             _armorReduction = armorReduction;
-      
         }
 
-        public double AttackDamageActiveSkills(ulong skillId, AccountSettings myAccount, AccountSettings enemyAccount, bool check)
+        public double AttackDamageActiveSkills(ulong skillId, AccountSettings myAccount, AccountSettings enemyAccount,
+            bool check)
         {
             double dmg = 0;
             switch (skillId)
@@ -62,7 +62,6 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     if (!check)
                     {
-
                         enemyAccount.InstantDeBuff.Add(new AccountSettings.InstantBuffClass(skillId, 1, false));
                         dmg = 0;
                     }
@@ -74,10 +73,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 //DONE
                 case 1007:
                     dmg = 0.25 >= enemyAccount.Health / enemyAccount.MaxHealth ? 99999999.00 : 1;
-                    if (!check)
-                    {
-                        myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 10));
-                    }
+                    if (!check) myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 10));
 
 
                     break;
@@ -91,23 +87,29 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 5));
                     break;
 
+                //(ад ветка) All in - пропускает ход, увеличивает физический урон на один ход через 4 хода. на 10% за каждый пропущенный ход (макс 40%)
+
+                //Done
+                case 1011:
+                    myAccount.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 4, false));
+                    break;
+//1013 (ад ветка) Спартанское копье - активно кричит "Слабым здесь не место", кидая на следующий ход копье, нанося 100% от ад + 15% от вражеских потерянных хп.
+
+                //DONE
+                case 1013:
+                    myAccount.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 1, false));
+                    break;
                 // (ад ветка-ульта) Замах ненависти - пропускает ход, следующих ходом наносит сокрушительный удар на 300% от ад и игнорирует 1 уровень физ защиты. 1015
                 //    Дамаг считается за крит и не может быть увеличен крит уроном.
-
                 //TODO this
                 case 1015:
                     dmg = myAccount.AttackPower_Stats * 3;
                     if (!check)
                     {
-                        if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
-                        {
-                            dmg = dmg * (1 + myAccount.PrecentBonusDmg);
-                            myAccount.IsFirstHit = false;
-                        }
-
                         enemyAccount.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 0, 1));
                         dmg = 0;
                     }
+
                     // -Здесь должна быть +1 армор пенетры на удар. так же этот удар не критует, но считается критом для игры (есть там пара скиллов на этой механнике)
                     break;
 
@@ -128,9 +130,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 1019:
                     if (!check)
                     {
-                        myAccount.AttackPower_Stats += myAccount.AttackPower_Stats * 0.5;
-                        myAccount.StatsForTime.Add(
-                            new AccountSettings.StatsForTimeClass(myAccount.AttackPower_Stats * 0.5, 2));
+                        myAccount.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 2, false));
                     }
 
                     break;
@@ -138,9 +138,9 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                 //1021 (ад ветка) Кромсатель - наносит 3 удара 30%+50%+70% от ад.  пропуская следующих ход, но получая онхит на 5 ходов (20% уровня + вражеский уровень армора * 10% от уровня)
 
-                //TODO this
+                //TODO in CheckForBuffs()
                 case 1021:
-
+                    myAccount.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 1, false));
                     break;
 
 
@@ -150,18 +150,17 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 1023:
                     if (!check)
                         enemyAccount.InstantDeBuff.Add(new AccountSettings.InstantBuffClass(skillId, 5, false));
-  
+
                     break;
-
             }
-
 
 
             if (check)
                 if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
                     dmg = dmg * (1 + myAccount.PrecentBonusDmg);
             if (check)
-                dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg);
+                dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance,
+                    dmg);
 
 
             _accounts.SaveAccounts(myAccount.DiscordId);

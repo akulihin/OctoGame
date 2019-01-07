@@ -124,7 +124,6 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             await CheckDmgWithTimer(account, enemy);
             await CheckDmgWithTimer(enemy, account);
-            await CheckStatsForTime(account, enemy);
 
             await CheckForPassivesAndUpdateStats(account, enemy);
         }
@@ -147,21 +146,6 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             await Task.CompletedTask;
         }
-
-        public async Task CheckStatsForTime(AccountSettings account, AccountSettings enemy)
-        {
-            for (var i = 0; i < account.StatsForTime.Count; i++)
-            {
-                var t = account.StatsForTime[i];
-                t.timer--;
-
-                if (t.timer <= 0) account.AttackPower_Stats -= t.AD_STATS;
-            }
-
-            await Task.CompletedTask;
-        }
-
-        //move debufs somewhere else
 
 
         public async Task CheckForPassivesAndUpdateStats(AccountSettings account, AccountSettings enemy)

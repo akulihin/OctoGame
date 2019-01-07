@@ -84,7 +84,6 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public double PhysShield { get; set; }
         public double MagShield { get; set; }
         public int HowManyTimesCrited { get; set; }
-        public List<StatsForTimeClass> StatsForTime {get; set; }
         public double LifeStealPrec { get; set; }
         public List<FullDmgBlock> BlockShield { get; set; }
 
@@ -199,21 +198,6 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
                 this.timer = timer*2;
             }
         }
-
-        public class StatsForTimeClass
-        {
-            public double AD_STATS;
-            public int timer;
-          //  public double stamina;
-
-            public StatsForTimeClass(double AD_STATS, int timer)
-            {
-                this.AD_STATS = AD_STATS;
-                this.timer = timer;
-              //  this.stamina = stamina;
-            }
-        }
-
     }
 }
 

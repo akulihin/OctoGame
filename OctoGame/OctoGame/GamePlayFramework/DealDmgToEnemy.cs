@@ -41,12 +41,8 @@ namespace OctoGame.OctoGame.GamePlayFramework
              */
             // type 0 = physic, 1 = magic
 
-            //yes, this is a passive skill, have no idea how to impement it better
-            //////////////////////////////////////////////////////////////////////////////////////////
-            if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
-                dmg = dmg * (1 + myAccount.PrecentBonusDmg);
-            if (dmg >= 1) myAccount.IsFirstHit = false;
-            //////////////////////////////////////////////////////////////////////////////////////////
+            if(myAccount.PrecentBonusDmg > 0)
+            dmg =  dmg * (1 + myAccount.PrecentBonusDmg);
 
             if (dmg > 0)
                 if (myAccount.IsCrit)
