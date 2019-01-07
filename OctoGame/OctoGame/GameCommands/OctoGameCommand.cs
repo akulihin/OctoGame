@@ -191,7 +191,6 @@ namespace OctoGame.OctoGame.GameCommands
             account.MagShield = 0;
             account.HowManyTimesCrited = 0;
             account.LifeStealPrec = 0;
-            account.StatsForTime = new List<AccountSettings.StatsForTimeClass>();
             account.BlockShield = new List<AccountSettings.FullDmgBlock>();
             account.InstantBuff = new List<AccountSettings.InstantBuffClass>();
             account.InstantDeBuff = new List<AccountSettings.InstantBuffClass>();

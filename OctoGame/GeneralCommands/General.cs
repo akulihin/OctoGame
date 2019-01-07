@@ -18,13 +18,12 @@ namespace OctoGame.GeneralCommands
         readonly AuthDiscordBotListApi _dblApi = new AuthDiscordBotListApi(423593006436712458, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQyMzU5MzAwNjQzNjcxMjQ1OCIsImJvdCI6dHJ1ZSwiaWF0IjoxNTMxODgwOTA3fQ.iFFl7gft4yI_ZysVbFoXW_VEUS_kUddQLlLb0kqG9mM");
         private readonly ILocalization _lang;
         private readonly IUserAccounts _accounts;
-
         private readonly SecureRandom _secureRandom;
         private readonly OctoPicPull _octoPicPull;
         private readonly OctoNamePull _octoNmaNamePull;
         private readonly HelperFunctions _helperFunctions;
         private readonly AudioService _service;
-
+  
         public General(ILocalization lang, IUserAccounts accounts, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service)
         {
             _lang = lang;
@@ -40,7 +39,7 @@ namespace OctoGame.GeneralCommands
 
         [Command("tt")]
         [Summary("doing absolutely nothing. That's right - NOTHING")]
-        public async Task Ttest([Remainder]string st)
+        public async Task Ttest([Remainder]string st = null)
         {
           //  (Context.Guild as IGuildChannel).Guild.
             await Task.CompletedTask;

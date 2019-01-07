@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Lamar.IoC;
 using OctoGame.DiscordFramework.CustomLibrary;
 using OctoGame.LocalPersistentData.ServerAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
+
 
 namespace OctoGame.DiscordFramework
 {
@@ -19,20 +21,22 @@ namespace OctoGame.DiscordFramework
         private readonly DiscordShardedClient _client;
         private readonly CommandService _commands;
         private readonly Global _global;
-        private readonly IServiceProvider _services;
+        private readonly Scope _services;
         private readonly IUserAccounts _accounts;
         private readonly IServerAccounts _serverAccounts;
+
         private const string LogFile = @"OctoDataBase/Log.json";
 
-        public CommandHandling(IServiceProvider services, CommandService commands,
-            DiscordShardedClient client, IUserAccounts accounts, IServerAccounts serverAccounts, Global global)
+        public CommandHandling(CommandService commands,
+            DiscordShardedClient client, IUserAccounts accounts, IServerAccounts serverAccounts, Global global, Scope scope)
         {
             _commands = commands;
-            _services = services;
+            _services = scope;
             _client = client;
             _accounts = accounts;
             _serverAccounts = serverAccounts;
             _global = global;
+
         }
 
         public async Task InitializeAsync()

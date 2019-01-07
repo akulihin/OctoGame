@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Lamar;
 using Microsoft.Extensions.DependencyInjection;
 using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.Language;
@@ -25,7 +25,7 @@ namespace OctoGame
     public class ProgramOctoGame
     {
         private DiscordShardedClient _client;
-        private IServiceProvider _services;
+        private Container _services;
 
         private readonly int[] _shardIds = {0};
 
@@ -46,8 +46,8 @@ namespace OctoGame
             });
 
             _services = ConfigureServices();
-            _services.GetRequiredService<DiscordEventHandler>().InitDiscordEvents();
-            await _services.GetRequiredService<CommandHandling>().InitializeAsync();
+                _services.GetRequiredService<DiscordEventHandler>().InitDiscordEvents();
+           await _services.GetRequiredService<CommandHandling>().InitializeAsync();
 
             var botToken = Config.Bot.Token;
             await _client.SetGameAsync("Boole~");
@@ -60,57 +60,60 @@ namespace OctoGame
             await Task.Delay(-1);
         }
 
-        private IServiceProvider ConfigureServices()
+        private Container ConfigureServices()
         {
-            return new ServiceCollection()
-                .AddSingleton(_client)
-                .AddSingleton<OctoPicPull>()
-                .AddSingleton<OctoNamePull>()
-                .AddSingleton<Global>()
-                .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandling>()
-                .AddSingleton<DiscordEventHandler>()
-                .AddSingleton<MagicReduction>()
-                .AddSingleton<ArmorReduction>()
-                .AddSingleton<Dodge>()
-                .AddSingleton<Crit>()
-                .AddSingleton<AgilityActiveTree>()
-                .AddSingleton<AgilityPassiveTree>()
-                .AddSingleton<AttackDamageActiveTree>()
-                .AddSingleton<AttackDamagePassiveTree>()
-                .AddSingleton<DefenceActiveTree>()
-                .AddSingleton<DefencePassiveTree>()
-                .AddSingleton<MagicActiveTree>()
-                .AddSingleton<MagicPassiveTree>()
-                .AddSingleton<AllBuffs>()
+            return new Container(x =>
+                {
+                x.AddSingleton(_client)
+                    .AddSingleton<OctoPicPull>()
+                    .AddSingleton<OctoNamePull>()
+                    .AddSingleton<Global>()
+                    .AddSingleton<CommandService>()
+                    .AddSingleton<CommandHandling>()
+                    .AddSingleton<DiscordEventHandler>()
+                    .AddSingleton<MagicReduction>()
+                    .AddSingleton<ArmorReduction>()
+                    .AddSingleton<Dodge>()
+                    .AddSingleton<Crit>()
+                    .AddSingleton<AgilityActiveTree>()
+                    .AddSingleton<AgilityPassiveTree>()
+                    .AddSingleton<AttackDamageActiveTree>()
+                    .AddSingleton<AttackDamagePassiveTree>()
+                    .AddSingleton<DefenceActiveTree>()
+                    .AddSingleton<DefencePassiveTree>()
+                    .AddSingleton<MagicActiveTree>()
+                    .AddSingleton<MagicPassiveTree>()
+                    .AddSingleton<AllBuffs>()
 
-                .AddSingleton<DealDmgToEnemy>()
-                .AddSingleton<OctoGameUpdateMess>()
-                .AddSingleton<UpdateFightPage>()
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
-                //.AddSingleton<CommandServiceExtension>()
+                    .AddSingleton<DealDmgToEnemy>()
+                    .AddSingleton<OctoGameUpdateMess>()
+                    .AddSingleton<UpdateFightPage>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
 
-                .AddSingleton<DiscordHelpModule>()
-                .AddSingleton<AudioService>()
-                .AddSingleton<OctoGameReaction>()
-                .AddSingleton<OctoGameUpdateMess>()
-    
-                .AddSingleton<CustomCalculator>()
-                .AddSingleton<HelperFunctions>()
-                .AddTransient<SecureRandom>()
-                .AddTransient<AwaitForUserMessage>()
-                .AddSingleton<GameFramework>()
-                .AddTransient<IDataStorage, JsonLocalStorage>()
-                .AddTransient<ILocalization, JsonLocalization>()
-                .AddTransient<IUserAccounts, UserAccounts>()
-                .AddTransient<IServerAccounts, ServerAccounts>()
-                .AddTransient<ILoggingSystem, LoggingSystem>()
-                .AddTransient<ISpellAccounts, SpellUserAccounts>()
-                .BuildServiceProvider();
-        }
+                    .AddSingleton<DiscordHelpModule>()
+                    .AddSingleton<AudioService>()
+                    .AddSingleton<OctoGameReaction>()
+                    .AddSingleton<OctoGameUpdateMess>()
+
+                    .AddSingleton<CustomCalculator>()
+                    .AddSingleton<HelperFunctions>()
+                    .AddTransient<SecureRandom>()
+                    .AddTransient<AwaitForUserMessage>()
+                    .AddSingleton<GameFramework>()
+
+                    .AddTransient<IDataStorage, JsonLocalStorage>()
+                    .AddTransient<ILocalization, JsonLocalization>()
+                    .AddTransient<IUserAccounts, UserAccounts>()
+                    .AddTransient<IServerAccounts, ServerAccounts>()
+                    .AddTransient<ILoggingSystem, LoggingSystem>()
+                    .AddTransient<ISpellAccounts, SpellUserAccounts>()
+                    .BuildServiceProvider();
+        });
+    }
     }
 }

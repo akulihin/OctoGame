@@ -92,9 +92,6 @@ namespace OctoGame.OctoGame.GamePlayFramework
             
             await _dealDmgToEnemy.DmgHealthHandeling(skill.WhereDmg, dmg, skill.SpellDmgType, account, enemy);
             await UpdateTurn(account, enemy);
-
-
-
         }
 
 
