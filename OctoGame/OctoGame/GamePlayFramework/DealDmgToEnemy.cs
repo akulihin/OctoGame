@@ -41,6 +41,8 @@ namespace OctoGame.OctoGame.GamePlayFramework
              */
             // type 0 = physic, 1 = magic
 
+            var onHitDmg = myAccount.OnHitDamage;
+
             if(myAccount.PrecentBonusDmg > 0)
             dmg =  dmg * (1 + myAccount.PrecentBonusDmg);
 
@@ -65,6 +67,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
                     break;
                 case 1:
                     dmg = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg);   
+                    onHitDmg = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg);   
                     break;
                 //TODO implement mix dmg
             }
@@ -76,6 +79,10 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             var status = 0;
             var userId = myAccount.DiscordId;
+
+            if (dmg > 0)
+                dmg += onHitDmg;
+            
             switch (dmgWhere)
             {
                 case 0 when enemyAccount.Stamina > 0:
