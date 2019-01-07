@@ -44,10 +44,10 @@ namespace OctoGame
                 MessageCacheSize = 50,
                 TotalShards = 1
             });
-
+            
             _services = ConfigureServices();
-                _services.GetRequiredService<DiscordEventHandler>().InitDiscordEvents();
-           await _services.GetRequiredService<CommandHandling>().InitializeAsync();
+            _services.GetRequiredService<DiscordEventHandler>().InitDiscordEvents();
+            await _services.GetRequiredService<CommandHandling>().InitializeAsync();
 
             var botToken = Config.Bot.Token;
             await _client.SetGameAsync("Boole~");
@@ -63,7 +63,7 @@ namespace OctoGame
         private Container ConfigureServices()
         {
             return new Container(x =>
-                {
+            {
                 x.AddSingleton(_client)
                     .AddSingleton<OctoPicPull>()
                     .AddSingleton<OctoNamePull>()
@@ -84,28 +84,25 @@ namespace OctoGame
                     .AddSingleton<MagicActiveTree>()
                     .AddSingleton<MagicPassiveTree>()
                     .AddSingleton<AllBuffs>()
-
                     .AddSingleton<DealDmgToEnemy>()
                     .AddSingleton<OctoGameUpdateMess>()
                     .AddSingleton<UpdateFightPage>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
 
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
+                    //.AddSingleton<CommandServiceExtension>()
                     .AddSingleton<DiscordHelpModule>()
                     .AddSingleton<AudioService>()
                     .AddSingleton<OctoGameReaction>()
                     .AddSingleton<OctoGameUpdateMess>()
-
                     .AddSingleton<CustomCalculator>()
                     .AddSingleton<HelperFunctions>()
                     .AddTransient<SecureRandom>()
                     .AddTransient<AwaitForUserMessage>()
                     .AddSingleton<GameFramework>()
-
                     .AddTransient<IDataStorage, JsonLocalStorage>()
                     .AddTransient<ILocalization, JsonLocalization>()
                     .AddTransient<IUserAccounts, UserAccounts>()
@@ -113,7 +110,7 @@ namespace OctoGame
                     .AddTransient<ILoggingSystem, LoggingSystem>()
                     .AddTransient<ISpellAccounts, SpellUserAccounts>()
                     .BuildServiceProvider();
-        });
-    }
+            });
+        }
     }
 }
