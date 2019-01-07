@@ -89,7 +89,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
                     if (dmgType == 0)
                     {
-                        dmg = dmg - myAccount.PhysShield;
+                        dmg = dmg - enemyAccount.PhysShield;
 
                         if (dmg < 0)
                             dmg = 0;
@@ -145,7 +145,9 @@ namespace OctoGame.OctoGame.GamePlayFramework
             _accounts.SaveAccounts(enemyAccount.DiscordId);
 
             await _updateFightPage.UpdateIfWinOrContinue(status, myAccount.DiscordId, myAccount.MessageIdInList);
+
             await _updateFightPage.UpdateMainPageForAllPlayers(myAccount);
+            var ll = 123;
         }
 
         public double CheckForBlock(int dmgType, double dmg, AccountSettings myAccount)

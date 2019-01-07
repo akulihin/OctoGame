@@ -99,13 +99,12 @@ namespace OctoGame
                     .AddSingleton<AudioService>()
                     .AddSingleton<OctoGameReaction>()
                     .AddSingleton<OctoGameUpdateMess>()
-
                     .AddSingleton<CustomCalculator>()
                     .AddSingleton<HelperFunctions>()
-                    .AddTransient<SecureRandom>()
-                    .AddTransient<AwaitForUserMessage>()
                     .AddSingleton<GameFramework>()
 
+                    .AddTransient<SecureRandom>()
+                    .AddTransient<AwaitForUserMessage>()
                     .AddTransient<IDataStorage, JsonLocalStorage>()
                     .AddTransient<ILocalization, JsonLocalization>()
                     .AddTransient<IUserAccounts, UserAccounts>()

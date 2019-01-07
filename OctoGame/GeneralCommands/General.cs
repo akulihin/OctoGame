@@ -42,6 +42,7 @@ namespace OctoGame.GeneralCommands
         public async Task Ttest([Remainder]string st = null)
         {
           //  (Context.Guild as IGuildChannel).Guild.
+            var acc = _accounts.GetAccount(Context.User);
             await Task.CompletedTask;
 
         }

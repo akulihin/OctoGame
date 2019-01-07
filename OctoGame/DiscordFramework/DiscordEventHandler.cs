@@ -126,7 +126,9 @@ namespace OctoGame.DiscordFramework
         {
             if (!cacheMessage.HasValue || cacheMessage.Value.Author.IsBot)
             {
+                return; //IActivity guess
             }
+            _commandHandler._clinet_MessageDeleted(cacheMessage, channel);
         }
 
         private async Task MessageReceived(SocketMessage message)
