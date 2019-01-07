@@ -12,9 +12,12 @@ namespace OctoGame.DiscordFramework.CustomLibrary
            if (Context.MessageContentForEdit == null)
            {
                var message = await Context.Channel.SendMessageAsync("", false, embed.Build());
-               var kek = new Global.CommandRam(Context.User, Context.Message, message);
-               Context.Global.CommandList.Add(kek);
-           }
+
+
+               Context.Global.CommandList.Insert(0, new Global.CommandRam(Context.User, Context.Message, message));
+               if (Context.Global.CommandList.Count > 1000)
+                   Context.Global.CommandList.RemoveAt(Context.Global.CommandList.Count - 1);
+            }
            else if (Context.MessageContentForEdit == "edit")
            {
                foreach (var t in Context.Global.CommandList)
@@ -34,10 +37,11 @@ namespace OctoGame.DiscordFramework.CustomLibrary
            if (Context.MessageContentForEdit == null)
            {
                var message = await Context.Channel.SendMessageAsync($"{regularMess}");
-               var kek = new Global.CommandRam(Context.User, Context.Message, message);
 
-               Context.Global.CommandList.Add(kek);
-           }
+               Context.Global.CommandList.Insert(0, new Global.CommandRam(Context.User, Context.Message, message));
+               if (Context.Global.CommandList.Count > 1000)
+                   Context.Global.CommandList.RemoveAt(Context.Global.CommandList.Count - 1);
+            }
            else if (Context.MessageContentForEdit == "edit")
            {
                foreach (var t in Context.Global.CommandList)
@@ -57,9 +61,10 @@ namespace OctoGame.DiscordFramework.CustomLibrary
            if (context.MessageContentForEdit == null )
            {
                var message = await context.Channel.SendMessageAsync($"{regularMess}");
-               var kek = new Global.CommandRam(context.User, context.Message, message);
 
-               context.Global.CommandList.Add(kek);
+               context.Global.CommandList.Insert(0, new Global.CommandRam(context.User, context.Message, message));
+               if(context.Global.CommandList.Count > 1000)
+                   context.Global.CommandList.RemoveAt(context.Global.CommandList.Count-1);
            }
            else if (context.MessageContentForEdit == "edit")
            {
@@ -73,6 +78,9 @@ namespace OctoGame.DiscordFramework.CustomLibrary
                        });
            }
        }
+
+
+
 
     }
 }

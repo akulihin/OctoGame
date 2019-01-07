@@ -46,6 +46,17 @@ namespace OctoGame.DiscordFramework
                 _services);
         }
 
+        public async Task _clinet_MessageDeleted(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
+        {
+            foreach (var t in _global.CommandList)
+            {
+                if (cacheMessage.Value.Id == t.UserSocketMsg.Id)
+                {
+                    t.BotSocketMsg.DeleteAsync();
+                    _global.CommandList.Remove(t);
+                }
+            }
+        }
 
         public async Task _client_MessageUpdated(Cacheable<IMessage, ulong> messageBefore,
             SocketMessage messageAfter, ISocketMessageChannel arg3)
