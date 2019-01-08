@@ -89,7 +89,6 @@ namespace OctoGame
                     .AddSingleton<DealDmgToEnemy>()
                     .AddSingleton<OctoGameUpdateMess>()
                     .AddSingleton<UpdateFightPage>()
-                    .AddSingleton<DiscordHelpModule>()
                     .AddSingleton<AudioService>()
                     .AddSingleton<OctoGameReaction>()
                     .AddSingleton<CustomCalculator>()
