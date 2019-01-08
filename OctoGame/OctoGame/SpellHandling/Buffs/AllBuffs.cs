@@ -11,6 +11,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
         private readonly IUserAccounts _accounts;
         private readonly DealDmgToEnemy _dealDmgToEnemy;
 
+
         private static readonly ConcurrentDictionary<ulong, double> TemporaryStrength1089 =
             new ConcurrentDictionary<ulong, double>();
         private static readonly ConcurrentDictionary<ulong, double> TemporaryAttack1019 =

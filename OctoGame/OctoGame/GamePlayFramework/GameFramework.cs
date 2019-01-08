@@ -29,11 +29,12 @@ namespace OctoGame.OctoGame.GamePlayFramework
         private readonly AllBuffs _allDebuffs;
 
         private readonly DealDmgToEnemy _dealDmgToEnemy;
+        private readonly UpdateFightPage _updateFightPage;
 
         public GameFramework(IUserAccounts accounts, 
             AttackDamageActiveTree attackDamageActiveTree, ISpellAccounts spellAccounts, 
             AwaitForUserMessage awaitForUserMessage,
-             AttackDamagePassiveTree attackDamagePassiveTree, AllBuffs allDebuffs, DefencePassiveTree defencePassiveTree, DefenceActiveTree defenceActiveTree, AgilityActiveTree agilityActiveTree, AgilityPassiveTree agilityPassiveTree, MagicActiveTree magicActiveTree, MagicPassiveTree magicPassiveTree, DealDmgToEnemy dealDmgToEnemy)
+             AttackDamagePassiveTree attackDamagePassiveTree, AllBuffs allDebuffs, DefencePassiveTree defencePassiveTree, DefenceActiveTree defenceActiveTree, AgilityActiveTree agilityActiveTree, AgilityPassiveTree agilityPassiveTree, MagicActiveTree magicActiveTree, MagicPassiveTree magicPassiveTree, DealDmgToEnemy dealDmgToEnemy, UpdateFightPage updateFightPage)
         {
             _accounts = accounts;
 
@@ -50,12 +51,14 @@ namespace OctoGame.OctoGame.GamePlayFramework
             _magicActiveTree = magicActiveTree;
             _magicPassiveTree = magicPassiveTree;
             _dealDmgToEnemy = dealDmgToEnemy;
+            _updateFightPage = updateFightPage;
         }
 
 
         public async Task GetSkillDependingOnMoveList(AccountSettings account, AccountSettings enemy,
             SocketReaction reaction, int i)
         {
+
             var skills = GetSkillListFromTree(account);
             var ski = Convert.ToUInt64(skills[GetSkillNum(reaction) - 1]);
             var skill = _spellAccounts.GetAccount(ski);
@@ -92,6 +95,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             
             await _dealDmgToEnemy.DmgHealthHandeling(skill.WhereDmg, dmg, skill.SpellDmgType, account, enemy);
             await UpdateTurn(account, enemy);
+       
         }
 
 
@@ -123,6 +127,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             await CheckDmgWithTimer(enemy, account);
 
             await CheckForPassivesAndUpdateStats(account, enemy);
+            await _updateFightPage.UpdateMainPageForAllPlayers(account);
         }
 
 
@@ -241,13 +246,25 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
                 case "7⃣":
                 {
-                    value = 6;
+                    value = 7;
                     break;
                 }
 
                 case "8⃣":
                 {
-                    value = 7;
+                    value = 8;
+                    break;
+                }
+                
+                case "9⃣":
+                {
+                    value = 9;
+                    break;
+                }
+
+                case "🐙":
+                {
+                    value = 100;
                     break;
                 }
             }

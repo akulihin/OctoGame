@@ -4,6 +4,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.Language;
 using OctoGame.Helpers;
@@ -64,6 +65,7 @@ namespace OctoGame
         {
             return new Container(x =>
             {
+            
                 x.AddSingleton(_client)
                     .AddSingleton<OctoPicPull>()
                     .AddSingleton<OctoNamePull>()
@@ -87,30 +89,26 @@ namespace OctoGame
                     .AddSingleton<DealDmgToEnemy>()
                     .AddSingleton<OctoGameUpdateMess>()
                     .AddSingleton<UpdateFightPage>()
-
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
-                    //.AddSingleton<CommandServiceExtension>()
                     .AddSingleton<DiscordHelpModule>()
                     .AddSingleton<AudioService>()
                     .AddSingleton<OctoGameReaction>()
-                    .AddSingleton<OctoGameUpdateMess>()
                     .AddSingleton<CustomCalculator>()
                     .AddSingleton<HelperFunctions>()
                     .AddSingleton<GameFramework>()
+                    .AddSingleton<AwaitForUserMessage>()
+
                     .AddTransient<SecureRandom>()
-                    .AddTransient<AwaitForUserMessage>()
-                    .AddTransient<IDataStorage, JsonLocalStorage>()
-                    .AddTransient<ILocalization, JsonLocalization>()
-                    .AddTransient<IUserAccounts, UserAccounts>()
-                    .AddTransient<IServerAccounts, ServerAccounts>()
-                    .AddTransient<ILoggingSystem, LoggingSystem>()
-                    .AddTransient<ISpellAccounts, SpellUserAccounts>()
+
+                    .AddSingleton<IDataStorage, JsonLocalStorage>()
+                    .AddSingleton<ILocalization, JsonLocalization>()
+                    .AddSingleton<IUserAccounts, UserAccounts>()
+                    .AddSingleton<IServerAccounts, ServerAccounts>()
+                    .AddSingleton<ILoggingSystem, LoggingSystem>()
+                    .AddSingleton<ISpellAccounts, SpellUserAccounts>()
+
                     .BuildServiceProvider();
             });
+          
         }
     }
 }

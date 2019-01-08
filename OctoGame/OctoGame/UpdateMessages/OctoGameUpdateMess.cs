@@ -95,7 +95,10 @@ namespace OctoGame.OctoGame.UpdateMessages
 
             var mainPage = FightPage(globalAccount, account, enemy, skillString);
 
-            await socketMsg.ModifyAsync(message => { message.Embed = mainPage.Build(); });
+            await socketMsg.ModifyAsync(message =>
+            {
+                message.Embed = null;
+                message.Embed =  mainPage.Build(); });
         }
 
 

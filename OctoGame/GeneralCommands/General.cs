@@ -41,9 +41,9 @@ namespace OctoGame.GeneralCommands
         [Summary("doing absolutely nothing. That's right - NOTHING")]
         public async Task Ttest([Remainder]string st = null)
         {
-          //  (Context.Guild as IGuildChannel).Guild.
             var acc = _accounts.GetAccount(Context.User);
-            await Task.CompletedTask;
+            acc.Attack_Tree = st;
+            _accounts.SaveAccounts(Context.User);
 
         }
 

@@ -46,8 +46,8 @@ namespace OctoGame.OctoGame.ReactionHandling
                     {
                         case "🐙":
 
-                            await _octoGameUpdateMess.MainPage(reaction.UserId,
-                                reaction.Message.Value);
+                            await _gameFramework.UpdateTurn(account, enemy);
+                     
                             break;
                         case "⬅":
                             await _octoGameUpdateMess.SkillPageLeft(reaction,

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 using OctoGame.OctoGame.SpellHandling.BonusDmgHandling;
@@ -146,8 +145,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             await _updateFightPage.UpdateIfWinOrContinue(status, myAccount.DiscordId, myAccount.MessageIdInList);
 
-            await _updateFightPage.UpdateMainPageForAllPlayers(myAccount);
-            var ll = 123;
+
         }
 
         public double CheckForBlock(int dmgType, double dmg, AccountSettings myAccount)

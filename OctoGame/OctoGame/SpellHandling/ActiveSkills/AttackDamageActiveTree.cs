@@ -158,8 +158,8 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
 
             if (check)
-                if (myAccount.InstantBuff.Any(x => x.skillId == 1000) && myAccount.IsFirstHit)
-                    dmg = dmg * (1 + myAccount.PrecentBonusDmg);
+                if(myAccount.PrecentBonusDmg > 0)
+                    dmg =  dmg * (1 + myAccount.PrecentBonusDmg);
             if (check)
                 dmg = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance,
                     dmg);

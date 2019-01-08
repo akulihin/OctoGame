@@ -19,8 +19,11 @@ namespace OctoGame.OctoGame.GamePlayFramework
         {
             foreach (var u in _global.OctopusGameMessIdList[account.MessageIdInList])
             {
-                if(u.PlayerDiscordAccount != null && u.GamingWindowFromBot != null)
+                if (u.PlayerDiscordAccount != null && u.GamingWindowFromBot != null)
+                {
                     await _octoGameUpdateMess.MainPage(u.PlayerDiscordAccount.Id, u.GamingWindowFromBot);
+                }
+
             }
         }
 
@@ -29,7 +32,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             if (status == 1)
                 foreach (var v in _global.OctopusGameMessIdList[i])
                 {
-                      if (v.PlayerDiscordAccount.Id == userId)
+                    if (v.PlayerDiscordAccount != null && v.PlayerDiscordAccount.Id == userId)
                       await _octoGameUpdateMess.VictoryPage(v.PlayerDiscordAccount.Id,
                         v.GamingWindowFromBot);
                 }
