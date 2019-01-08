@@ -36,6 +36,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     var minus = myAccount.Strength;
                     if (minus > 100)
                         minus = 100;
+
                     dmg = ((100 - minus) /100 * myAccount.AttackPower_Stats) +
                           enemyAccount.Health * (myAccount.Strength / 20 * 5 / 100 + 0.05);
 

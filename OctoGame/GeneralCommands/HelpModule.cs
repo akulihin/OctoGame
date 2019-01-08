@@ -50,9 +50,9 @@ namespace OctoGame.GeneralCommands
             var moduleInfos = commandModulesList.ToList();
             var moduleWeNeed = new List<CommandInfo>();
 
-            foreach (var c in moduleInfos) moduleWeNeed.AddRange(c.Commands.Where(h => string.Equals(h.Name, command, StringComparison.CurrentCultureIgnoreCase)));
+            foreach (var c in moduleInfos) moduleWeNeed.AddRange(c.Commands.Where(h => string.Equals(h.Name.ToLower(), command.ToLower(), StringComparison.CurrentCultureIgnoreCase)));
 
-            var module = commandModulesList.FirstOrDefault(m => m.Name == command);
+            var module = commandModulesList.FirstOrDefault(m => m.Name.ToLower() == command.ToLower());
             if (module != null)
             {
                 builder.AddField(GetModuleName(module), GetFullModuleInfo(module, guildAccount.Prefix));
@@ -89,10 +89,10 @@ namespace OctoGame.GeneralCommands
             var userAccount = _userAccounts.GetAccount(Context.User.Id);
             var guildAccount = _serverAccounts.GetServerAccount(Context.Guild);
 
-            var botPrefix = $"{guildAccount.Prefix}";
+            var botPrefix = $"`{guildAccount.Prefix}`";
 
             if (userAccount.MyPrefix != null && userAccount.MyPrefix.Length >= 1)
-                botPrefix += $"**OR** {userAccount.MyPrefix}";
+                botPrefix += $"**OR** `{userAccount.MyPrefix}`";
 
             var footerMessage =
                 $"Use {guildAccount.Prefix}help [command module] or {guildAccount.Prefix}help [command name] for more information.";
@@ -134,10 +134,12 @@ namespace OctoGame.GeneralCommands
         private static string GetFullModuleInfo(ModuleInfo module, string prefix)
         {
             var sb = new StringBuilder();
+            var i = 0;
             foreach (var c in module.Commands)
             {
+                i++;
                 var parameters = string.Join(", ", GetCommandParameters(c));
-                sb.AppendLine($"**Usage**: `{prefix}{c.Name} {parameters}`");
+                sb.AppendLine($"{i}. **Usage**: `{prefix}{c.Name} {parameters}`");
             }
 
             return sb.ToString();
