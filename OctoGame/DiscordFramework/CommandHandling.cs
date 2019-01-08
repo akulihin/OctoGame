@@ -46,7 +46,7 @@ namespace OctoGame.DiscordFramework
                 _services);
         }
 
-        public async Task _clinet_MessageDeleted(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
+        public async Task _client_MessageDeleted(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
         {
             foreach (var t in _global.CommandList)
             {

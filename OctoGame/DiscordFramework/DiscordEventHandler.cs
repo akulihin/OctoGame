@@ -128,7 +128,7 @@ namespace OctoGame.DiscordFramework
             {
                 return; //IActivity guess
             }
-            _commandHandler._clinet_MessageDeleted(cacheMessage, channel);
+            _commandHandler._client_MessageDeleted(cacheMessage, channel);
         }
 
         private async Task MessageReceived(SocketMessage message)
