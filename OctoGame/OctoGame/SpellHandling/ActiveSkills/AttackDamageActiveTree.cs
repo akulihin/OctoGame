@@ -25,16 +25,16 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
             {
                 //1096 (ад ветка) - 100% от АД
 
-                //Done
+                //Done Checked
                 case 1096:
                     dmg = myAccount.AttackPower_Stats;
                     break;
-                //(ад ветка) Убийца гигантов = (вражеское хп / 100 *5) * (сила/20 +1) + ад/100*(100-сила)
+                //Атака(100% - Сила) + (5% от вражеских HP +5% за каждые 20 Силы). (Активируется только по HP)",
 
-                //Done
+                //Done Checked
                 case 1001:
-                    dmg = enemyAccount.Health / 100 * 5 * (myAccount.Strength / 20 + 1) +
-                          myAccount.AttackPower_Stats / 100 * (100 - myAccount.Strength);
+                    dmg = (myAccount.AttackPower_Stats - myAccount.Strength) +
+                          enemyAccount.Health * (myAccount.Strength / 20 * 5 / 100 + 0.05);
 
                     if (!check)
                         myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 6));
@@ -42,7 +42,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                 // (ад ветка) Острый топор - снижает вражеский армор на 2 уровня на 2 хода, 4 хода КД  || 1003
 
-                // Done
+                // Done Checked
                 case 1003:
 
                     if (!check)

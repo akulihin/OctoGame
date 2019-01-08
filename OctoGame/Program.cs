@@ -4,7 +4,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.Language;
 using OctoGame.Helpers;
