@@ -77,7 +77,7 @@
     "SpellTreeNum": 1,
     "SpellTreeString": "AD",
     "SpellDescriptionRu": "Коварно иммитирует замах, пропуская ход. На следующем ходу смободно может дейсстовать, атака автоматически произведется на следующий ход после этого. || Физический урон = 228% от Атаки",
-    "SpellDescriptionEn": "Cunningly imitates swing, missing a turn. On the next turn can freely act, attack will be automatically made on the next turn after that. || Physical damage = 228% of Attack",
+    "SpellDescriptionEn": "Cunningly fakes swing, missing a turn. On the next turn can freely act, attack will be automatically made on the next turn after that. || Physical damage = 228% of Attack",
     "SpellFormula": "TODO",
     "SpellDmgType": 0,
     "SpellCd": 228,
