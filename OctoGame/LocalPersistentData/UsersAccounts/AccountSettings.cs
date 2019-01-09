@@ -22,6 +22,16 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public uint OctoLvL { get; set; } //1 lvl ( 0 lvl 1lvl 2 lvl)
         public string OctoInfo { get; set; }
         public string OctoAvatar { get; set; }
+
+
+
+
+
+
+
+
+
+
         public List<ArtifactEntities> Inventory { get; set; }
         public List<ArtifactEntities> OctoItems { get; set; }
         public string Attack_Tree { get; set; }

@@ -45,6 +45,8 @@ namespace OctoGame.GeneralCommands
             acc.Attack_Tree = st;
             _accounts.SaveAccounts(Context.User);
 
+           // Context.User.GetAvatarUrl()
+
         }
 
 

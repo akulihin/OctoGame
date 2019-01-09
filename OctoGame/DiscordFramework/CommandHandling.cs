@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
@@ -10,13 +9,10 @@ using OctoGame.DiscordFramework.CustomLibrary;
 using OctoGame.LocalPersistentData.ServerAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
-
 namespace OctoGame.DiscordFramework
 {
     public class CommandHandling : ModuleBaseCustom
     {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
 
         private readonly DiscordShardedClient _client;
         private readonly CommandService _commands;
@@ -24,19 +20,20 @@ namespace OctoGame.DiscordFramework
         private readonly Scope _services;
         private readonly IUserAccounts _accounts;
         private readonly IServerAccounts _serverAccounts;
+        private readonly Log _log;
 
-        private const string LogFile = @"OctoDataBase/Log.json";
 
         public CommandHandling(CommandService commands,
-            DiscordShardedClient client, IUserAccounts accounts, IServerAccounts serverAccounts, Global global, Scope scope)
+            DiscordShardedClient client, IUserAccounts accounts, IServerAccounts serverAccounts, Global global,
+            Scope scope, Log log)
         {
             _commands = commands;
             _services = scope;
+            _log = log;
             _client = client;
             _accounts = accounts;
             _serverAccounts = serverAccounts;
             _global = global;
-
         }
 
         public async Task InitializeAsync()
@@ -49,18 +46,21 @@ namespace OctoGame.DiscordFramework
         public async Task _client_MessageDeleted(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
         {
             foreach (var t in _global.CommandList)
-            {
                 if (cacheMessage.Value.Id == t.UserSocketMsg.Id)
                 {
-                    t.BotSocketMsg.DeleteAsync();
+                  await  t.BotSocketMsg.DeleteAsync();
                     _global.CommandList.Remove(t);
                 }
-            }
+
+            await Task.CompletedTask;
         }
 
         public async Task _client_MessageUpdated(Cacheable<IMessage, ulong> messageBefore,
             SocketMessage messageAfter, ISocketMessageChannel arg3)
         {
+            var watch = Stopwatch.StartNew();
+            watch.Start();
+
             if (messageAfter.Author.IsBot)
                 return;
             var after = messageAfter as IUserMessage;
@@ -70,7 +70,7 @@ namespace OctoGame.DiscordFramework
                 return;
 
 
-            var before = (messageBefore.HasValue ? messageBefore.Value : null) as IUserMessage;
+            var before = messageBefore.HasValue ? messageBefore.Value : null;
             if (before == null)
                 return;
             if (arg3 == null)
@@ -95,18 +95,20 @@ namespace OctoGame.DiscordFramework
 
                 if (message.Channel is SocketDMChannel)
                 {
-                    var resultTask = await _commands.ExecuteAsync(
+                    var resultTask = Task.FromResult(await _commands.ExecuteAsync(
                         context,
                         argPos,
-                        _services);
-                  
-                    if (!resultTask.IsSuccess  && !resultTask.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {resultTask.ErrorReason}", context);
+                        _services));
+
+                    watch.Stop();
+
+                    await resultTask.ContinueWith(async task =>
+                        await CommandResults(task, context, watch));
+
                     return;
                 }
 
                 var guild = _serverAccounts.GetServerAccount(context.Guild);
-                
-
 
                 if (message.HasStringPrefix(guild.Prefix, ref argPos) || message.HasStringPrefix(guild.Prefix + " ",
                                                                           ref argPos)
@@ -117,25 +119,30 @@ namespace OctoGame.DiscordFramework
                                                                       || message.HasStringPrefix(account.MyPrefix,
                                                                           ref argPos))
                 {
-                    var result = await _commands.ExecuteAsync(
+                    var resultTask = Task.FromResult(await _commands.ExecuteAsync(
                         context,
                         argPos,
-                        _services);
+                        _services));
+                    watch.Stop();
 
-
-                    if (!result.IsSuccess  && !result.ErrorReason.Contains("Unknown command")) SendMessAsync( $"Booole! {result.ErrorReason}", context);
+                    await resultTask.ContinueWith(async task =>
+                        await CommandResults(task, context, watch));
                 }
 
                 return;
             }
 
+            watch.Stop();
 
-            await HandleCommandAsync(messageAfter); 
+            await HandleCommandAsync(messageAfter);
         }
 
 
         public async Task HandleCommandAsync(SocketMessage msg)
         {
+            var watch = Stopwatch.StartNew();
+            watch.Start();
+
             var message = msg as SocketUserMessage;
             if (message == null) return;
             var account = _accounts.GetAccount(msg.Author);
@@ -145,51 +152,33 @@ namespace OctoGame.DiscordFramework
             if (message.Author is SocketGuildUser userCheck && userCheck.IsMuted)
                 return;
 
-            if(msg.Author.IsBot)
-                return;        
+            if (msg.Author.IsBot)
+                return;
 
             switch (message.Channel)
             {
                 case SocketDMChannel _ when context.User.IsBot:
                     return;
                 case SocketDMChannel _:
+
                     var resultTask = _commands.ExecuteAsync(
                         context,
                         argPos,
                         _services);
-                    resultTask.ContinueWith(task =>
-                    {
-                        if (!task.Result.IsSuccess)
-                        {
-                            Console.ForegroundColor = LogColor("red");
-                            Console.WriteLine(
-                                $"{DateTime.Now.ToLongTimeString()} - DM: ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason}");
-                            Console.ResetColor();
 
-                            File.AppendAllText(LogFile,
-                                $"{DateTime.Now.ToLongTimeString()} - DM: ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason} \n");
+                    watch.Stop();
 
-                            if(!task.Result.ErrorReason.Contains("Unknown command"))
-                                SendMessAsync( $"Booole! {task.Result.ErrorReason}", context);
-                        }
-                        else
-                        {
-                            Console.ForegroundColor = LogColor("white");
-                            Console.WriteLine(
-                                $"{DateTime.Now.ToLongTimeString()} - DM: '{context.Channel}' {context.User}: {message}");
-                            Console.ResetColor();
 
-                            File.AppendAllText(LogFile,
-                                $"{DateTime.Now.ToLongTimeString()} - DM: '{context.Channel}' {context.User}: {message} \n");
-                        }
-                    });
+                  await  resultTask.ContinueWith(async task =>
+                        await CommandResults(task, context, watch));
+
 
                     return;
             }
 
             var guild = _serverAccounts.GetServerAccount(context.Guild);
 
-            
+
             if (message.HasStringPrefix(guild.Prefix, ref argPos) || message.HasStringPrefix(guild.Prefix + " ",
                                                                       ref argPos)
                                                                   || message.HasMentionPrefix(_client.CurrentUser,
@@ -203,53 +192,38 @@ namespace OctoGame.DiscordFramework
                     context,
                     argPos,
                     _services);
-                resultTask.ContinueWith(task =>
-                {
-                    if (!task.Result.IsSuccess)
-                    {
-                        Console.ForegroundColor = LogColor("red");
-                        Console.WriteLine(
-                            $"{DateTime.Now.ToLongTimeString()} - ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason}");
-                        Console.ResetColor();
 
-                        File.AppendAllText(LogFile,
-                            $"{DateTime.Now.ToLongTimeString()} - ERROR '{context.Channel}' {context.User}: {message} || {task.Result.ErrorReason} \n");
+                watch.Stop();
 
-                        if(!task.Result.ErrorReason.Contains("Unknown command"))
-                            SendMessAsync($"Booole! {task.Result.ErrorReason}", context);
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = LogColor("white");
-                        Console.WriteLine(
-                            $"{DateTime.Now.ToLongTimeString()} - '{context.Channel}' {context.User}: {message}");
-                        Console.ResetColor();
-
-                        File.AppendAllText(LogFile,
-                            $"{DateTime.Now.ToLongTimeString()} - '{context.Channel}' {context.User}: {message} \n");
-                    }
-                });
+            await    resultTask.ContinueWith(async task =>
+                    await CommandResults(task, context, watch));
             }
         }
 
 
-        private static ConsoleColor LogColor(string color)
+        public async Task CommandResults(Task<IResult> resultTask, SocketCommandContextCustom context, Stopwatch watch)
         {
-            switch (color)
+            var guildName = context.Guild == null ? "DM" : context.Guild.Name;
+
+            if (!resultTask.Result.IsSuccess)
             {
-                case "red": //Critical or Error
-                    return ConsoleColor.Red;
-                case "green": //Debug
-                    return ConsoleColor.Green;
-                case "cyan": //Info
-                    return ConsoleColor.Cyan;
-                case "white": //Regular
-                    return ConsoleColor.White;
-                case "yellow": // Warning
-                    return ConsoleColor.Yellow;
-                default:
-                    return ConsoleColor.White;
+                _log.Warning(
+                    $"Command [{context.Message.Content}] by user [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.\n" +
+                    $"Reason: {resultTask.Result.ErrorReason}", "CommandHandler");
+                _log.Error(resultTask.Exception);
+
+
+                if (!resultTask.Result.ErrorReason.Contains("Unknown command"))
+                    await SendMessAsync($"Error! {resultTask.Result.ErrorReason}", context);
             }
+            else
+            {
+                _log.Info(
+                    $"Command [{context.Message.Content}] by user [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.",
+                    "CommandHandler");
+            }
+
+            await Task.CompletedTask;
         }
     }
 }

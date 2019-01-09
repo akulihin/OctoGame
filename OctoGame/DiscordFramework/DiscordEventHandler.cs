@@ -13,13 +13,15 @@ namespace OctoGame.DiscordFramework
         private readonly DiscordShardedClient _client;
         private readonly CommandHandling _commandHandler;
         private readonly OctoGameReaction _octoGameReaction;
+        private readonly LoginFromConsole _log;
  
 
-        public DiscordEventHandler(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction)
+        public DiscordEventHandler(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction, LoginFromConsole log)
         {
             _client = client;
             _commandHandler = commandHandler;
             _octoGameReaction = octoGameReaction;
+            _log = log;
         }
 
         public void InitDiscordEvents()
@@ -111,7 +113,7 @@ namespace OctoGame.DiscordFramework
 
         private async Task Log(LogMessage logMessage)
         {
-            LoogingFromConsole.Log(logMessage);
+            _log.Log(logMessage);
         }
 
         private async Task LoggedIn()
