@@ -4,7 +4,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mylorik/OctoGame/blob/master/LICENSE)
 
 
-# Text based RPG Game using Discord API
+# Turn Based Text RPG game using Discord API
 
 Demo:
 
