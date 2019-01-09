@@ -203,12 +203,12 @@ namespace OctoGame.DiscordFramework
 
         public async Task CommandResults(Task<IResult> resultTask, SocketCommandContextCustom context, Stopwatch watch)
         {
-            var guildName = context.Guild == null ? "DM" : context.Guild.Name;
+            var guildName = context.Guild == null ? "DM" : $"{context.Guild.Name}({context.Guild.Id})";
 
             if (!resultTask.Result.IsSuccess)
             {
                 _log.Warning(
-                    $"Command [{context.Message.Content}] by user [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.\n" +
+                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.\n" +
                     $"Reason: {resultTask.Result.ErrorReason}", "CommandHandler");
                 _log.Error(resultTask.Exception);
 
@@ -219,7 +219,7 @@ namespace OctoGame.DiscordFramework
             else
             {
                 _log.Info(
-                    $"Command [{context.Message.Content}] by user [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.",
+                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.",
                     "CommandHandler");
             }
 
