@@ -4,7 +4,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mylorik/OctoGame/blob/master/LICENSE)
 
 
-# Bext based RPG Game using Discord API
+# Text based RPG Game using Discord API
 
 Demo:
 
