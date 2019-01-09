@@ -94,7 +94,6 @@ namespace OctoGame
                     .AddSingleton<HelperFunctions>()
                     .AddSingleton<GameFramework>()
                     .AddSingleton<AwaitForUserMessage>()
-                    .AddSingleton<Log>()
                     .AddSingleton<LoginFromConsole>()
 
                     .AddTransient<SecureRandom>()

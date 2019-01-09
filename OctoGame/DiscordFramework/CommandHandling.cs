@@ -20,12 +20,12 @@ namespace OctoGame.DiscordFramework
         private readonly Scope _services;
         private readonly IUserAccounts _accounts;
         private readonly IServerAccounts _serverAccounts;
-        private readonly Log _log;
+        private readonly LoginFromConsole _log;
 
 
         public CommandHandling(CommandService commands,
             DiscordShardedClient client, IUserAccounts accounts, IServerAccounts serverAccounts, Global global,
-            Scope scope, Log log)
+            Scope scope, LoginFromConsole log)
         {
             _commands = commands;
             _services = scope;

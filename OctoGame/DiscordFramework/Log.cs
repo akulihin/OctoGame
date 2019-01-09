@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Discord;
 
 namespace OctoGame.DiscordFramework
 {
-    public class Log
+    public class LoginFromConsole
     {
         private readonly string _runTime = @"OctoDataBase/Log.json";
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
@@ -39,6 +40,33 @@ namespace OctoGame.DiscordFramework
                 {LogSeverity.Verbose, "VRBS"}
             };
 
+        internal Task Log(LogMessage message)
+        {
+            if (string.IsNullOrWhiteSpace(message.Message)) return Task.CompletedTask;
+            switch (message.Severity)
+            {
+                case LogSeverity.Critical:
+                    Critical(message.Message, message.Source);
+                    break;
+                case LogSeverity.Error:
+                    Error(message.Message, message.Source);
+                    break;
+                case LogSeverity.Warning:
+                    Warning(message.Message, message.Source);
+                    break;
+                case LogSeverity.Info:
+                    Info(message.Message, message.Source);
+                    break;
+                case LogSeverity.Verbose:
+                    Verbose(message.Message, message.Source);
+                    break;
+                case LogSeverity.Debug:
+                    Debug(message.Message, message.Source);
+                    break;
+            }
+
+            return Task.CompletedTask;
+        }
         public void Critical(object value, [CallerFilePath] string callerFilePath = "",
             ConsoleColor color = ConsoleColor.Gray)
         {
