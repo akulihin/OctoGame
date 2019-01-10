@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using OctoGame.LocalPersistentData.UsersAccounts;
+﻿using OctoGame.LocalPersistentData.UsersAccounts;
 using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
