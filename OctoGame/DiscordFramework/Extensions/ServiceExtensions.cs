@@ -12,8 +12,12 @@ namespace OctoGame.DiscordFramework.Extensions
         {
             foreach (var type in Assembly.GetEntryAssembly().GetTypes()
                 .Where(x => typeof(IService).IsAssignableFrom(x) && !x.IsInterface))
+            {
                 services.AddSingleton(type);
-
+                // type.GetInterfaces().FirstOrDefault(x => !(x is typeof(IService)))
+            }
+               
+      
             return services;
         }
 
@@ -21,7 +25,9 @@ namespace OctoGame.DiscordFramework.Extensions
         {
             foreach (var type in Assembly.GetEntryAssembly().GetTypes()
                 .Where(x => typeof(IService).IsAssignableFrom(x) && !x.IsInterface))
+            {
                 await ((IService) services.GetRequiredService(type)).InitializeAsync();
+            }
         }
     }
 }

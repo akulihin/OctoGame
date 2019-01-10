@@ -9,6 +9,7 @@ using OctoGame.DiscordFramework;
 using OctoGame.DiscordFramework.Extensions;
 using System.Net.Http;
 using OctoGame.DiscordFramework.Language;
+using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.GameSpellsAccounts;
 using OctoGame.LocalPersistentData.LoggingSystemJson;
 using OctoGame.LocalPersistentData.ServerAccounts;
@@ -51,6 +52,7 @@ namespace OctoGame
                         .AddSingleton<IServerAccounts, ServerAccounts>()
                         .AddSingleton<ILoggingSystem, LoggingSystem>()
                         .AddSingleton<ISpellAccounts, SpellUserAccounts>()
+                        .AddTransient<SecureRandom>()
                         .AutoAddServices()
                         .BuildServiceProvider();
                 });

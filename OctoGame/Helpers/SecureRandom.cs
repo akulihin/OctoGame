@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OctoGame.Helpers
 {
-      public sealed class  SecureRandom : IService
+      public sealed class  SecureRandom 
     {
 
         public Task InitializeAsync()
