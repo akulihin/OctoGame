@@ -80,9 +80,5 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
             }
         }
 
-        public static bool SaveExists(string filePath)
-        {
-            return File.Exists(filePath);
-        }
     }
 }
