@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using OctoGame.DiscordFramework;
 
 namespace OctoGame.LocalPersistentData.ServerAccounts
 {
-    public static class ServerDataStorage
+    public sealed class ServerDataStorage : IService
     {
-         
+
         /*
         это работуящая версия API варианта сторейджа
 
@@ -37,32 +39,44 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
         */
 
 
-        public static void SaveServerSettings(IEnumerable<ServerSettings> accounts, string filePath)
+
+        private readonly LoginFromConsole _log;
+
+        public ServerDataStorage(LoginFromConsole log)
+        {
+            _log = log;
+        }
+
+        public void SaveServerSettings(IEnumerable<ServerSettings> accounts, string filePath)
         {
             try
             {
                 var json = JsonConvert.SerializeObject(accounts, Formatting.Indented);
                 File.WriteAllText(filePath, json);
             }
-            catch
+            catch(Exception e)
             {
-                Console.WriteLine("Failed To ReadFile(SaveServerSettings). Will ty in 5 sec.");
+                _log.Critical($"Failed To ReadFile(Save SERVER Settings): {e.Message}");
+              
             }
         }
 
         //Get ServerSettings
 
-        public static IEnumerable<ServerSettings> LoadServerSettings(string filePath)
+        public IEnumerable<ServerSettings> LoadServerSettings(string filePath)
         {
             if (!File.Exists(filePath)) return null;
             var json = File.ReadAllText(filePath);
             return JsonConvert.DeserializeObject<List<ServerSettings>>(json);
         }
 
-        public static bool SaveExists(string filePath)
+        public bool SaveExists(string filePath)
         {
             return File.Exists(filePath);
         }
+
+        public async Task InitializeAsync()
+            => await Task.CompletedTask;
 
     }
 }

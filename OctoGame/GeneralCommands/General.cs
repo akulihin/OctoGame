@@ -42,7 +42,7 @@ namespace OctoGame.GeneralCommands
         public async Task Ttest([Remainder]string st = null)
         {
             var acc = _accounts.GetAccount(Context.User);
-            acc.Attack_Tree = st;
+            acc.Attack_Tree = st; 
             _accounts.SaveAccounts(Context.User);
 
  

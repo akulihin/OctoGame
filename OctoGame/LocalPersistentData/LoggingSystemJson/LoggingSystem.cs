@@ -13,17 +13,18 @@ namespace OctoGame.LocalPersistentData.LoggingSystemJson
 
 
         private readonly IUserAccounts _accounts;
+        private readonly LoggingSystemDataStorage _loggingSystemDataStorage;
 
-        public LoggingSystem( IUserAccounts accounts)
+        public LoggingSystem( IUserAccounts accounts, LoggingSystemDataStorage loggingSystemDataStorage)
         {
-
             _accounts = accounts;
+            _loggingSystemDataStorage = loggingSystemDataStorage;
         }
 
         public  List<LoggingSystemSettings> GetOrAddLogsToDictionary(ulong userId1, ulong userId2)
         {
             var keyString = GetKeyString(userId1, userId2);
-            return AllLogsDictionary.GetOrAdd(keyString, x => LoggingSystemDataStorage.LoadLogs(keyString).ToList());
+            return AllLogsDictionary.GetOrAdd(keyString, x => _loggingSystemDataStorage.LoadLogs(keyString).ToList());
         }
 
 
@@ -49,7 +50,7 @@ namespace OctoGame.LocalPersistentData.LoggingSystemJson
 
             var keyString = GetKeyString(userId1, userId2);
 
-            LoggingSystemDataStorage.SaveLogs(accounts, keyString);
+            _loggingSystemDataStorage.SaveLogs(accounts, keyString);
         }
 
 
@@ -59,7 +60,7 @@ namespace OctoGame.LocalPersistentData.LoggingSystemJson
 
             var keyString = GetKeyString(userId1, userId2);
 
-            LoggingSystemDataStorage.CompleteSaveLogs(accounts, keyString);
+            _loggingSystemDataStorage.CompleteSaveLogs(accounts, keyString);
             AllLogsDictionary.Remove(keyString, out accounts);
         }
 

@@ -9,26 +9,28 @@ namespace OctoGame.LocalPersistentData.GameSpellsAccounts
 
 
         private  readonly List<SpellSetting> _accounts;
+        private readonly SpellDataStorage _spellDataStorage;
 
 
         private  readonly string _accountsFile = @"OctoGameDataBase/SpellBook.json";
 
-         public SpellUserAccounts()
-        {
-            if (SpellDataStorage.SaveExists(_accountsFile))
+         public SpellUserAccounts(SpellDataStorage spellDataStorage)
+         {
+             _spellDataStorage = spellDataStorage;
+             if (SpellDataStorage.SaveExists(_accountsFile))
             {
-                _accounts = SpellDataStorage.LoadAccountSettings(_accountsFile).ToList();
+                _accounts = _spellDataStorage.LoadAccountSettings(_accountsFile).ToList();
             }
             else
             {
                 _accounts = new List<SpellSetting>();
                 SaveAccounts();
             }
-        }
+         }
 
         public  void SaveAccounts()
         {
-            SpellDataStorage.SaveAccountSettings(_accounts, _accountsFile);
+            _spellDataStorage.SaveAccountSettings(_accounts, _accountsFile);
         }
 
         public  SpellSetting GetAccount(ulong spellId)

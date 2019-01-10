@@ -74,27 +74,29 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
         }
         */
          private  readonly List<ServerSettings> _accounts;
+        private readonly ServerDataStorage _serverDataStorage;
 
         private  readonly string _serverAccountsFile = @"OctoDataBase/ServerAccounts.json";
 
-         public ServerAccounts()
-        {
-            if (ServerDataStorage.SaveExists(_serverAccountsFile))
+         public ServerAccounts(ServerDataStorage serverDataStorage)
+         {
+             _serverDataStorage = serverDataStorage;
+             if (_serverDataStorage.SaveExists(_serverAccountsFile))
             {
-                _accounts = ServerDataStorage.LoadServerSettings(_serverAccountsFile).ToList();
+                _accounts = _serverDataStorage.LoadServerSettings(_serverAccountsFile).ToList();
             }
             else
             {
                 _accounts = new List<ServerSettings>();
                 SaveServerAccounts();
             }
-        }
+         }
 
 
 
         public  void SaveServerAccounts()
         {
-            ServerDataStorage.SaveServerSettings(_accounts, _serverAccountsFile);
+            _serverDataStorage.SaveServerSettings(_accounts, _serverAccountsFile);
         }
 
         public  ServerSettings GetServerAccount(SocketGuild guild)

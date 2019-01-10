@@ -12,10 +12,12 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
             new ConcurrentDictionary<ulong, List<AccountSettings>>();
 
         private readonly DiscordShardedClient _client;
+        private readonly UsersDataStorage _usersDataStorage;
 
-        public UserAccounts(DiscordShardedClient client)
+        public UserAccounts(DiscordShardedClient client, UsersDataStorage usersDataStorage)
         {
             _client = client;
+            _usersDataStorage = usersDataStorage;
         }
        
         /*
@@ -30,7 +32,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 
         public  List<AccountSettings> GetOrAddUserAccountsForGuild(ulong userId)
         {
-            return UserAccountsDictionary.GetOrAdd(userId, x => UsersDataStorage.LoadAccountSettings(userId).ToList());
+            return UserAccountsDictionary.GetOrAdd(userId, x => _usersDataStorage.LoadAccountSettings(userId).ToList());
         }
 
         public  AccountSettings GetAccount(IUser user)
@@ -43,7 +45,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
             if(userId > 1000)
             return GetOrCreateAccount(_client.GetUser(userId));
             else
-            return UserAccountsDictionary.GetOrAdd(userId, x => UsersDataStorage.LoadAccountSettings(userId).ToList()).FirstOrDefault();
+            return UserAccountsDictionary.GetOrAdd(userId, x => _usersDataStorage.LoadAccountSettings(userId).ToList()).FirstOrDefault();
         }
         /*
         public AccountSettings GetBotAccount(ulong botId)
@@ -62,13 +64,13 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public  void SaveAccounts(ulong userId)
         {
             var accounts = GetOrAddUserAccountsForGuild(userId);
-            UsersDataStorage.SaveAccountSettings(accounts, userId);
+            _usersDataStorage.SaveAccountSettings(accounts, userId);
         }
 
         public  void SaveAccounts(IUser user)
         {
             var accounts = GetOrAddUserAccountsForGuild(user.Id);
-            UsersDataStorage.SaveAccountSettings(accounts, user.Id);
+            _usersDataStorage.SaveAccountSettings(accounts, user.Id);
         }
 
 
