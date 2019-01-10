@@ -8,7 +8,7 @@ using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
 using Newtonsoft.Json;
-using OctoGame.DiscordFramework.CustomLibrary;
+using OctoGame.DiscordFramework.Extensions;
 using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.GameSpellsAccounts;
 using OctoGame.LocalPersistentData.LoggingSystemJson;

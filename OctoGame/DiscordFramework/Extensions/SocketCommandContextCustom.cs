@@ -1,7 +1,7 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 
-namespace OctoGame.DiscordFramework.CustomLibrary
+namespace OctoGame.DiscordFramework.Extensions
 {
     public class SocketCommandContextCustom : ShardedCommandContext
     {

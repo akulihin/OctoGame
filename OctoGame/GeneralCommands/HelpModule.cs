@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using OctoGame.DiscordFramework.CustomLibrary;
+using OctoGame.DiscordFramework.Extensions;
 using OctoGame.LocalPersistentData.ServerAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
 

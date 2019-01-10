@@ -7,8 +7,9 @@ using OctoGame.Helpers;
 
 namespace OctoGame.DiscordFramework.Language
 {
-    public class JsonLocalStorage : IDataStorage
+    public sealed class JsonLocalStorage : IDataStorage
     {
+
         private const string StorageDirectory = "jsonStorage";
         private const string LanguagesDirectory = "Language/Data";
 

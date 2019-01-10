@@ -5,7 +5,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.LocalPersistentData.LoggingSystemJson
 {
-    public class LoggingSystem : ILoggingSystem
+    public sealed class LoggingSystem : ILoggingSystem
     {
 
         private static readonly ConcurrentDictionary<string, List<LoggingSystemSettings>> AllLogsDictionary =

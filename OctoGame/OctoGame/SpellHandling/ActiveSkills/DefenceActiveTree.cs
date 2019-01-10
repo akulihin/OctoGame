@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 {
-    public class DefenceActiveTree
+    public sealed class DefenceActiveTree : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly IUserAccounts _accounts;
         private readonly ArmorReduction _armorReduction;
 

@@ -1,24 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Lamar;
 using Microsoft.Extensions.DependencyInjection;
 using OctoGame.DiscordFramework;
+using OctoGame.DiscordFramework.Extensions;
+using System.Net.Http;
 using OctoGame.DiscordFramework.Language;
-using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.GameSpellsAccounts;
 using OctoGame.LocalPersistentData.LoggingSystemJson;
 using OctoGame.LocalPersistentData.ServerAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
-using OctoGame.OctoGame.GamePlayFramework;
-using OctoGame.OctoGame.ReactionHandling;
-using OctoGame.OctoGame.SpellHandling.ActiveSkills;
-using OctoGame.OctoGame.SpellHandling.BonusDmgHandling;
-using OctoGame.OctoGame.SpellHandling.Buffs;
-using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
-using OctoGame.OctoGame.SpellHandling.PassiveSkills;
-using OctoGame.OctoGame.UpdateMessages;
+
 
 namespace OctoGame
 {
@@ -36,7 +31,6 @@ namespace OctoGame
 
         public async Task RunBotAsync()
         {
-            if (string.IsNullOrEmpty(Config.Bot.Token)) return;
             _client = new DiscordShardedClient(_shardIds, new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose,
@@ -45,69 +39,37 @@ namespace OctoGame
                 TotalShards = 1
             });
             
-            _services = ConfigureServices();
-            _services.GetRequiredService<DiscordEventHandler>().InitDiscordEvents();
-            await _services.GetRequiredService<CommandHandling>().InitializeAsync();
-
-            var botToken = Config.Bot.Token;
+            _services = new Container(x => 
+                {
+                    x.AddSingleton(_client)
+                        .AddSingleton<CancellationTokenSource>()
+                        .AddSingleton<CommandService>()
+                        .AddSingleton<HttpClient>()                       
+                        .AddSingleton<IDataStorage, JsonLocalStorage>()
+                        .AddSingleton<ILocalization, JsonLocalization>()
+                        .AddSingleton<IUserAccounts, UserAccounts>()
+                        .AddSingleton<IServerAccounts, ServerAccounts>()
+                        .AddSingleton<ILoggingSystem, LoggingSystem>()
+                        .AddSingleton<ISpellAccounts, SpellUserAccounts>()
+                        .AutoAddServices()
+                        .BuildServiceProvider();
+                });
+            
+            await _services.InitializeServicesAsync();
+         
             await _client.SetGameAsync("Boole~");
 
-            await _client.LoginAsync(TokenType.Bot, botToken);
+            await _client.LoginAsync(TokenType.Bot, _services.GetRequiredService<Config>().Token);
             await _client.StartAsync();
 
-
             SendMessagesUsingConsole.ConsoleInput(_client);
-            await Task.Delay(-1);
-        }
 
-        private Container ConfigureServices()
-        {
-            return new Container(x =>
+            try
             {
-            
-                x.AddSingleton(_client)
-                    .AddSingleton<OctoPicPull>()
-                    .AddSingleton<OctoNamePull>()
-                    .AddSingleton<Global>()
-                    .AddSingleton<CommandService>()
-                    .AddSingleton<CommandHandling>()
-                    .AddSingleton<DiscordEventHandler>()
-                    .AddSingleton<MagicReduction>()
-                    .AddSingleton<ArmorReduction>()
-                    .AddSingleton<Dodge>()
-                    .AddSingleton<Crit>()
-                    .AddSingleton<AgilityActiveTree>()
-                    .AddSingleton<AgilityPassiveTree>()
-                    .AddSingleton<AttackDamageActiveTree>()
-                    .AddSingleton<AttackDamagePassiveTree>()
-                    .AddSingleton<DefenceActiveTree>()
-                    .AddSingleton<DefencePassiveTree>()
-                    .AddSingleton<MagicActiveTree>()
-                    .AddSingleton<MagicPassiveTree>()
-                    .AddSingleton<AllBuffs>()
-                    .AddSingleton<DealDmgToEnemy>()
-                    .AddSingleton<OctoGameUpdateMess>()
-                    .AddSingleton<UpdateFightPage>()
-                    .AddSingleton<AudioService>()
-                    .AddSingleton<OctoGameReaction>()
-                    .AddSingleton<CustomCalculator>()
-                    .AddSingleton<HelperFunctions>()
-                    .AddSingleton<GameFramework>()
-                    .AddSingleton<AwaitForUserMessage>()
-                    .AddSingleton<LoginFromConsole>()
-
-                    .AddTransient<SecureRandom>()
-
-                    .AddSingleton<IDataStorage, JsonLocalStorage>()
-                    .AddSingleton<ILocalization, JsonLocalization>()
-                    .AddSingleton<IUserAccounts, UserAccounts>()
-                    .AddSingleton<IServerAccounts, ServerAccounts>()
-                    .AddSingleton<ILoggingSystem, LoggingSystem>()
-                    .AddSingleton<ISpellAccounts, SpellUserAccounts>()
-
-                    .BuildServiceProvider();
-            });
-          
+                await Task.Delay(-1, _services.GetRequiredService<CancellationTokenSource>().Token);
+            }
+            catch (TaskCanceledException)
+            { }
         }
     }
 }

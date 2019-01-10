@@ -11,8 +11,12 @@ using OctoGame.OctoGame.SpellHandling.PassiveSkills;
 
 namespace OctoGame.OctoGame.GamePlayFramework
 {
-    public class GameFramework
+    public sealed class GameFramework : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly IUserAccounts _accounts;
         private readonly ISpellAccounts _spellAccounts;
 

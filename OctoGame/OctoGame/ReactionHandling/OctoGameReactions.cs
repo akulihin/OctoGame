@@ -9,8 +9,11 @@ using OctoGame.OctoGame.UpdateMessages;
 
 namespace OctoGame.OctoGame.ReactionHandling
 {
-    public class OctoGameReaction
+    public sealed class OctoGameReaction : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly IUserAccounts _accounts;
         private readonly OctoGameUpdateMess _octoGameUpdateMess;
         private readonly Global _global;

@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 {
-    public class AttackDamagePassiveTree
+    public sealed class AttackDamagePassiveTree : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1004 = new ConcurrentDictionary<ulong, double>();
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1008 = new ConcurrentDictionary<ulong, double>();
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1016 = new ConcurrentDictionary<ulong, double>();

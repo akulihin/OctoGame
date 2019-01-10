@@ -4,8 +4,11 @@ using Discord.WebSocket;
 
 namespace OctoGame.Helpers
 {
-    public class HelperFunctions
+    public sealed class HelperFunctions : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         public async Task DeleteBotAndUserMessage(IUserMessage botMessage, SocketMessage userMessage,
             int timeInSeconds)
         {

@@ -6,9 +6,8 @@ using Discord.WebSocket;
 
 namespace OctoGame.LocalPersistentData.UsersAccounts
 {
-    public class UserAccounts : IUserAccounts
+    public sealed class UserAccounts : IUserAccounts
     {
-
         private static readonly ConcurrentDictionary<ulong, List<AccountSettings>> UserAccountsDictionary =
             new ConcurrentDictionary<ulong, List<AccountSettings>>();
 
@@ -18,7 +17,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         {
             _client = client;
         }
-
+       
         /*
         static UserAccounts()
         {

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.BonusDmgHandling
 {
-   public class Crit
+   public sealed class Crit : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         public double CritHandling(double agi, double dmg, AccountSettings account)
         {
             var rand = new Random();
