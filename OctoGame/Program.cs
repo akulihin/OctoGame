@@ -25,7 +25,7 @@ namespace OctoGame
 
         private readonly int[] _shardIds = {0};
 
-        private void Main()
+        private static void Main()
         {
             new ProgramOctoGame().RunBotAsync().GetAwaiter().GetResult();
         }
