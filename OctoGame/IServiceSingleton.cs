@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 namespace OctoGame
 {
-    public interface IService
+    public interface IServiceSingleton
     {
         Task InitializeAsync();
     }

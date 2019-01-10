@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace OctoGame.OctoGame.SpellHandling.DmgReductionHandling
 {
-    public sealed class ArmorReduction : IService
+    public sealed class ArmorReduction : IServiceSingleton
     {
 
         public Task InitializeAsync()

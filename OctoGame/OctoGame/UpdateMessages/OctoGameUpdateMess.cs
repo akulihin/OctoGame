@@ -14,13 +14,13 @@ using OctoGame.OctoGame.SpellHandling.ActiveSkills;
 
 namespace OctoGame.OctoGame.UpdateMessages
 {
-    public sealed class OctoGameUpdateMess : ModuleBase<SocketCommandContext>, IService
+    public sealed class OctoGameUpdateMess : ModuleBase<SocketCommandContext>, IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;
 
-        private readonly IUserAccounts _accounts;
-        private readonly ISpellAccounts _spellAccounts;
+        private readonly UserAccounts _accounts;
+        private readonly SpellUserAccounts _spellAccounts;
         private readonly AttackDamageActiveTree _attackDamageActiveTree;
         private readonly AgilityActiveTree _agilityActiveTree;
         private readonly DefenceActiveTree _defenceActiveTree;
@@ -30,8 +30,8 @@ namespace OctoGame.OctoGame.UpdateMessages
 
         private readonly Global _global;
 
-        public OctoGameUpdateMess(IUserAccounts accounts, AttackDamageActiveTree attackDamageActiveTree,
-            ISpellAccounts spellAccounts, Global global, MagicActiveTree magicActiveTree,
+        public OctoGameUpdateMess(UserAccounts accounts, AttackDamageActiveTree attackDamageActiveTree,
+            SpellUserAccounts spellAccounts, Global global, MagicActiveTree magicActiveTree,
             DefenceActiveTree defenceActiveTree, AgilityActiveTree agilityActiveTree)
         {
             _accounts = accounts;

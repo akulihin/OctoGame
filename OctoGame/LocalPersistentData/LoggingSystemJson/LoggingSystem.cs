@@ -1,21 +1,25 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.LocalPersistentData.LoggingSystemJson
 {
-    public sealed class LoggingSystem : ILoggingSystem
+    public sealed class LoggingSystem :  IServiceSingleton
     {
+
+        public async Task InitializeAsync()
+            => await Task.CompletedTask;
 
         private static readonly ConcurrentDictionary<string, List<LoggingSystemSettings>> AllLogsDictionary =
             new ConcurrentDictionary<string, List<LoggingSystemSettings>>();
 
 
-        private readonly IUserAccounts _accounts;
+        private readonly UserAccounts _accounts;
         private readonly LoggingSystemDataStorage _loggingSystemDataStorage;
 
-        public LoggingSystem( IUserAccounts accounts, LoggingSystemDataStorage loggingSystemDataStorage)
+        public LoggingSystem( UserAccounts accounts, LoggingSystemDataStorage loggingSystemDataStorage)
         {
             _accounts = accounts;
             _loggingSystemDataStorage = loggingSystemDataStorage;

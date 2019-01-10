@@ -11,20 +11,20 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.DiscordFramework
 {
-    public sealed class CommandHandling : ModuleBaseCustom, IService
+    public sealed class CommandHandling : ModuleBaseCustom, IServiceSingleton
     {
 
         private readonly DiscordShardedClient _client;
         private readonly CommandService _commands;
         private readonly Global _global;
         private readonly Scope _services;
-        private readonly IUserAccounts _accounts;
-        private readonly IServerAccounts _serverAccounts;
+        private readonly UserAccounts _accounts;
+        private readonly ServerAccounts _serverAccounts;
         private readonly LoginFromConsole _log;
 
 
         public CommandHandling(CommandService commands,
-            DiscordShardedClient client, IUserAccounts accounts, IServerAccounts serverAccounts, Global global,
+            DiscordShardedClient client, UserAccounts accounts, ServerAccounts serverAccounts, Global global,
             Scope scope, LoginFromConsole log)
         {
             _commands = commands;
@@ -59,7 +59,7 @@ namespace OctoGame.DiscordFramework
             SocketMessage messageAfter, ISocketMessageChannel arg3)
         {
             var watch = Stopwatch.StartNew();
-            watch.Start();
+            
 
             if (messageAfter.Author.IsBot)
                 return;
@@ -141,7 +141,7 @@ namespace OctoGame.DiscordFramework
         public async Task HandleCommandAsync(SocketMessage msg)
         {
             var watch = Stopwatch.StartNew();
-            watch.Start();
+
 
             var message = msg as SocketUserMessage;
             if (message == null) return;

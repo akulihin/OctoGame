@@ -14,11 +14,11 @@ namespace OctoGame.GeneralCommands
     public class HelpModule :  ModuleBaseCustom
     {
         private readonly CommandService _commandService;
-        private readonly IUserAccounts _userAccounts;
-        private readonly IServerAccounts _serverAccounts;
+        private readonly UserAccounts _userAccounts;
+        private readonly ServerAccounts _serverAccounts;
 
 
-        public HelpModule(CommandService commandService, IUserAccounts userAccounts, IServerAccounts serverAccounts)
+        public HelpModule(CommandService commandService, UserAccounts userAccounts, ServerAccounts serverAccounts)
         {
             _commandService = commandService;
             _userAccounts = userAccounts;

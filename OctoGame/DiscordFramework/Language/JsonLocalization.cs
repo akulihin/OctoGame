@@ -15,7 +15,7 @@ namespace OctoGame.DiscordFramework.Language
             _dataStorage = dataStorage;
             LoadLanguages();
         }
-
+    
 
         public void LoadLanguages()
         {

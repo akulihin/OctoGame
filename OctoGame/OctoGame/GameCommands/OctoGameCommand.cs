@@ -20,17 +20,17 @@ namespace OctoGame.OctoGame.GameCommands
 {
     public class OctoGameCommand : ModuleBaseCustom
     {
-        private readonly IUserAccounts _accounts;
-        private readonly ISpellAccounts _spellAccounts;
-        private readonly ILoggingSystem _loggingSystem;
+        private readonly UserAccounts _accounts;
+        private readonly SpellUserAccounts _spellAccounts;
+        private readonly LoggingSystem _loggingSystem;
         private readonly Global _global;
         private readonly AwaitForUserMessage _awaitForUserMessage;
         private readonly GameFramework _gameFramework;
         private readonly DiscordShardedClient _client;
         private readonly OctoGameUpdateMess _octoGameUpdateMess;
 
-        public OctoGameCommand(IUserAccounts accounts, ISpellAccounts spellAccounts, Global global,
-            AwaitForUserMessage awaitForUserMessage, ILoggingSystem loggingSystem,
+        public OctoGameCommand(UserAccounts accounts, SpellUserAccounts spellAccounts, Global global,
+            AwaitForUserMessage awaitForUserMessage, LoggingSystem loggingSystem,
             GameFramework gameFramework, DiscordShardedClient client, OctoGameUpdateMess octoGameUpdateMess)
         {
             _accounts = accounts;

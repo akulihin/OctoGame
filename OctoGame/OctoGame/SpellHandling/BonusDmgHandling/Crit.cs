@@ -4,7 +4,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.BonusDmgHandling
 {
-   public sealed class Crit : IService
+   public sealed class Crit : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;

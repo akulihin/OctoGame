@@ -11,14 +11,14 @@ using OctoGame.OctoGame.SpellHandling.PassiveSkills;
 
 namespace OctoGame.OctoGame.GamePlayFramework
 {
-    public sealed class GameFramework : IService
+    public sealed class GameFramework : IServiceSingleton
     {
 
         public Task InitializeAsync()
             => Task.CompletedTask;
 
-        private readonly IUserAccounts _accounts;
-        private readonly ISpellAccounts _spellAccounts;
+        private readonly UserAccounts _accounts;
+        private readonly SpellUserAccounts _spellAccounts;
 
         private readonly AttackDamageActiveTree _attackDamageActiveTree;
         private readonly AttackDamagePassiveTree _attackDamagePassiveTree;
@@ -35,8 +35,8 @@ namespace OctoGame.OctoGame.GamePlayFramework
         private readonly DealDmgToEnemy _dealDmgToEnemy;
         private readonly UpdateFightPage _updateFightPage;
 
-        public GameFramework(IUserAccounts accounts, 
-            AttackDamageActiveTree attackDamageActiveTree, ISpellAccounts spellAccounts, 
+        public GameFramework(UserAccounts accounts, 
+            AttackDamageActiveTree attackDamageActiveTree, SpellUserAccounts spellAccounts, 
             AwaitForUserMessage awaitForUserMessage,
              AttackDamagePassiveTree attackDamagePassiveTree, AllBuffs allDebuffs, DefencePassiveTree defencePassiveTree, DefenceActiveTree defenceActiveTree, AgilityActiveTree agilityActiveTree, AgilityPassiveTree agilityPassiveTree, MagicActiveTree magicActiveTree, MagicPassiveTree magicPassiveTree, DealDmgToEnemy dealDmgToEnemy, UpdateFightPage updateFightPage)
         {
@@ -66,7 +66,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             var skills = GetSkillListFromTree(account);
             var ski = Convert.ToUInt64(skills[GetSkillNum(reaction) - 1]);
             var skill = _spellAccounts.GetAccount(ski);
-
+            
             if (account.SkillCooldowns.Any(x => x.skillId == skill.SpellId))
             {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

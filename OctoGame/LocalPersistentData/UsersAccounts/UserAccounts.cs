@@ -1,12 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
 namespace OctoGame.LocalPersistentData.UsersAccounts
 {
-    public sealed class UserAccounts : IUserAccounts
+    public sealed class UserAccounts :  IServiceSingleton
     {
         private static readonly ConcurrentDictionary<ulong, List<AccountSettings>> UserAccountsDictionary =
             new ConcurrentDictionary<ulong, List<AccountSettings>>();
@@ -19,7 +20,10 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
             _client = client;
             _usersDataStorage = usersDataStorage;
         }
-       
+
+        public async Task InitializeAsync()
+            => await Task.CompletedTask;
+
         /*
         static UserAccounts()
         {

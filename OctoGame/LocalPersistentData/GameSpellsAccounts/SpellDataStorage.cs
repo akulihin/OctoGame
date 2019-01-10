@@ -7,7 +7,7 @@ using OctoGame.DiscordFramework;
 
 namespace OctoGame.LocalPersistentData.GameSpellsAccounts
 {
-    public sealed class SpellDataStorage : IService
+    public sealed class SpellDataStorage : IServiceSingleton
     {
 
         private readonly LoginFromConsole _log;

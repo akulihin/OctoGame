@@ -6,7 +6,7 @@ using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 
 namespace OctoGame.OctoGame.GamePlayFramework
 {
-    public sealed class DealDmgToEnemy : IService
+    public sealed class DealDmgToEnemy : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;
@@ -15,11 +15,11 @@ namespace OctoGame.OctoGame.GamePlayFramework
         private readonly Dodge _dodge;
         private readonly ArmorReduction _armorReduction;
         private readonly MagicReduction _magicReduction;
-        private readonly IUserAccounts _accounts;
+        private readonly UserAccounts _accounts;
         private readonly UpdateFightPage _updateFightPage;
 
 
-        public DealDmgToEnemy(Crit crit, Dodge dodge, ArmorReduction armorReduction, MagicReduction magicReduction, IUserAccounts accounts, UpdateFightPage updateFightPage)
+        public DealDmgToEnemy(Crit crit, Dodge dodge, ArmorReduction armorReduction, MagicReduction magicReduction, UserAccounts accounts, UpdateFightPage updateFightPage)
         {
             _crit = crit;
             _dodge = dodge;

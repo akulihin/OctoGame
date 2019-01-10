@@ -4,7 +4,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 {
-   public sealed class MagicActiveTree : IService
+   public sealed class MagicActiveTree : IServiceSingleton
     {
 
         public Task InitializeAsync()

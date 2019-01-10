@@ -7,7 +7,7 @@ using OctoGame.DiscordFramework;
 
 namespace OctoGame.LocalPersistentData.UsersAccounts
 {
-       public sealed class UsersDataStorage : IService
+       public sealed class UsersDataStorage : IServiceSingleton
     {
         //Save all AccountSettings
 

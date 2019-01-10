@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
 namespace OctoGame.LocalPersistentData.ServerAccounts
 {
-    public sealed class ServerAccounts : IServerAccounts
+    public sealed class ServerAccounts :  IServiceSingleton
     {
+        public async Task InitializeAsync()
+            => await Task.CompletedTask;
         /*
       это работуящая версия API варианта сторейджа
 
@@ -73,7 +76,7 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
             return newAccount;
         }
         */
-         private  readonly List<ServerSettings> _accounts;
+        private  readonly List<ServerSettings> _accounts;
         private readonly ServerDataStorage _serverDataStorage;
 
         private  readonly string _serverAccountsFile = @"OctoDataBase/ServerAccounts.json";

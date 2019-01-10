@@ -12,7 +12,7 @@ using Discord;
 
 namespace OctoGame.DiscordFramework
 {
-    public sealed class LoginFromConsole : IService
+    public sealed class LoginFromConsole : IServiceSingleton
     {
 
         public Task InitializeAsync()

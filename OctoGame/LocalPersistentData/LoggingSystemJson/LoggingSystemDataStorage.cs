@@ -7,7 +7,7 @@ using OctoGame.DiscordFramework;
 
 namespace OctoGame.LocalPersistentData.LoggingSystemJson
 {
-    public sealed class LoggingSystemDataStorage : IService
+    public sealed class LoggingSystemDataStorage : IServiceSingleton
     {
         //Save all AccountSettings
 

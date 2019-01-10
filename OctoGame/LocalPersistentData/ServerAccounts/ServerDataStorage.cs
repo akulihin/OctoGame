@@ -7,7 +7,7 @@ using OctoGame.DiscordFramework;
 
 namespace OctoGame.LocalPersistentData.ServerAccounts
 {
-    public sealed class ServerDataStorage : IService
+    public sealed class ServerDataStorage : IServiceSingleton
     {
 
         /*

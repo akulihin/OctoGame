@@ -5,17 +5,17 @@ using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 {
-    public sealed class AttackDamageActiveTree : IService
+    public sealed class AttackDamageActiveTree : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;
 
-        private readonly IUserAccounts _accounts;
+        private readonly UserAccounts _accounts;
         private readonly ArmorReduction _armorReduction;
   
 
 
-        public AttackDamageActiveTree(IUserAccounts accounts, ArmorReduction armorReduction)
+        public AttackDamageActiveTree(UserAccounts accounts, ArmorReduction armorReduction)
         {
             _accounts = accounts;
             _armorReduction = armorReduction;

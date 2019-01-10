@@ -7,7 +7,7 @@ using Discord.Audio;
 
 namespace OctoGame.DiscordFramework
 {
-    public sealed class AudioService : IService
+    public sealed class AudioService : IServiceSingleton
     {
 
         public Task InitializeAsync()

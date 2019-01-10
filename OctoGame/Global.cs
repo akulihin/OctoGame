@@ -5,7 +5,7 @@ using Discord.WebSocket;
 
 namespace OctoGame
 {
-    public sealed class Global : IService
+    public sealed class Global : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;

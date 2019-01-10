@@ -4,7 +4,7 @@ using OctoGame.OctoGame.UpdateMessages;
 
 namespace OctoGame.OctoGame.GamePlayFramework
 {
-  public sealed class UpdateFightPage : IService
+  public sealed class UpdateFightPage : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;

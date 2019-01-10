@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace OctoGame.Helpers
 {
-    public sealed class CustomCalculator : IService
+    public sealed class CustomCalculator : IServiceSingleton
     {
 
         public Task InitializeAsync()

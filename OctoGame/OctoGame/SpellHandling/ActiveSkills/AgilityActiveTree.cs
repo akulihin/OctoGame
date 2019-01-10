@@ -3,7 +3,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 {
-   public sealed class AgilityActiveTree : IService
+   public sealed class AgilityActiveTree : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;

@@ -6,7 +6,7 @@ using OctoGame.DiscordFramework;
 
 namespace OctoGame
 {
-    public sealed class Config : IService
+    public sealed class Config : IServiceSingleton
     {
 
         public Config(LoginFromConsole log)

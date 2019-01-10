@@ -4,7 +4,7 @@ using Discord.WebSocket;
 
 namespace OctoGame.Helpers
 {
-    public sealed class HelperFunctions : IService
+    public sealed class HelperFunctions : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;

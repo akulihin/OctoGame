@@ -3,7 +3,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 {
-   public sealed class DefencePassiveTree : IService
+   public sealed class DefencePassiveTree : IServiceSingleton
     {
 
         public Task InitializeAsync()

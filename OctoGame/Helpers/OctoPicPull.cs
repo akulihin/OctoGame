@@ -4,7 +4,7 @@ namespace OctoGame.Helpers
 {
 
 
-    public sealed  class OctoPicPull : IService
+    public sealed  class OctoPicPull : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;
@@ -190,7 +190,7 @@ namespace OctoGame.Helpers
     }
 
 
-    public sealed class OctoNamePull : IService
+    public sealed class OctoNamePull : IServiceSingleton
     {
         public Task InitializeAsync()
             => Task.CompletedTask;

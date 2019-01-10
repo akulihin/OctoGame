@@ -6,7 +6,7 @@ using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 {
-    public sealed class AttackDamagePassiveTree : IService
+    public sealed class AttackDamagePassiveTree : IServiceSingleton
     {
 
         public Task InitializeAsync()
@@ -16,9 +16,9 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1008 = new ConcurrentDictionary<ulong, double>();
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1016 = new ConcurrentDictionary<ulong, double>();
         private  static readonly ConcurrentDictionary<ulong, double> TemporaryAd1018 = new ConcurrentDictionary<ulong, double>();
-        private readonly IUserAccounts _accounts;
+        private readonly UserAccounts _accounts;
 
-        public AttackDamagePassiveTree(IUserAccounts accounts)
+        public AttackDamagePassiveTree(UserAccounts accounts)
         {
             _accounts = accounts;
         }

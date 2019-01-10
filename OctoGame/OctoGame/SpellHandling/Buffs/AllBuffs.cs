@@ -6,13 +6,13 @@ using OctoGame.OctoGame.GamePlayFramework;
 
 namespace OctoGame.OctoGame.SpellHandling.Buffs
 {
-    public sealed class AllBuffs : IService
+    public sealed class AllBuffs : IServiceSingleton
     {
 
         public Task InitializeAsync()
             => Task.CompletedTask;
 
-        private readonly IUserAccounts _accounts;
+        private readonly UserAccounts _accounts;
         private readonly DealDmgToEnemy _dealDmgToEnemy;
 
 
@@ -25,7 +25,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
         // private static List<ulong, double>
 
 
-        public AllBuffs(IUserAccounts accounts, DealDmgToEnemy dealDmgToEnemy)
+        public AllBuffs(UserAccounts accounts, DealDmgToEnemy dealDmgToEnemy)
         {
             _accounts = accounts;
             _dealDmgToEnemy = dealDmgToEnemy;

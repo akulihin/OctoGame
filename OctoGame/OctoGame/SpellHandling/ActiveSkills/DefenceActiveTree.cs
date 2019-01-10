@@ -6,16 +6,16 @@ using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 {
-    public sealed class DefenceActiveTree : IService
+    public sealed class DefenceActiveTree : IServiceSingleton
     {
 
         public Task InitializeAsync()
             => Task.CompletedTask;
 
-        private readonly IUserAccounts _accounts;
+        private readonly UserAccounts _accounts;
         private readonly ArmorReduction _armorReduction;
 
-        public DefenceActiveTree(IUserAccounts accounts, ArmorReduction armorReduction)
+        public DefenceActiveTree(UserAccounts accounts, ArmorReduction armorReduction)
         {
             _accounts = accounts;
             _armorReduction = armorReduction;

@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace OctoGame.LocalPersistentData.GameSpellsAccounts
 {
-    public sealed class SpellUserAccounts : ISpellAccounts
+    public sealed class SpellUserAccounts :  IServiceSingleton
     {
 
+        public async Task InitializeAsync()
+            => await Task.CompletedTask;
 
         private  readonly List<SpellSetting> _accounts;
         private readonly SpellDataStorage _spellDataStorage;
