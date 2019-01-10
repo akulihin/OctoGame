@@ -1,7 +1,13 @@
-﻿namespace OctoGame.Helpers
+﻿using System.Threading.Tasks;
+
+namespace OctoGame.Helpers
 {
-    public class OctoPicPull
+
+
+    public sealed  class OctoPicPull : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
         public string[] OctoPics =
         {
             //индекс осьминога -1 к его номеру
@@ -184,8 +190,11 @@
     }
 
 
-    public class OctoNamePull
+    public sealed class OctoNamePull : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         public string[] OctoNameRu =
         {
             "[Фиолетовый дракон](https://i.imgur.com/jAnjdX0.jpg)",

@@ -1,8 +1,13 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace OctoGame.OctoGame.SpellHandling.DmgReductionHandling
 {
-    public class MagicReduction
+    public sealed class MagicReduction : IService
     {  
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         public double ResistHandling(double magPen, double magResist, double dmg)
         {
             double def = 0;

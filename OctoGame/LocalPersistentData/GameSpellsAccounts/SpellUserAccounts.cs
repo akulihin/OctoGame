@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+
 namespace OctoGame.LocalPersistentData.GameSpellsAccounts
 {
-    public  class SpellUserAccounts : ISpellAccounts
+    public sealed class SpellUserAccounts : ISpellAccounts
     {
+
+
         private  readonly List<SpellSetting> _accounts;
 
 

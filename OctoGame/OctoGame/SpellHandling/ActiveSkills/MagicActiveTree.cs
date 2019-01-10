@@ -1,10 +1,15 @@
 ﻿
+using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 {
-   public class MagicActiveTree
+   public sealed class MagicActiveTree : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         public double ApSkills(ulong skillId, AccountSettings myAccount, AccountSettings enemyAccount, bool check)
         {
             double dmg = 0;

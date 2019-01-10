@@ -6,9 +6,8 @@ using Discord.WebSocket;
 
 namespace OctoGame.LocalPersistentData.ServerAccounts
 {
-    public  class ServerAccounts : IServerAccounts
+    public sealed class ServerAccounts : IServerAccounts
     {
-
         /*
       это работуящая версия API варианта сторейджа
 

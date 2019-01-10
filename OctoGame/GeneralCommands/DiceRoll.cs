@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using OctoGame.DiscordFramework.CustomLibrary;
+using OctoGame.DiscordFramework.Extensions;
 using OctoGame.Helpers;
 
 namespace OctoGame.GeneralCommands

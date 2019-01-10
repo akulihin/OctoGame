@@ -5,13 +5,13 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Lamar.IoC;
-using OctoGame.DiscordFramework.CustomLibrary;
+using OctoGame.DiscordFramework.Extensions;
 using OctoGame.LocalPersistentData.ServerAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.DiscordFramework
 {
-    public class CommandHandling : ModuleBaseCustom
+    public sealed class CommandHandling : ModuleBaseCustom, IService
     {
 
         private readonly DiscordShardedClient _client;

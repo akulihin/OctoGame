@@ -14,8 +14,11 @@ using OctoGame.OctoGame.SpellHandling.ActiveSkills;
 
 namespace OctoGame.OctoGame.UpdateMessages
 {
-    public class OctoGameUpdateMess : ModuleBase<SocketCommandContext>
+    public sealed class OctoGameUpdateMess : ModuleBase<SocketCommandContext>, IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly IUserAccounts _accounts;
         private readonly ISpellAccounts _spellAccounts;
         private readonly AttackDamageActiveTree _attackDamageActiveTree;

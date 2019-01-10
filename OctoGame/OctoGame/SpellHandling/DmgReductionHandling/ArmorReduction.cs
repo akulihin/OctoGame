@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace OctoGame.OctoGame.SpellHandling.DmgReductionHandling
 {
-    public class ArmorReduction
+    public sealed class ArmorReduction : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         public double ArmorHandling(double armPen, double arm, double dmg)
         {
             // TEST IT, maybe an error!!! ( unity test helps)

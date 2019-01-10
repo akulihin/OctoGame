@@ -12,8 +12,12 @@ using Discord;
 
 namespace OctoGame.DiscordFramework
 {
-    public class LoginFromConsole
+    public sealed class LoginFromConsole : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly string _runTime = @"OctoDataBase/Log.json";
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private const int PadLength = 16;

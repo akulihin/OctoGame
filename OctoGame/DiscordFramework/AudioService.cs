@@ -7,8 +7,12 @@ using Discord.Audio;
 
 namespace OctoGame.DiscordFramework
 {
-    public class AudioService
+    public sealed class AudioService : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly ConcurrentDictionary<ulong, IAudioClient> _connectedChannels = new ConcurrentDictionary<ulong, IAudioClient>();
 
         public async Task JoinAudio(IGuild guild, IVoiceChannel target)

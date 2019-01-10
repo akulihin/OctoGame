@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OctoGame.Helpers
 {
-    public class CustomCalculator
+    public sealed class CustomCalculator : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly SecureRandom _secureRandom;
 
         public CustomCalculator(SecureRandom secureRandom)

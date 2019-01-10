@@ -1,9 +1,13 @@
-﻿using OctoGame.LocalPersistentData.UsersAccounts;
+﻿using System.Threading.Tasks;
+using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 {
-   public class DefencePassiveTree
+   public sealed class DefencePassiveTree : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
         /*
 1 столб
 

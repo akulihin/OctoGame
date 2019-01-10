@@ -5,7 +5,7 @@ using OctoGame.OctoGame.ReactionHandling;
 
 namespace OctoGame.DiscordFramework
 {
-    public class DiscordEventHandler
+    public sealed class DiscordEventDispatcher : IService
     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
@@ -16,7 +16,7 @@ namespace OctoGame.DiscordFramework
         private readonly LoginFromConsole _log;
  
 
-        public DiscordEventHandler(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction, LoginFromConsole log)
+        public DiscordEventDispatcher(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction, LoginFromConsole log)
         {
             _client = client;
             _commandHandler = commandHandler;
@@ -24,7 +24,7 @@ namespace OctoGame.DiscordFramework
             _log = log;
         }
 
-        public void InitDiscordEvents()
+        public Task InitializeAsync()
         {
             _client.ChannelCreated += ChannelCreated;
             _client.ChannelDestroyed += ChannelDestroyed;
@@ -59,6 +59,7 @@ namespace OctoGame.DiscordFramework
             _client.UserUnbanned += UserUnbanned;
             _client.UserUpdated += UserUpdated;
             _client.UserVoiceStateUpdated += UserVoiceStateUpdated;
+            return Task.CompletedTask;
         }
 
         private async Task _client_ShardConnected(DiscordSocketClient arg)
@@ -219,5 +220,6 @@ namespace OctoGame.DiscordFramework
             SocketVoiceState voiceStateAfter)
         {
         }
+
     }
 }

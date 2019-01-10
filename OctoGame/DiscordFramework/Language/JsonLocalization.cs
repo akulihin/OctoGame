@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace OctoGame.DiscordFramework.Language
 {
- public class JsonLocalization : ILocalization
+ public sealed class JsonLocalization : ILocalization
     {
         private readonly IDataStorage _dataStorage;
         private List<JustineLanguage> _languages = new List<JustineLanguage>();
@@ -15,6 +15,7 @@ namespace OctoGame.DiscordFramework.Language
             _dataStorage = dataStorage;
             LoadLanguages();
         }
+
 
         public void LoadLanguages()
         {

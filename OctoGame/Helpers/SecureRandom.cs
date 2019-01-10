@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace OctoGame.Helpers
 {
-      public class  SecureRandom
+      public sealed class  SecureRandom 
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly RNGCryptoServiceProvider _csp;
 
         public  SecureRandom()

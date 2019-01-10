@@ -2,7 +2,7 @@
 using Discord;
 using Discord.Commands;
 
-namespace OctoGame.DiscordFramework.CustomLibrary
+namespace OctoGame.DiscordFramework.Extensions
 {
    public class ModuleBaseCustom : ModuleBase<SocketCommandContextCustom>
    {

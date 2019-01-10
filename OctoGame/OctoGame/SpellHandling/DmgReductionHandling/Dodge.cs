@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.DmgReductionHandling
 {
-    public class Dodge
+    public sealed class Dodge : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly IUserAccounts _accounts;
 
         public Dodge(IUserAccounts accounts)

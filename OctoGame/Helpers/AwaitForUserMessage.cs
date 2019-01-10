@@ -4,8 +4,12 @@ using Discord.WebSocket;
 
 namespace OctoGame.Helpers
 {
-    public class AwaitForUserMessage
+    public sealed class AwaitForUserMessage : IService
     {
+
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly Global _global;
 
         public AwaitForUserMessage(Global global)

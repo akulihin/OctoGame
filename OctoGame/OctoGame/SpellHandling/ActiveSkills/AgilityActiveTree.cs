@@ -1,9 +1,13 @@
-﻿using OctoGame.LocalPersistentData.UsersAccounts;
+﻿using System.Threading.Tasks;
+using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 {
-   public class AgilityActiveTree
+   public sealed class AgilityActiveTree : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         public double AgiActiveSkills(ulong skillId, AccountSettings myAccount, AccountSettings enemyAccount, bool check)
         {
             double dmg = 0;

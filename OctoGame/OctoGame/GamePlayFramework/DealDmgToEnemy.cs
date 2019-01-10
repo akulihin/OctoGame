@@ -6,8 +6,11 @@ using OctoGame.OctoGame.SpellHandling.DmgReductionHandling;
 
 namespace OctoGame.OctoGame.GamePlayFramework
 {
-    public class DealDmgToEnemy
+    public sealed class DealDmgToEnemy : IService
     {
+        public Task InitializeAsync()
+            => Task.CompletedTask;
+
         private readonly Crit _crit;
         private readonly Dodge _dodge;
         private readonly ArmorReduction _armorReduction;
