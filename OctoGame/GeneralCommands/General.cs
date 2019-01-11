@@ -8,6 +8,7 @@ using OctoGame.DiscordFramework.Extensions;
 using OctoGame.DiscordFramework.Language;
 using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.UsersAccounts;
+#nullable
 
 namespace OctoGame.GeneralCommands
 {
@@ -83,12 +84,14 @@ namespace OctoGame.GeneralCommands
             SendMessAsync($"I have deleted {toBeDeleted} commands");
         }
 
+      
+
         [Command("uptime")]
         [Summary("showing general info about the bot")]
         public async Task UpTime()
         {
             var time = DateTime.Now -_global.TimeBotStarted;
-            
+            _global.TimeSpendOnLastMessage.TryGetValue(Context.User.Id, out var watch);
             var embed = new EmbedBuilder()
                // .WithAuthor(Context.Client.CurrentUser)
                // .WithTitle("My internal statistics")
@@ -103,7 +106,7 @@ namespace OctoGame.GeneralCommands
                                       $"Total Commands deleted: {_global.TotalCommandsDeleted}\n" +
                                       $"Total Commands in memory: {_commandsInMemory.CommandList.Count} (max {_commandsInMemory.MaximumCommandsInRam})\n" +
                                       $"Client Latency: {_global.Client.Latency}\n" +
-                                      $"Time I spend processing your command: {_global.TimeSpendOnLastMessage.Elapsed:m\\:ss\\.ffff}s\n" +
+                                      $"Time I spend processing your command: {watch.Elapsed:m\\:ss\\.ffff}s\n" +
                                       $"This time counts from from the moment he receives this command.");
        
           

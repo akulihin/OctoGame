@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -209,12 +211,14 @@ namespace OctoGame.DiscordFramework
         public async Task CommandResults(Task<IResult> resultTask, SocketCommandContextCustom context)
         {
        
+            _global.TimeSpendOnLastMessage.Remove(context.User.Id, out var watch);
+
             var guildName = context.Guild == null ? "DM" : $"{context.Guild.Name}({context.Guild.Id})";
 
             if (!resultTask.Result.IsSuccess)
             {
                 _log.Warning(
-                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {_global.TimeSpendOnLastMessage.Elapsed:m\\:ss\\.ffff}s.\n" +
+                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.\n" +
                     $"Reason: {resultTask.Result.ErrorReason}", "CommandHandling");
                 _log.Error(resultTask.Exception);
 
@@ -227,10 +231,12 @@ namespace OctoGame.DiscordFramework
                 _global.TotalCommandsIssued++;
 
                 _log.Info(
-                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {_global.TimeSpendOnLastMessage.Elapsed:m\\:ss\\.ffff}s.",
+                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.",
                     "CommandHandling");
             }
-            _global.TimeSpendOnLastMessage.Stop();
+
+   
+
             await Task.CompletedTask;
         }
     }

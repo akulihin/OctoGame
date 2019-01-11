@@ -143,7 +143,7 @@ namespace OctoGame.DiscordFramework
             
             if(message.Author.IsBot)
                 return;
-            _global.TimeSpendOnLastMessage = Stopwatch.StartNew();
+            _global.TimeSpendOnLastMessage.AddOrUpdate(message.Author.Id, Stopwatch.StartNew(), (key, oldValue) =>  Stopwatch.StartNew());
             _commandHandler.HandleCommandAsync(message);
            
         }
@@ -156,7 +156,11 @@ namespace OctoGame.DiscordFramework
                 return;
             if(cacheMessageBefore.Value.Author.IsBot)
                 return;
-            _global.TimeSpendOnLastMessage = Stopwatch.StartNew();
+
+
+            _global.TimeSpendOnLastMessage.AddOrUpdate(messageAfter.Author.Id, Stopwatch.StartNew(), (key, oldValue) =>  Stopwatch.StartNew());
+
+
             _commandHandler._client_MessageUpdated(cacheMessageBefore, messageAfter, channel);     
             
         }

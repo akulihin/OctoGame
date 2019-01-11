@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace OctoGame
         public uint TotalCommandsIssued { get; set; }
         public uint TotalCommandsDeleted { get; set; }
         public uint TotalCommandsChanged { get; set; }
-        public Stopwatch TimeSpendOnLastMessage { get; set; }
+        public ConcurrentDictionary<ulong, Stopwatch> TimeSpendOnLastMessage  = new ConcurrentDictionary<ulong, Stopwatch>();
 
 
         public  List<List<OctoGameMessAndUserTrack>> OctopusGameMessIdList { get; internal set; } =
