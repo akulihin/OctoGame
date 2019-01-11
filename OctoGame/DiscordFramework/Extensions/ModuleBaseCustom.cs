@@ -77,7 +77,7 @@ namespace OctoGame.DiscordFramework.Extensions
        private static void UpdateGlobalCommandList(IUserMessage message, SocketCommandContextCustom context)
        {
            context.CommandsInMemory.CommandList.Insert(0, new CommandsInMemory.CommandRam(context.Message, message));
-           if(context.CommandsInMemory.CommandList.Count > 1000)
+           if(context.CommandsInMemory.CommandList.Count > context.CommandsInMemory.MaximumCommandsInRam)
                context.CommandsInMemory.CommandList.RemoveAt(context.CommandsInMemory.CommandList.Count-1);
        }
     }

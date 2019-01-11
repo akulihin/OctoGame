@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -22,7 +23,7 @@ namespace OctoGame
         public uint TotalCommandsIssued { get; set; }
         public uint TotalCommandsDeleted { get; set; }
         public uint TotalCommandsChanged { get; set; }
-    
+        public Stopwatch TimeSpendOnLastMessage { get; set; }
 
 
         public  List<List<OctoGameMessAndUserTrack>> OctopusGameMessIdList { get; internal set; } =

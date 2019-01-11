@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using OctoGame.OctoGame.ReactionHandling;
@@ -14,14 +15,16 @@ namespace OctoGame.DiscordFramework
         private readonly CommandHandling _commandHandler;
         private readonly OctoGameReaction _octoGameReaction;
         private readonly LoginFromConsole _log;
+        private readonly Global _global;
  
 
-        public DiscordEventDispatcher(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction, LoginFromConsole log)
+        public DiscordEventDispatcher(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction, LoginFromConsole log, Global global)
         {
             _client = client;
             _commandHandler = commandHandler;
             _octoGameReaction = octoGameReaction;
             _log = log;
+            _global = global;
         }
 
         public Task InitializeAsync()
@@ -136,8 +139,11 @@ namespace OctoGame.DiscordFramework
 
         private async Task MessageReceived(SocketMessage message)
         {
+
+            
             if(message.Author.IsBot)
                 return;
+            _global.TimeSpendOnLastMessage = Stopwatch.StartNew();
             _commandHandler.HandleCommandAsync(message);
            
         }
@@ -150,7 +156,9 @@ namespace OctoGame.DiscordFramework
                 return;
             if(cacheMessageBefore.Value.Author.IsBot)
                 return;
-            _commandHandler._client_MessageUpdated(cacheMessageBefore, messageAfter, channel);       
+            _global.TimeSpendOnLastMessage = Stopwatch.StartNew();
+            _commandHandler._client_MessageUpdated(cacheMessageBefore, messageAfter, channel);     
+            
         }
 
         private async Task ReactionAdded(Cacheable<IUserMessage, ulong> cacheMessage, ISocketMessageChannel channel,

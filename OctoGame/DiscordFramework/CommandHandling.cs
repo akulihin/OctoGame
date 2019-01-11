@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -61,8 +60,7 @@ namespace OctoGame.DiscordFramework
         public async Task _client_MessageUpdated(Cacheable<IMessage, ulong> messageBefore,
             SocketMessage messageAfter, ISocketMessageChannel arg3)
         {
-            var watch = Stopwatch.StartNew();
-            
+           
 
             if (messageAfter.Author.IsBot)
                 return;
@@ -99,15 +97,16 @@ namespace OctoGame.DiscordFramework
 
                 if (message.Channel is SocketDMChannel)
                 {
+                   
                     var resultTask = Task.FromResult(await _commands.ExecuteAsync(
                         context,
                         argPos,
                         _services));
 
-                    watch.Stop();
+                  
 
                     await resultTask.ContinueWith(async task =>
-                        await CommandResults(task, context, watch));
+                        await CommandResults(task, context));
 
                     return;
                 }
@@ -123,20 +122,22 @@ namespace OctoGame.DiscordFramework
                                                                       || message.HasStringPrefix(account.MyPrefix,
                                                                           ref argPos))
                 {
+
+            
                     var resultTask = Task.FromResult(await _commands.ExecuteAsync(
                         context,
                         argPos,
                         _services));
-                    watch.Stop();
+                    
 
                     await resultTask.ContinueWith(async task =>
-                        await CommandResults(task, context, watch));
+                        await CommandResults(task, context));
                 }
 
                 return;
             }
 
-            watch.Stop();
+           
 
             await HandleCommandAsync(messageAfter);
         }
@@ -144,8 +145,6 @@ namespace OctoGame.DiscordFramework
 
         public async Task HandleCommandAsync(SocketMessage msg)
         {
-            var watch = Stopwatch.StartNew();
-
 
             var message = msg as SocketUserMessage;
             if (message == null) return;
@@ -165,16 +164,17 @@ namespace OctoGame.DiscordFramework
                     return;
                 case SocketDMChannel _:
 
+                  
                     var resultTask = _commands.ExecuteAsync(
                         context,
                         argPos,
                         _services);
 
-                    watch.Stop();
+               
 
 
                   await  resultTask.ContinueWith(async task =>
-                        await CommandResults(task, context, watch));
+                        await CommandResults(task, context));
 
 
                     return;
@@ -192,27 +192,29 @@ namespace OctoGame.DiscordFramework
                                                                   || message.HasStringPrefix(account.MyPrefix,
                                                                       ref argPos))
             {
+            
                 var resultTask = _commands.ExecuteAsync(
                     context,
                     argPos,
                     _services);
 
-                watch.Stop();
+             
 
             await    resultTask.ContinueWith(async task =>
-                    await CommandResults(task, context, watch));
+                    await CommandResults(task, context));
             }
         }
 
 
-        public async Task CommandResults(Task<IResult> resultTask, SocketCommandContextCustom context, Stopwatch watch)
+        public async Task CommandResults(Task<IResult> resultTask, SocketCommandContextCustom context)
         {
+       
             var guildName = context.Guild == null ? "DM" : $"{context.Guild.Name}({context.Guild.Id})";
 
             if (!resultTask.Result.IsSuccess)
             {
                 _log.Warning(
-                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.\n" +
+                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {_global.TimeSpendOnLastMessage.Elapsed:m\\:ss\\.ffff}s.\n" +
                     $"Reason: {resultTask.Result.ErrorReason}", "CommandHandling");
                 _log.Error(resultTask.Exception);
 
@@ -223,11 +225,12 @@ namespace OctoGame.DiscordFramework
             else
             {
                 _global.TotalCommandsIssued++;
+
                 _log.Info(
-                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.",
+                    $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {_global.TimeSpendOnLastMessage.Elapsed:m\\:ss\\.ffff}s.",
                     "CommandHandling");
             }
-
+            _global.TimeSpendOnLastMessage.Stop();
             await Task.CompletedTask;
         }
     }

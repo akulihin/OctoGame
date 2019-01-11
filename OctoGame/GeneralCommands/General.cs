@@ -102,15 +102,17 @@ namespace OctoGame.GeneralCommands
                                       $"Total Commands changed: {_global.TotalCommandsChanged}\n" +
                                       $"Total Commands deleted: {_global.TotalCommandsDeleted}\n" +
                                       $"Total Commands in memory: {_commandsInMemory.CommandList.Count} (max {_commandsInMemory.MaximumCommandsInRam})\n" +
-                                      $"");
+                                      $"Client Latency: {_global.Client.Latency}\n" +
+                                      $"Time I spend processing your command: {_global.TimeSpendOnLastMessage.Elapsed:m\\:ss\\.ffff}s\n" +
+                                      $"This time counts from from the moment he receives this command.");
        
           
                 
             
 
             SendMessAsync(embed);
-            // Context.User.GetAvatarUrl()
 
+            // Context.User.GetAvatarUrl()
         }
 
 
