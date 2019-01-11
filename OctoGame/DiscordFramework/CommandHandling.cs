@@ -16,24 +16,26 @@ namespace OctoGame.DiscordFramework
 
         private readonly DiscordShardedClient _client;
         private readonly CommandService _commands;
-        private readonly Global _global;
+        private readonly CommandsInMemory _commandsInMemory;
         private readonly Scope _services;
         private readonly UserAccounts _accounts;
         private readonly ServerAccounts _serverAccounts;
         private readonly LoginFromConsole _log;
+        private readonly Global _global;
 
 
         public CommandHandling(CommandService commands,
-            DiscordShardedClient client, UserAccounts accounts, ServerAccounts serverAccounts, Global global,
-            Scope scope, LoginFromConsole log)
+            DiscordShardedClient client, UserAccounts accounts, ServerAccounts serverAccounts, CommandsInMemory commandsInMemory,
+            Scope scope, LoginFromConsole log, Global global)
         {
             _commands = commands;
             _services = scope;
             _log = log;
+            _global = global;
             _client = client;
             _accounts = accounts;
             _serverAccounts = serverAccounts;
-            _global = global;
+            _commandsInMemory = commandsInMemory;
         }
 
         public async Task InitializeAsync()
@@ -45,11 +47,12 @@ namespace OctoGame.DiscordFramework
 
         public async Task _client_MessageDeleted(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
         {
-            foreach (var t in _global.CommandList)
-                if (cacheMessage.Value.Id == t.UserSocketMsg.Id)
+            foreach (var t in _commandsInMemory.CommandList)
+                if (cacheMessage.Value.Id == t.MessageUserId)
                 {
-                  await  t.BotSocketMsg.DeleteAsync();
-                    _global.CommandList.Remove(t);
+                    _global.TotalCommandsDeleted++;
+                  await t.BotSocketMsg.DeleteAsync();
+                    _commandsInMemory.CommandList.Remove(t);
                 }
 
             await Task.CompletedTask;
@@ -79,17 +82,18 @@ namespace OctoGame.DiscordFramework
                 return;
 
 
-            var list = _global.CommandList;
+            var list = _commandsInMemory.CommandList;
             foreach (var t in list)
             {
-                if (t.UserSocketMsg.Id != messageAfter.Id) continue;
+                if (t.MessageUserId != messageAfter.Id) continue;
 
                 if (!(messageAfter is SocketUserMessage message)) continue;
 
                 if (t.BotSocketMsg == null)
                     return;
+                _global.TotalCommandsChanged++;
                 var account = _accounts.GetAccount(messageAfter.Author);
-                var context = new SocketCommandContextCustom(_client, message, _global, "edit", account.MyLanguage);
+                var context = new SocketCommandContextCustom(_client, message,  _commandsInMemory, "edit", account.MyLanguage);
                 var argPos = 0;
 
 
@@ -146,7 +150,7 @@ namespace OctoGame.DiscordFramework
             var message = msg as SocketUserMessage;
             if (message == null) return;
             var account = _accounts.GetAccount(msg.Author);
-            var context = new SocketCommandContextCustom(_client, message, _global, null, account.MyLanguage);
+            var context = new SocketCommandContextCustom(_client, message, _commandsInMemory, null, account.MyLanguage);
             var argPos = 0;
 
             if (message.Author is SocketGuildUser userCheck && userCheck.IsMuted)
@@ -209,7 +213,7 @@ namespace OctoGame.DiscordFramework
             {
                 _log.Warning(
                     $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.\n" +
-                    $"Reason: {resultTask.Result.ErrorReason}", "CommandHandler");
+                    $"Reason: {resultTask.Result.ErrorReason}", "CommandHandling");
                 _log.Error(resultTask.Exception);
 
 
@@ -218,9 +222,10 @@ namespace OctoGame.DiscordFramework
             }
             else
             {
+                _global.TotalCommandsIssued++;
                 _log.Info(
                     $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.",
-                    "CommandHandler");
+                    "CommandHandling");
             }
 
             await Task.CompletedTask;

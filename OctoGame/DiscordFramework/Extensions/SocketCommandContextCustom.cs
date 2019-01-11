@@ -7,16 +7,16 @@ namespace OctoGame.DiscordFramework.Extensions
     {
         public string MessageContentForEdit { get; }
         public string Language { get; }
-        public Global Global { get; }
+        public CommandsInMemory CommandsInMemory { get; }
      
 
-        public SocketCommandContextCustom(DiscordShardedClient client, SocketUserMessage msg, Global global, string messageContentForEdit = null, string language = null) : base(client, msg)
+        public SocketCommandContextCustom(DiscordShardedClient client, SocketUserMessage msg, CommandsInMemory commandsInMemory, string messageContentForEdit = null, string language = null) : base(client, msg)
         {
             if (language == null)
                 language = "en";
+            CommandsInMemory = commandsInMemory;
             Language = language;
             MessageContentForEdit = messageContentForEdit;
-            Global = global;
         }
     }
 }

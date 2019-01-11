@@ -4,72 +4,84 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using OctoGame.DiscordFramework.Language;
 
 namespace OctoGame.DiscordFramework.Extensions
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AutoAddServices(this IServiceCollection services)
+        public static IServiceCollection AutoAddSingleton(this IServiceCollection services)
         {
-            var singleCont = 0;
-            var trasCont = 0;
+            var singletonServicesCount = 0;
 
-            var watchSingl = Stopwatch.StartNew();     
+
+            var watchSingleton = Stopwatch.StartNew();     
             foreach (var type in Assembly.GetEntryAssembly().GetTypes()
                 .Where(x => typeof(IServiceSingleton).IsAssignableFrom(x) && !x.IsInterface))
             {
-                singleCont++;
+                singletonServicesCount++;
                 services.AddSingleton(type);
   
 
                 // type.GetInterfaces().FirstOrDefault(x => !(x is typeof(IServiceSingleton)))
+                //x != typeof(IService)
             }
-            watchSingl.Stop();
-            
+            watchSingleton.Stop();
+
+            var log = new LoginFromConsole();
+            log.Info($"Singleton added count: {singletonServicesCount} ({watchSingleton.Elapsed:m\\:ss\\.ffff}s.)");
+            return services;
+        }
+
+        public static IServiceCollection AutoAddTransient(this IServiceCollection services)
+        {
+            var transientServicesCount = 0;
           
-            var watchTrans = Stopwatch.StartNew();
+            var watchTransient = Stopwatch.StartNew();
             foreach (var type in Assembly.GetEntryAssembly().GetTypes()
                 .Where(x => typeof(IServiceTransient).IsAssignableFrom(x) && !x.IsInterface))
             {
-                trasCont++;
+                transientServicesCount++;
                 services.AddTransient(type);
                 
 
             }
-            watchTrans.Stop();
+            watchTransient.Stop();
 
-            Console.WriteLine($"Singleton added count: {singleCont} ({watchSingl.Elapsed:m\\:ss\\.ffff}s.)\n" +
-                              $"Transient added count: {trasCont} ({watchTrans.Elapsed:m\\:ss\\.ffff}s.)");
+            var log = new LoginFromConsole();     
+            log.Info($"Transient added count: {transientServicesCount} ({watchTransient.Elapsed:m\\:ss\\.ffff}s.)");
             return services;
+
         }
+
 
         public static async Task InitializeServicesAsync(this IServiceProvider services)
         {
-            var singleCont = 0;
-            var trasCont = 0;
+            var singletonServicesCount = 0;
+            var transientServicesCount = 0;
 
-            var watchSingl = Stopwatch.StartNew();
+            var watchSingleton = Stopwatch.StartNew();
             foreach (var type in Assembly.GetEntryAssembly().GetTypes()
                 .Where(x => typeof(IServiceSingleton).IsAssignableFrom(x) && !x.IsInterface))
             {
-                singleCont++;
+                singletonServicesCount++;
                 await ((IServiceSingleton) services.GetRequiredService(type)).InitializeAsync();
             }
-            watchSingl.Stop();
+            watchSingleton.Stop();
 
 
-            var watchTrans = Stopwatch.StartNew();
+            var watchTransient = Stopwatch.StartNew();
             foreach (var type in Assembly.GetEntryAssembly().GetTypes()
                 .Where(x => typeof(IServiceTransient).IsAssignableFrom(x) && !x.IsInterface))
             {
-                trasCont++;
+                transientServicesCount++;
                 await ((IServiceTransient)services.GetRequiredService(type)).InitializeAsync();
             }
-            watchTrans.Stop();
+            watchTransient.Stop();
 
-            Console.WriteLine($"\nSingleton Initialized count: {singleCont} ({watchSingl.Elapsed:m\\:ss\\.ffff}s.)\n" +
-                              $"Transient Initialized count: {trasCont} ({watchTrans.Elapsed:m\\:ss\\.ffff}s.)\n");
+            var log = new LoginFromConsole();
+
+            log.Info($"\nSingleton Initialized count: {singletonServicesCount} ({watchSingleton.Elapsed:m\\:ss\\.ffff}s.)");
+            log.Info($"Transient Initialized count: {transientServicesCount} ({watchTransient.Elapsed:m\\:ss\\.ffff}s.)\n");
         }
     }
 }

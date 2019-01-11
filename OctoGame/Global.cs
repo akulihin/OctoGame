@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -13,14 +14,25 @@ namespace OctoGame
         public Global(DiscordShardedClient client)
         {
             Client = client;
+            TimeBotStarted = DateTime.Now;
         }
+        public readonly DiscordShardedClient Client;
+        public readonly DateTime TimeBotStarted;
+        public uint OctoGamePlaying { get; set; }
+        public uint TotalCommandsIssued { get; set; }
+        public uint TotalCommandsDeleted { get; set; }
+        public uint TotalCommandsChanged { get; set; }
+    
 
-        public DiscordShardedClient Client{get; set;}
-
-        public int OctoGamePlaying { get; set; }
 
         public  List<List<OctoGameMessAndUserTrack>> OctopusGameMessIdList { get; internal set; } =
             new List<List<OctoGameMessAndUserTrack>>();
+
+
+
+
+        //not data
+   
 
         public struct OctoGameMessAndUserTrack
         {           
@@ -35,24 +47,6 @@ namespace OctoGame
                 GamingWindowFromBot = gamingWindowFromBot;
                 PlayerDiscordAccount = playerDiscordAccount;
 
-            }
-        }
-
-
-        public List<CommandRam> CommandList { get; set; } = new List<CommandRam>();
-
-        public class CommandRam
-        {
-            public IUser BlogAuthor;
-            public IUserMessage UserSocketMsg;
-            public IUserMessage BotSocketMsg;
-            
-
-            public CommandRam(IUser blogAuthor, IUserMessage userSocketMsg, IUserMessage botSocketMsg)
-            {
-                BlogAuthor = blogAuthor;
-                UserSocketMsg = userSocketMsg;
-                BotSocketMsg = botSocketMsg;
             }
         }
 

@@ -42,7 +42,8 @@ namespace OctoGame
                         .AddSingleton<HttpClient>()
                         .AddSingleton<IDataStorage, JsonLocalStorage>()
                         .AddSingleton<ILocalization, JsonLocalization>()
-                        .AutoAddServices()
+                        .AutoAddSingleton()
+                        .AutoAddTransient()
                         .BuildServiceProvider();
                 });
             

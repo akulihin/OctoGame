@@ -23,19 +23,18 @@ namespace OctoGame.OctoGame.GameCommands
         private readonly UserAccounts _accounts;
         private readonly SpellUserAccounts _spellAccounts;
         private readonly LoggingSystem _loggingSystem;
-        private readonly Global _global;
         private readonly AwaitForUserMessage _awaitForUserMessage;
         private readonly GameFramework _gameFramework;
         private readonly DiscordShardedClient _client;
         private readonly OctoGameUpdateMess _octoGameUpdateMess;
+        private readonly Global _global;
 
-        public OctoGameCommand(UserAccounts accounts, SpellUserAccounts spellAccounts, Global global,
+        public OctoGameCommand(UserAccounts accounts, SpellUserAccounts spellAccounts,
             AwaitForUserMessage awaitForUserMessage, LoggingSystem loggingSystem,
-            GameFramework gameFramework, DiscordShardedClient client, OctoGameUpdateMess octoGameUpdateMess)
+            GameFramework gameFramework, DiscordShardedClient client, OctoGameUpdateMess octoGameUpdateMess, Global global)
         {
             _accounts = accounts;
             _spellAccounts = spellAccounts;
-            _global = global;
             _awaitForUserMessage = awaitForUserMessage;
 
 
@@ -43,6 +42,7 @@ namespace OctoGame.OctoGame.GameCommands
             _gameFramework = gameFramework;
             _client = client;
             _octoGameUpdateMess = octoGameUpdateMess;
+            _global = global;
         }
 
 

@@ -18,9 +18,9 @@ namespace OctoGame.DiscordFramework
         public Task InitializeAsync()
             => Task.CompletedTask;
 
-        private readonly string _runTime = @"OctoDataBase/Log.json";
+        private string _runTime = @"OctoDataBase/Log.json";
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
-        private const int PadLength = 16;
+        private readonly int _padLength = 16;
 
         private readonly IReadOnlyDictionary<LogSeverity, ConsoleColor> _logColors =
             new Dictionary<LogSeverity, ConsoleColor>
@@ -33,7 +33,7 @@ namespace OctoGame.DiscordFramework
                 {LogSeverity.Verbose, ConsoleColor.DarkGray}
             };
 
-        private readonly IReadOnlyDictionary<LogSeverity, string> LogAbbreviations =
+        private readonly IReadOnlyDictionary<LogSeverity, string> _logAbbreviations =
             new Dictionary<LogSeverity, string>
             {
                 {LogSeverity.Critical, "CRIT"},
@@ -163,7 +163,7 @@ namespace OctoGame.DiscordFramework
 #endif
                 Console.Write("[");
                 Console.ForegroundColor = _logColors[severity];
-                Console.Write($"{LogAbbreviations[severity]}");
+                Console.Write($"{_logAbbreviations[severity]}");
                 Console.ResetColor();
                 var caller = callerFilePath;
                 try
@@ -187,9 +187,10 @@ namespace OctoGame.DiscordFramework
 
             string PadCenter(string str)
             {
-                var spaces = PadLength - str.Length;
+                var spaces = _padLength - str.Length;
                 var padLeft = spaces / 2 + str.Length;
-                return str.PadLeft(padLeft).PadRight(PadLength);
+
+                return str.PadLeft(padLeft).PadRight(_padLength);
             }
         }
     }

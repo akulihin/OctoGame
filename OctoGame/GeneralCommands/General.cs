@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using DiscordBotsList.Api;
@@ -25,8 +26,11 @@ namespace OctoGame.GeneralCommands
         private readonly OctoNamePull _octoNmaNamePull;
         private readonly HelperFunctions _helperFunctions;
         private readonly AudioService _service;
+        private readonly CommandsInMemory _commandsInMemory;
+        private readonly Global _global;
+
   
-        public General(ILocalization lang, UserAccounts accounts, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service)
+        public General(ILocalization lang, UserAccounts accounts, SecureRandom secureRandom, OctoPicPull octoPicPull, OctoNamePull octoNmaNamePull, HelperFunctions helperFunctions, AudioService service, CommandsInMemory commandsInMemory, Global global) 
         {
             _lang = lang;
             _accounts = accounts;
@@ -36,6 +40,8 @@ namespace OctoGame.GeneralCommands
             _octoNmaNamePull = octoNmaNamePull;
             _helperFunctions = helperFunctions;
             _service = service;
+            _commandsInMemory = commandsInMemory;
+            _global = global;
         }
 
 
@@ -53,6 +59,56 @@ namespace OctoGame.GeneralCommands
             
 
             SendMessAsync($"updated");
+            // Context.User.GetAvatarUrl()
+
+        }
+
+
+        [Command("updMaxRam")]
+        [RequireOwner]
+        [Summary("updates maximum number of commands bot will save in memory (default 1000 every time you launch this app)")]
+        public async Task ChangeMaxNumberOfCommandsInRam(uint number)
+        {
+            _commandsInMemory.MaximumCommandsInRam = number;
+            SendMessAsync($"now I will store {number} of commands");
+        }
+
+        [Command("clearMaxRam")]
+        [RequireOwner]
+        [Summary("CAREFUL! This will delete ALL commands in ram")]
+        public async Task ClearCommandsInRam()
+        {
+            var toBeDeleted = _commandsInMemory.CommandList.Count;
+            _commandsInMemory.CommandList.Clear();
+            SendMessAsync($"I have deleted {toBeDeleted} commands");
+        }
+
+        [Command("uptime")]
+        [Summary("showing general info about the bot")]
+        public async Task UpTime()
+        {
+            var time = DateTime.Now -_global.TimeBotStarted;
+            
+            var embed = new EmbedBuilder()
+               // .WithAuthor(Context.Client.CurrentUser)
+               // .WithTitle("My internal statistics")
+                .WithColor(Color.DarkGreen)
+                .WithCurrentTimestamp()
+                .WithFooter("Thank you for using me!")
+                .AddField("Numbers:", "" +
+                                      $"Working for: {time.Days}d {time.Hours}h {time.Minutes}m and {time:ss\\.fff}s\n" +
+                                      $"Total Games Started: {_global.OctoGamePlaying}\n" +
+                                      $"Total Commands issued while running: {_global.TotalCommandsIssued}\n" +
+                                      $"Total Commands changed: {_global.TotalCommandsChanged}\n" +
+                                      $"Total Commands deleted: {_global.TotalCommandsDeleted}\n" +
+                                      $"Total Commands in memory: {_commandsInMemory.CommandList.Count} (max {_commandsInMemory.MaximumCommandsInRam})\n" +
+                                      $"");
+       
+          
+                
+            
+
+            SendMessAsync(embed);
             // Context.User.GetAvatarUrl()
 
         }
