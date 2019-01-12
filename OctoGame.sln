@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame", "OctoGame\OctoGame.csproj", "{24E20E4B-E35D-4824-8BD7-0B83253153ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame.WEB", "OctoGame.WEB\OctoGame.WEB.csproj", "{3D186D14-27BF-4453-AFA9-9647E4C5B7C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame.API", "OctoGame.API\OctoGame.API.csproj", "{AB8C1650-9921-439B-A6A8-07AE21D76D3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoGame.API", "OctoGame.API\OctoGame.API.csproj", "{AB8C1650-9921-439B-A6A8-07AE21D76D3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoGame.WEB", "OctoGame.WEB\OctoGame.WEB.csproj", "{CD8D65ED-8BB0-43A7-9A42-CC632BF24D10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{24E20E4B-E35D-4824-8BD7-0B83253153ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24E20E4B-E35D-4824-8BD7-0B83253153ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24E20E4B-E35D-4824-8BD7-0B83253153ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D186D14-27BF-4453-AFA9-9647E4C5B7C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D186D14-27BF-4453-AFA9-9647E4C5B7C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D186D14-27BF-4453-AFA9-9647E4C5B7C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D186D14-27BF-4453-AFA9-9647E4C5B7C0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB8C1650-9921-439B-A6A8-07AE21D76D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB8C1650-9921-439B-A6A8-07AE21D76D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB8C1650-9921-439B-A6A8-07AE21D76D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB8C1650-9921-439B-A6A8-07AE21D76D3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD8D65ED-8BB0-43A7-9A42-CC632BF24D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD8D65ED-8BB0-43A7-9A42-CC632BF24D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD8D65ED-8BB0-43A7-9A42-CC632BF24D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD8D65ED-8BB0-43A7-9A42-CC632BF24D10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
