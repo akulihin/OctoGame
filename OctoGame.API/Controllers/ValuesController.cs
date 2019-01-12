@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GameAPI.Controllers
+namespace OctoGame.API.Controllers
 {
     [Route("api/hmm")]
     [ApiController]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace GameAPI
+namespace OctoGame.API
 {
     public class Program
     {

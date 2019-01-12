@@ -43,8 +43,8 @@ namespace OctoGame.OctoGame.GamePlayFramework
              */
             // type 0 = physic, 1 = magic
 
-            var onHitDmg = myAccount.OnHitDamage;
-
+            var onHitDmg  = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, myAccount.OnHitDamage);   
+            
             if(myAccount.PrecentBonusDmg > 0)
             dmg =  dmg * (1 + myAccount.PrecentBonusDmg);
 
@@ -61,6 +61,9 @@ namespace OctoGame.OctoGame.GamePlayFramework
             if(dmg > 0)
             dmg = CheckForBlock(dmgType, dmg, myAccount); // check for block, if dmg <= 0 than dont waste block
 
+            // 0 - artmor
+            // 1 - magic 
+            // 2 - mix (50/50)
             if (dmg > 0) // armor resist handling
                 switch (dmgType)
             {
@@ -69,8 +72,17 @@ namespace OctoGame.OctoGame.GamePlayFramework
                     break;
                 case 1:
                     dmg = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg);   
-                    onHitDmg = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg);   
                     break;
+                case 3:
+                    var part1 = _armorReduction.ArmorHandling(myAccount.PhysicalPenetration, enemyAccount.PhysicalResistance, dmg/2);
+                    var part2 = _magicReduction.ResistHandling(myAccount.MagicalPenetration, enemyAccount.MagicalResistance, dmg/2);
+                    dmg = part1 + part2;
+                    break;
+                case 2:
+                    //true dmg - no armor reduction.
+                    break;
+                default:
+                    throw new ApplicationException("Damage Type is not in the range (0 - armor, 1 - magic, 2 - 50/50)");
                 //TODO implement mix dmg
             }
 

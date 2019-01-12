@@ -28,9 +28,9 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
             switch (skillId)
             {
                 //1073 (танк ветка) Напор массой - дает в ебло, наносит микс урон равный (15% от твоей выносливости + 50% от уровня) (кд 4 хода)
-                case 1073:
 
-                    // прописать микс урон
+                //done
+                case 1073:
                     dmg = account.Stamina * 0.15 + account.OctoLvL * 0.5;
                     if (!check)
                         account.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 4));
@@ -38,6 +38,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     break;
 
                 //1075 (танк ветка) Колючие доспехи - следующие 3 хода враг будет получать урон при атаке равный 10% от твоей выносливости за попадание. 
+                //done
                 case 1075:
                     dmg = account.Stamina * 0.1;
                     if (!check)

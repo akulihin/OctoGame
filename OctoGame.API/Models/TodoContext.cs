@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace GameAPI.Models
+namespace OctoGame.API.Models
 {
     public class TodoContext : DbContext
     {

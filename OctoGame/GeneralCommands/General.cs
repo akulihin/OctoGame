@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -89,14 +91,17 @@ namespace OctoGame.GeneralCommands
         [Summary("showing general info about the bot")]
         public async Task UpTime()
         {
-            var time = DateTime.Now -_global.TimeBotStarted;
             _global.TimeSpendOnLastMessage.TryGetValue(Context.User.Id, out var watch);
+
+            var time = DateTime.Now -_global.TimeBotStarted;
+            var ramUsage = Process.GetCurrentProcess().WorkingSet64 / (1024 * 1024);
+
             var embed = new EmbedBuilder()
                // .WithAuthor(Context.Client.CurrentUser)
                // .WithTitle("My internal statistics")
                 .WithColor(Color.DarkGreen)
                 .WithCurrentTimestamp()
-                .WithFooter("Thank you for using me!")
+                .WithFooter("Version: 0.0a | Thank you for using me!")
                 .AddField("Numbers:", "" +
                                       $"Working for: {time.Days}d {time.Hours}h {time.Minutes}m and {time:ss\\.fff}s\n" +
                                       $"Total Games Started: {_global.OctoGamePlaying}\n" +
@@ -106,11 +111,9 @@ namespace OctoGame.GeneralCommands
                                       $"Total Commands in memory: {_commandsInMemory.CommandList.Count} (max {_commandsInMemory.MaximumCommandsInRam})\n" +
                                       $"Client Latency: {_global.Client.Latency}\n" +
                                       $"Time I spend processing your command: {watch?.Elapsed:m\\:ss\\.ffff}s\n" +
-                                      $"This time counts from from the moment he receives this command.");
-       
-          
-                
-            
+                                      $"This time counts from from the moment he receives this command.\n" +
+                                      $"Memory Used: {ramUsage}");
+
 
             SendMessAsync(embed);
 

@@ -1,4 +1,4 @@
-﻿namespace GameAPI.Models
+﻿namespace OctoGame.API.Models
 {
     public class TodoItem
     {

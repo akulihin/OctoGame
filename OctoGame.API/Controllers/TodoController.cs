@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GameAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OctoGame.API.Models;
 
-namespace GameAPI.Controllers
+namespace OctoGame.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

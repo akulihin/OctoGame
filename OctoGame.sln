@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame", "OctoGame\OctoGa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame.API", "OctoGame.API\OctoGame.API.csproj", "{AB8C1650-9921-439B-A6A8-07AE21D76D3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoGame.WEB", "OctoGame.WEB\OctoGame.WEB.csproj", "{CD8D65ED-8BB0-43A7-9A42-CC632BF24D10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame.WEB", "OctoGame.WEB\OctoGame.WEB.csproj", "{CD8D65ED-8BB0-43A7-9A42-CC632BF24D10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
