@@ -44,7 +44,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         /// Fight:
         /// </summary>
         
-        public int Turn { get; set; } // 1 = not the turn | 1 = his turn to move
+        public bool IsMyTurn { get; set; } // 1 = not the turn | 1 = his turn to move
         public double Round { get; set; }
         public ulong CurrentEnemy { get; set; }
         public int MoveListPage { get; set; } 
@@ -215,7 +215,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 CREATE TABLE UserAccounts(DiscordUserName VARCHAR(50), userId decimal (20, 0), MyPrefix VARCHAR(50), MyLanguage VARCHAR(50), 
 OctoName VARCHAR(50), OctoLvL bigint, OctoInfo VARCHAR(2000), OctoAvatar VARCHAR(100), Attack_Tree VARCHAR(1000),
 Defensive_Tree VARCHAR(1000), Agility_Tree VARCHAR(1000), Magic_Tree VARCHAR(1000), AllPassives VARCHAR(1000),
-Turn INTEGER, Round float, CurrentEnemy decimal (20, 0), MoveListPage INTEGER, PlayingStatus INTEGER,
+IsMyTurn INTEGER, Round float, CurrentEnemy decimal (20, 0), MoveListPage INTEGER, PlayingStatus INTEGER,
 Strength decimal (20, 0), Bonus_AD_Stats decimal (20, 0), Base_AD_Stats decimal (20, 0), AttackPower_Stats decimal (20, 0), 
 MagicPower_Stats decimal (20, 0), Agility_Stats decimal (20, 0), CriticalDamage decimal (20, 0), CriticalChance decimal (20, 0), 
 DodgeChance decimal (20, 0), PhysicalResistance decimal (20, 0), MagicalResistance decimal (20, 0), Health decimal (20, 0), 

@@ -22,6 +22,9 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
             new ConcurrentDictionary<ulong, double>();
         private static readonly ConcurrentDictionary<ulong, double> TemporaryBonusDmg1011 =
             new ConcurrentDictionary<ulong, double>();
+        private static readonly ConcurrentDictionary<ulong, double> TemporaryBonusOnHitDmg1021 =
+                new ConcurrentDictionary<ulong, double>();
+            
         // private static List<ulong, double>
 
 
@@ -37,7 +40,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                 for (var i = 0; i < account.InstantBuff.Count; i++)
                 {
                     account.InstantBuff[i].forHowManyTurns--;
-
+                    var enemy = _accounts.GetAccount(account.CurrentEnemy);
                     switch (account.InstantBuff[i].skillId)
                     {
                         case 4856757499:
@@ -55,8 +58,8 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                                 await _dealDmgToEnemy.DmgHealthHandeling(0, dmg, 0, account,
                                     _accounts.GetAccount(account.CurrentEnemy));
 
-                                account.Turn = 1;
-                                _accounts.GetAccount(account.CurrentEnemy).Turn = 0;
+                                account.IsMyTurn = false;
+                                _accounts.GetAccount(account.CurrentEnemy).IsMyTurn = true;
                             }
 
                             break;
@@ -128,24 +131,48 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                         case 1013:
                             if (!account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
                             {
-                                var e = _accounts.GetAccount(account.CurrentEnemy);
-                                var dmg = account.AttackPower_Stats * ((e.MaxHealth - e.Health) * 0.15 / 100 + 1);
+                                
+                                var dmg = account.AttackPower_Stats * ((enemy.MaxHealth - enemy.Health) * 0.15 / 100 + 1);
 
 
                                 await _dealDmgToEnemy.DmgHealthHandeling(0, dmg, 0, account,
                                     _accounts.GetAccount(account.CurrentEnemy));
 
-                                account.Turn = 1;
-                                e.Turn = 0;
+                                account.IsMyTurn = false;
+                                enemy.IsMyTurn = true;
                             }
                             break;
 
-                        //1021 (ад ветка) Кромсатель - наносит 3 удара 30%+50%+70% от ад.  пропуская следующих ход, но получая онхит на 5 ходов (20% уровня + вражеский уровень армора * 10% от уровня)
+ //1021 (ад ветка) Кромсатель - наносит 3 удара 30%+50%+70% от ад.  пропуская следующих ход, но получая онхит на 5 ходов (20% уровня + вражеский уровень армора * 10% от уровня)
 
                         //TODO implement
                         case 1021:
+                            if (!account.InstantBuff[i].activated)
+                            {
+                              await  _dealDmgToEnemy.DmgHealthHandeling(0, 0, 0, account, enemy);
+                              await _dealDmgToEnemy.DmgHealthHandeling(0, 0, 0, account, enemy);
+                              await _dealDmgToEnemy.DmgHealthHandeling(0, 0, 0, account, enemy);
+                             account.InstantDeBuff.Add(new AccountSettings.InstantBuffClass(1021, 1, false));
 
+                       
+                                var onHitDamage =
+                                 account.OctoLvL * 0.2 + enemy.PhysicalResistance * enemy.OctoLvL * 0.1;
 
+                                account.OnHitDamage += onHitDamage;
+
+                                TemporaryBonusOnHitDmg1021.AddOrUpdate(account.DiscordId, onHitDamage,
+                                    (key, oldValue) => onHitDamage);
+
+                                account.InstantBuff[i].activated = true;
+                            }
+                          //  ada
+                            if (!account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
+                            {
+                                TemporaryBonusOnHitDmg1021.TryGetValue(account.DiscordId, out var extra);
+                                account.OnHitDamage += extra;
+                                TemporaryBonusOnHitDmg1021.TryRemove(account.DiscordId, out _);
+
+                            }
 
                             break;
 
@@ -242,11 +269,12 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
 
         public async Task CheckForDeBuffs(AccountSettings account)
         {
+            var enemyAccount = _accounts.GetAccount(account.CurrentEnemy);
             if (account.InstantDeBuff.Count > 0)
                 for (var i = 0; i < account.InstantDeBuff.Count; i++)
                 {
                     account.InstantDeBuff[i].forHowManyTurns--;
-
+              
 
                     switch (account.InstantDeBuff[i].skillId)
                     {
@@ -261,6 +289,12 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                         //1075 (танк ветка) Колючие доспехи - следующие 3 хода враг будет получать урон при атаке равный 10% от твоей выносливости за попадание. 
                         //TODO implement
                         case 1075:
+
+                            break;
+
+                        case 1021:
+                            account.IsMyTurn = false;
+                            enemyAccount.IsMyTurn = true;
 
                             break;
                     }

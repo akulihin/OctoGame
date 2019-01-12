@@ -129,8 +129,8 @@ namespace OctoGame.OctoGame.GamePlayFramework
             await CheckForPassivesAndUpdateStats(account, enemy);
             await _updateFightPage.UpdateMainPageForAllPlayers(account);
 
-            account.Turn = 1;
-            enemy.Turn = 0;
+            account.IsMyTurn = false;
+            enemy.IsMyTurn = true;
             _accounts.SaveAccounts(account.DiscordId);
 
         }
