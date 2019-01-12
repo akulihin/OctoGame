@@ -10,6 +10,7 @@ using OctoGame.DiscordFramework.Extensions;
 using System.Net.Http;
 using OctoGame.DiscordFramework.Language;
 
+
 namespace OctoGame
 {
     public class ProgramOctoGame

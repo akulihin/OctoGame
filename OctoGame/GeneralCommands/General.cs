@@ -8,7 +8,6 @@ using OctoGame.DiscordFramework.Extensions;
 using OctoGame.DiscordFramework.Language;
 using OctoGame.Helpers;
 using OctoGame.LocalPersistentData.UsersAccounts;
-#nullable
 
 namespace OctoGame.GeneralCommands
 {
@@ -106,7 +105,7 @@ namespace OctoGame.GeneralCommands
                                       $"Total Commands deleted: {_global.TotalCommandsDeleted}\n" +
                                       $"Total Commands in memory: {_commandsInMemory.CommandList.Count} (max {_commandsInMemory.MaximumCommandsInRam})\n" +
                                       $"Client Latency: {_global.Client.Latency}\n" +
-                                      $"Time I spend processing your command: {watch.Elapsed:m\\:ss\\.ffff}s\n" +
+                                      $"Time I spend processing your command: {watch?.Elapsed:m\\:ss\\.ffff}s\n" +
                                       $"This time counts from from the moment he receives this command.");
        
           

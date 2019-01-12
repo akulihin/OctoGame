@@ -166,15 +166,17 @@ namespace OctoGame.DiscordFramework
                 Console.Write($"{_logAbbreviations[severity]}");
                 Console.ResetColor();
                 var caller = callerFilePath;
+
+                if(caller.Length > 10)
                 try
                 {
                     caller = Path.GetFileNameWithoutExtension(new Uri(callerFilePath).AbsolutePath);
                 }
                 catch
                 {
-                    // wasn't a file path, just use the caller name directly
+                    // wasn't a file path, just use the caller name directly    
                 }
-
+           
                 Console.Write($"|{PadCenter(caller)}] ");
                 Console.ForegroundColor = color;
                 Console.WriteLine(message);
