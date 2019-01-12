@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame", "OctoGame\OctoGame.csproj", "{24E20E4B-E35D-4824-8BD7-0B83253153ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{3D186D14-27BF-4453-AFA9-9647E4C5B7C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoGame.WEB", "OctoGame.WEB\OctoGame.WEB.csproj", "{3D186D14-27BF-4453-AFA9-9647E4C5B7C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameAPI", "GameAPI\GameAPI.csproj", "{AB8C1650-9921-439B-A6A8-07AE21D76D3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoGame.API", "OctoGame.API\OctoGame.API.csproj", "{AB8C1650-9921-439B-A6A8-07AE21D76D3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
