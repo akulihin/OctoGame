@@ -109,6 +109,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
         {
 
             //TODO figure out who to update and when 
+
             await _allDebuffs.CheckForBuffs(account);
             await _allDebuffs.CheckForDeBuffs(enemy);
             await _allDebuffs.CheckForBuffsToBeActivatedLater(account);
@@ -123,35 +124,18 @@ namespace OctoGame.OctoGame.GamePlayFramework
                         account.SkillCooldowns.RemoveAt(i);
                 }
 
+
+
+            await CheckForPassivesAndUpdateStats(account, enemy);
+            await _updateFightPage.UpdateMainPageForAllPlayers(account);
+
             account.Turn = 1;
             enemy.Turn = 0;
             _accounts.SaveAccounts(account.DiscordId);
 
-            await CheckDmgWithTimer(account, enemy);
-            await CheckDmgWithTimer(enemy, account);
-
-            await CheckForPassivesAndUpdateStats(account, enemy);
-            await _updateFightPage.UpdateMainPageForAllPlayers(account);
         }
 
 
-
-        public async Task CheckDmgWithTimer(AccountSettings account, AccountSettings enemy)
-        {
-            for (var index = 0; index < account.DamageOnTimer.Count; index++)
-            {
-                var t = account.DamageOnTimer[index];
-                t.timer--;
-                if (t.timer <= 0)
-                {
-                    await _dealDmgToEnemy.DmgHealthHandeling(0, t.dmg, t.dmgType, enemy, account);
-                    account.DamageOnTimer.RemoveAt(index);
-                    _accounts.SaveAccounts(account.DiscordId);
-                }
-            }
-
-            await Task.CompletedTask;
-        }
 
 
         public async Task CheckForPassivesAndUpdateStats(AccountSettings account, AccountSettings enemy)
@@ -168,12 +152,8 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             }
 
-           // account.Base_AD_Stats = Math.Ceiling(account.Strength * (0.2 * account.OctoLvL)); // + ITEMS + SKILLS
-
-        //    account.AttackPower_Stats = account.Base_AD_Stats + account.Bonus_AD_Stats;
-       //     account.Bonus_AD_Stats = 0;
-
-            account.IsCrit = false;
+            //TODO ?????
+          //  account.IsCrit = false;
 
             _accounts.SaveAccounts(account.DiscordId);
             _accounts.SaveAccounts(enemy.DiscordId);

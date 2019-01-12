@@ -29,7 +29,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
             {
                 //1073 (танк ветка) Напор массой - дает в ебло, наносит микс урон равный (15% от твоей выносливости + 50% от уровня) (кд 4 хода)
 
-                //done
+                //TODO formula
                 case 1073:
                     dmg = account.Stamina * 0.15 + account.OctoLvL * 0.5;
                     if (!check)
@@ -42,11 +42,13 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 1075:
                     dmg = account.Stamina * 0.1;
                     if (!check)
-                        account.PoisonDamage.Add(new AccountSettings.Poison(skillId, dmg, 3, 0));
-                    //TODO poisen dmg!!!!!!!!!!!!!!!!!!!
+                        enemy.InstantDeBuff.Add(new AccountSettings.InstantBuffClass(skillId, 3, false));
+                      //  account.PoisonDamage.Add(new AccountSettings.Poison(skillId, dmg, 3, 0));
+                    
                     break;
                 //1077 (танк ветка) (prof) Надежный щит - пропуская ход, ставит блок, блокируя одно физ попадание врага.  
                 //                              (без лимита по времени) (можно использовать только пока активна стамина, кд 5 ходов)
+                //DONE
                 case 1077:
                     if (!check)
                     {
@@ -58,6 +60,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     break;
                 //1079 (танк ветка - ульта) Get cancer - после 20и ходов отхиливает фул выносливость +1% за каждые 20 уровней, снимает все дебафы 
+                //done
                 case 1079:
                     if (!check)
                         account.BuffToBeActivatedLater.Add(new AccountSettings.OnTimeBuffClass(skillId, 20, false));
@@ -68,7 +71,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 1081:
                     if (!check)
                         account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 2, false));
-                    //TODO implement this buff in def pass tree
+
                     break;
                 //1083 (танк ветка) Замах Гиганта - пропускает 2 хода, следующий ход дамажит микс уроном и скейлится от твоей выносливости 1%*силу + 2хп/силу минус 1%lvl * силу (кд 12)
                 case 1083:
@@ -78,20 +81,19 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
 
                     if (!check)
                     {
-                        if (account.InstantBuff.Any(x => x.skillId == 1000) && account.IsFirstHit)
-                        {
-                            dmg = dmg * (1 + account.PrecentBonusDmg);
-                            account.IsFirstHit = false;
-                        }
-
-                        account.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 3, 2));
-                        dmg = 0;
+                        account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 2, false));
+                        account.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 12));
                     }
 
                     break;
                 // 1085 (танк ветка) (prof) Оборона - пропускает 4 хода, получая на них на 50% урона меньше. Считается за блок и пробивается полностью мастеркой Бронебой. по окончанию получает 20% от уровня в ад и 25% в ап.
 
                 case 1085:
+
+                    if (!check)
+                    {
+                        account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 4, false));
+                    }
                     break;
 //1087 (танк ветка - ульта) Берсеркер - снимает твой армор и резист и прибавляет его к ад и ап (деф * 20 % от уровня) до конца боя 
                 case 1087:
@@ -111,27 +113,23 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     if (!check)
                     {
                         account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 2, false));
-                        //TODO implement it in pass def tree
                     }
                     break;
 
                 //1091 (танк ветка) Тяжелая броня - пропускает ход, твой армор и резист перестанут бафать стамину на 3 хода, а бафнут урон со скилла на следующем ходу после пропуска, но снижает критшанс на этот удар в два раза. (%дамаг + %блока армора + %резиста)
                 case 1091:
                     //AdStast = AdStast *0.52 *0.52
-
-
                     // account.AttackPower_Stats ЭТО УРОН СЛЕДУЮЩЕГО СКИЛЛА! это не ад статы!
-                    dmg = account.AttackPower_Stats *
-                          (_armorReduction.GetArmorPercentDependsOnLvl(Convert.ToInt32(account.PhysicalResistance) + _armorReduction.GetArmorPercentDependsOnLvl(Convert.ToInt32(account.MagicalResistance))));
-                    
+
+                    account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 3, false));
+                  
                     break;
 
                 //1093 (танк ветка) (prof) Бои без правил - пропускает 3 хода, наносит 3 хита. (150% от ад + (40% от уровня +150% от ап) + 26% от твоей выносливости) микс уроном.
                 case 1093:
                     if (!check)
-                    {
-                        dmg = account.AttackPower_Stats*1.5 + (account.OctoLvL * 0.4 + account.MagicPower_Stats * 1.5) + account.Stamina * 0.26;
-                        account.DamageOnTimer.Add(new AccountSettings.DmgWithTimer(dmg, 3, 3));
+                    {//   dmg = account.AttackPower_Stats*1.5 + (account.OctoLvL * 0.4 + account.MagicPower_Stats * 1.5) + account.Stamina * 0.26;
+                      account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 3, false));
                     }
                     break;
             

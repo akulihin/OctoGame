@@ -6,6 +6,10 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="Microsoft.EntityFrameworkCore">
       <HintPath>C:\Users\baker\.nuget\packages\microsoft.entityframeworkcore\2.2.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>

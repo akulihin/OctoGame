@@ -42,23 +42,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                     {
                         case 4856757499:
                             break;
-                        //1089 (танк ветка) Истинный воин - повышает силу в 2 раза на следующие 2 хода (но  дополнительная силна не влияет на авд) 
-                        case 1089:
-                            if (!account.InstantBuff[i].activated)
-                            {
-                                TemporaryStrength1089.GetOrAdd(account.DiscordId, account.Strength);
-                                account.Strength = account.Strength * 2;
-                                account.InstantBuff[i].activated = true;
-                            }
-
-                            if (account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
-                            {
-                                TemporaryStrength1089.TryGetValue(account.DiscordId, out var extra);
-                                account.Strength -= extra;
-                                TemporaryStrength1089.TryRemove(account.DiscordId, out _);
-                            }
-
-                            break;
+   
 
                         // (ад ветка) Грязный прием - пропускает один ход, и через еще ход бьет 228% от ад. 1005 
                         // -Пропускает ход1, может ходить на ход2, и тратит ход3 на удар
@@ -158,12 +142,56 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
 
                         //1021 (ад ветка) Кромсатель - наносит 3 удара 30%+50%+70% от ад.  пропуская следующих ход, но получая онхит на 5 ходов (20% уровня + вражеский уровень армора * 10% от уровня)
 
-                        //TODO
+                        //TODO implement
                         case 1021:
 
 
 
                             break;
+
+
+                        //1081 (танк ветка) Закал боем - бафф на два хода, который дает (25% от уровня) выносливости с каждым попаданием по врагу. 
+                        //TODO implement
+                        case 1081:
+
+                            break;
+
+                        //1083 (танк ветка) Замах Гиганта - пропускает 2 хода, следующий ход дамажит микс уроном и скейлится от твоей выносливости 1%*силу + 2хп/силу минус 1%lvl * силу (кд 12)
+                        case 1083:
+
+                            break;
+
+                        //1089 (танк ветка) Истинный воин - повышает силу в 2 раза на следующие 2 хода (но  дополнительная силна не влияет на авд) 
+                        case 1089:
+                            if (!account.InstantBuff[i].activated)
+                            {
+                                TemporaryStrength1089.GetOrAdd(account.DiscordId, account.Strength);
+                                account.Strength = account.Strength * 2;
+                                account.InstantBuff[i].activated = true;
+                            }
+
+                            if (account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
+                            {
+                                TemporaryStrength1089.TryGetValue(account.DiscordId, out var extra);
+                                account.Strength -= extra;
+                                TemporaryStrength1089.TryRemove(account.DiscordId, out _);
+                            }
+
+                            break;
+
+                        //1091 (танк ветка) Тяжелая броня - пропускает ход, твой армор и резист перестанут бафать стамину на 3 хода, а бафнут урон со скилла на следующем ходу после пропуска, но снижает критшанс на этот удар в два раза. (%дамаг + %блока армора + %резиста)
+                        case 1091:
+                        //AdStast = AdStast *0.52 *0.52
+                        // account.AttackPower_Stats ЭТО УРОН СЛЕДУЮЩЕГО СКИЛЛА! это не ад статы!
+                        break;
+
+                        //1093 (танк ветка) (prof) Бои без правил - пропускает 3 хода, наносит 3 хита. (150% от ад + (40% от уровня +150% от ап) + 26% от твоей выносливости) микс уроном.
+                        case 1093:
+                            break;
+
+
+
+
                     }
 
                     if (account.InstantBuff[i].forHowManyTurns <= 0)
@@ -227,6 +255,13 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                                 account.PhysicalResistance -= 2;
                             if (account.InstantDeBuff[i].forHowManyTurns <= 0)
                                 account.PhysicalResistance += 2;
+                            break;
+
+
+                        //1075 (танк ветка) Колючие доспехи - следующие 3 хода враг будет получать урон при атаке равный 10% от твоей выносливости за попадание. 
+                        //TODO implement
+                        case 1075:
+
                             break;
                     }
 
