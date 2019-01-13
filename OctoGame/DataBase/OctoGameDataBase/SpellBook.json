@@ -10,7 +10,7 @@
     "SpellDescriptionEn": "Waiting for the best moment to attack || passively the first attack of the fight will be increased by 20%",
     "SpellFormula": "TODO",
     "SpellDmgType": 0,
-    "SpellCd": 9999,
+    "SpellCd": 9998,
     "WhereDmg": 0
   },
   {
