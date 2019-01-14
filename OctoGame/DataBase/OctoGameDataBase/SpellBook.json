@@ -632,7 +632,7 @@
   {
     "SpellId": 1045,
     "SpellNameEn": "Scattering",
-    "SpellNameRu": "Рассеевание",
+    "SpellNameRu": "Рассеивание",
     "SpellType": 1,
     "SpellTreeNum": 4,
     "SpellTreeString": "AP",
@@ -673,7 +673,7 @@
   },
   {
     "SpellId": 1089,
-    "SpellNameEn": "The True warrior",
+    "SpellNameEn": "The True Warrior",
     "SpellNameRu": "Истинный воин",
     "SpellType": 0,
     "SpellTreeNum": 2,
@@ -688,7 +688,7 @@
   {
     "SpellId": 1099,
     "SpellNameEn": "Pugilism",
-    "SpellNameRu": "кулачный бой",
+    "SpellNameRu": "Кулачный бой",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -701,7 +701,7 @@
   },
   {
     "SpellId": 1072,
-    "SpellNameEn": "Rage Splash",
+    "SpellNameEn": "Splash of Fury",
     "SpellNameRu": "Выплеск ярости",
     "SpellType": 0,
     "SpellTreeNum": 2,
@@ -715,8 +715,8 @@
   },
   {
     "SpellId": 1073,
-    "SpellNameEn": "Head Mass",
-    "SpellNameRu": " Напор массой ",
+    "SpellNameEn": "Mass pressure",
+    "SpellNameRu": "Напор массой",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -730,7 +730,7 @@
   {
     "SpellId": 1074,
     "SpellNameEn": "Heavyweight",
-    "SpellNameRu": " Тяжеловес ",
+    "SpellNameRu": "Тяжеловес",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -743,8 +743,8 @@
   },
   {
     "SpellId": 1075,
-    "SpellNameEn": "Thorny Armor",
-    "SpellNameRu": " Колючие доспехи ",
+    "SpellNameEn": "Prickly Armor",
+    "SpellNameRu": "Колючие доспехи",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -757,8 +757,8 @@
   },
   {
     "SpellId": 1076,
-    "SpellNameEn": "Long Battle",
-    "SpellNameRu": " Затяжной бой ",
+    "SpellNameEn": "Prolonged combat",
+    "SpellNameRu": "Затяжной бой",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -772,7 +772,7 @@
   {
     "SpellId": 1077,
     "SpellNameEn": "Reliable Shield",
-    "SpellNameRu": "надежный щит",
+    "SpellNameRu": "Надежный щит",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -800,7 +800,7 @@
   {
     "SpellId": 1079,
     "SpellNameEn": "Get cancer",
-    "SpellNameRu": " Get cancer ",
+    "SpellNameRu": "Get cancer",
     "SpellType": 2,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -813,8 +813,8 @@
   },
   {
     "SpellId": 1080,
-    "SpellNameEn": "Protective rack",
-    "SpellNameRu": " Защитная стойка ",
+    "SpellNameEn": "Defensive stand",
+    "SpellNameRu": "Защитная стойка",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -827,8 +827,8 @@
   },
   {
     "SpellId": 1081,
-    "SpellNameEn": "Temper fight",
-    "SpellNameRu": " Закал боем ",
+    "SpellNameEn": "Battle temper",
+    "SpellNameRu": "Закал боем",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -842,7 +842,7 @@
   {
     "SpellId": 1082,
     "SpellNameEn": "Regeneration",
-    "SpellNameRu": " Регенерация ",
+    "SpellNameRu": "Регенерация",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -856,7 +856,7 @@
   {
     "SpellId": 1083,
     "SpellNameEn": "Swipe of the Giant",
-    "SpellNameRu": " Замах Гиганта ",
+    "SpellNameRu": "Замах Гиганта",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -870,7 +870,7 @@
   {
     "SpellId": 1084,
     "SpellNameEn": "Perfect protection",
-    "SpellNameRu": " Совершенная защита ",
+    "SpellNameRu": "Совершенная защита",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -884,7 +884,7 @@
   {
     "SpellId": 1085,
     "SpellNameEn": "Defense",
-    "SpellNameRu": "Защита",
+    "SpellNameRu": "Оборона",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -898,7 +898,7 @@
   {
     "SpellId": 1086,
     "SpellNameEn": "Dragon scales",
-    "SpellNameRu": "Драконья шулуха",
+    "SpellNameRu": "Драконья чешуя",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -912,7 +912,7 @@
   {
     "SpellId": 1087,
     "SpellNameEn": "Berserker",
-    "SpellNameRu": " Берсеркер ",
+    "SpellNameRu": "Берсеркер",
     "SpellType": 2,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -926,7 +926,7 @@
   {
     "SpellId": 1088,
     "SpellNameEn": "Battle dance",
-    "SpellNameRu": " Боевой танец ",
+    "SpellNameRu": "Боевой танец",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -940,7 +940,7 @@
   {
     "SpellId": 1090,
     "SpellNameEn": "Titan",
-    "SpellNameRu": " Титан ",
+    "SpellNameRu": "Титан",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -954,7 +954,7 @@
   {
     "SpellId": 1091,
     "SpellNameEn": "Heavy armor",
-    "SpellNameRu": " Тяжелая броня ",
+    "SpellNameRu": "Тяжелая броня",
     "SpellType": 1,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -968,7 +968,7 @@
   {
     "SpellId": 1092,
     "SpellNameEn": "Impenetrable wall",
-    "SpellNameRu": " Непрогибаемая стена ",
+    "SpellNameRu": "Непрогибаемая стена",
     "SpellType": 0,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
@@ -981,7 +981,7 @@
   },
   {
     "SpellId": 1093,
-    "SpellNameEn": "Fights without rules",
+    "SpellNameEn": "Fight without rules",
     "SpellNameRu": "Бой Без Правил",
     "SpellType": 1,
     "SpellTreeNum": 2,
@@ -1009,8 +1009,8 @@
   },
   {
     "SpellId": 1095,
-    "SpellNameEn": "Immortal Hydra's Armor",
-    "SpellNameRu": " Доспехи Бессмертной Гидры ",
+    "SpellNameEn": "The Armor of Immortal Hydra",
+    "SpellNameRu": "Доспехи Бессмертной Гидры",
     "SpellType": 2,
     "SpellTreeNum": 2,
     "SpellTreeString": null,
