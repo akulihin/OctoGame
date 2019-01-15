@@ -6,7 +6,7 @@
 
 # Turn Based Text RPG game using Discord API
 
-Demo:
+Demo (rus):
 
 ![alt text](https://i.imgur.com/OYucXtD.png)
 
