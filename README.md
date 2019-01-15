@@ -6,11 +6,10 @@
 
 # Turn Based Text RPG game using Discord API
 
-Demo (rus):
+Demo:
 
-![alt text](https://i.imgur.com/OYucXtD.png)
+Constrol with emojis:
+![alt text](https://i.imgur.com/H1AluYn.png)
 
-![alt text](https://i.imgur.com/a5BKv9i.png)
-
-
-
+100 Spells!
+![alt text](https://i.imgur.com/cxl4zlP.png)
