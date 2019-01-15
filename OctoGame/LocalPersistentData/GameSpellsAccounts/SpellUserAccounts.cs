@@ -15,7 +15,7 @@ namespace OctoGame.LocalPersistentData.GameSpellsAccounts
         private readonly SpellDataStorage _spellDataStorage;
 
 
-        private  readonly string _accountsFile = @"OctoGameDataBase/SpellBook.json";
+        private  readonly string _accountsFile = @"DataBase/OctoGameDataBase/SpellBook.json";
 
          public SpellUserAccounts(SpellDataStorage spellDataStorage)
          {

@@ -79,7 +79,7 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
         private  readonly List<ServerSettings> _accounts;
         private readonly ServerDataStorage _serverDataStorage;
 
-        private  readonly string _serverAccountsFile = @"OctoDataBase/ServerAccounts.json";
+        private  readonly string _serverAccountsFile = @"DataBase/OctoDataBase/ServerAccounts.json";
 
          public ServerAccounts(ServerDataStorage serverDataStorage)
          {

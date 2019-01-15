@@ -24,7 +24,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 
         public void SaveAccountSettings(IEnumerable<AccountSettings> accounts, string idString, string json)
         {
-            var filePath = $@"OctoDataBase/UserAccounts/account-{idString}.json";
+            var filePath = $@"DataBase/OctoDataBase/UserAccounts/account-{idString}.json";
             try
             {
                 File.WriteAllText(filePath, json);
@@ -39,7 +39,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 
         public void SaveAccountSettings(IEnumerable<AccountSettings> accounts, ulong userId)
         {
-            var filePath = $@"OctoDataBase/UserAccounts/account-{userId}.json";
+            var filePath = $@"DataBase/OctoDataBase/UserAccounts/account-{userId}.json";
             try
             {
                 var json = JsonConvert.SerializeObject(accounts, Formatting.Indented);
@@ -56,7 +56,7 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 
         public  IEnumerable<AccountSettings> LoadAccountSettings(ulong userId)
         {
-            var filePath = $@"OctoDataBase/UserAccounts/account-{userId}.json";
+            var filePath = $@"DataBase/OctoDataBase/UserAccounts/account-{userId}.json";
             if (!File.Exists(filePath))
             {
                 var newList = new List<AccountSettings>();

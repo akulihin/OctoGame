@@ -13,7 +13,7 @@ namespace OctoGame
         {
             try
             {
-                JsonConvert.PopulateObject(File.ReadAllText(@"OctoDataBase/config.json"), this);
+                JsonConvert.PopulateObject(File.ReadAllText(@"DataBase/OctoDataBase/config.json"), this);
             }
             catch (Exception ex)
             {

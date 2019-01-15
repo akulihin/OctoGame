@@ -20,7 +20,7 @@ namespace OctoGame.LocalPersistentData.LoggingSystemJson
 
         public void SaveLogs(IEnumerable<LoggingSystemSettings> accounts, string keyString, string json)
         {
-            var filePath = $@"OctoDataBase/Logging/{keyString}.json";
+            var filePath = $@"DataBase/OctoDataBase/Logging/{keyString}.json";
             try
             {
                 File.WriteAllText(filePath, json);
@@ -35,7 +35,7 @@ namespace OctoGame.LocalPersistentData.LoggingSystemJson
 
         public void SaveLogs(IEnumerable<LoggingSystemSettings> accounts, string keyString)
         {
-            var filePath = $@"OctoDataBase/Logging/{keyString}.json";
+            var filePath = $@"DataBase/OctoDataBase/Logging/{keyString}.json";
             try
             {
                 var json = JsonConvert.SerializeObject(accounts, Formatting.Indented);
@@ -51,11 +51,11 @@ namespace OctoGame.LocalPersistentData.LoggingSystemJson
         public void CompleteSaveLogs(IEnumerable<LoggingSystemSettings> accounts, string keyString)
         {
             var index = 1;
-            var filePath = $@"OctoDataBase/Logging/{keyString}-{index}.json";
+            var filePath = $@"DataBase/OctoDataBase/Logging/{keyString}-{index}.json";
 
             while (File.Exists(filePath))
             {
-                filePath = $@"OctoDataBase/Logging/{keyString}-{index++}.json";
+                filePath = $@"DataBase/OctoDataBase/Logging/{keyString}-{index++}.json";
             }
 
             try
@@ -74,7 +74,7 @@ namespace OctoGame.LocalPersistentData.LoggingSystemJson
 
         public IEnumerable<LoggingSystemSettings> LoadLogs(string keyString)
         {
-            var filePath = $@"OctoDataBase/Logging/{keyString}.json";
+            var filePath = $@"DataBase/OctoDataBase/Logging/{keyString}.json";
             if (!File.Exists(filePath))
             {
                 var newList = new List<LoggingSystemSettings>();

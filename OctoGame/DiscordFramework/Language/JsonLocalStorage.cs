@@ -12,7 +12,7 @@ namespace OctoGame.DiscordFramework.Language
 
 
         private const string StorageDirectory = "jsonStorage";
-        private const string LanguagesDirectory = "Language/Data";
+        private const string LanguagesDirectory = "DataBase/Language/Data";
 
         public JsonLocalStorage()
         {

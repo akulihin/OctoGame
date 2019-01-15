@@ -219,7 +219,7 @@ namespace OctoGame.DiscordFramework
                 _log.Warning(
                     $"Command [{context.Message.Content}] by [{context.User}] [{guildName}] after {watch.Elapsed:m\\:ss\\.ffff}s.\n" +
                     $"Reason: {resultTask.Result.ErrorReason}", "CommandHandling");
-                _log.Error(resultTask.Exception);
+                _log.Error(resultTask.Result.ErrorReason);
 
 
                 if (!resultTask.Result.ErrorReason.Contains("Unknown command"))

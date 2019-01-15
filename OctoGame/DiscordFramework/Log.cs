@@ -18,7 +18,7 @@ namespace OctoGame.DiscordFramework
         public Task InitializeAsync()
             => Task.CompletedTask;
 
-        private string _runTime = @"OctoDataBase/Log.json";
+        private string _runTime = @"DataBase/OctoDataBase/Log.json";
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private readonly int _padLength = 16;
 
@@ -167,7 +167,7 @@ namespace OctoGame.DiscordFramework
                 Console.ResetColor();
                 var caller = callerFilePath;
 
-                if(caller.Length > 10)
+                if(caller.Length > 20)
                 try
                 {
                     caller = Path.GetFileNameWithoutExtension(new Uri(callerFilePath).AbsolutePath);

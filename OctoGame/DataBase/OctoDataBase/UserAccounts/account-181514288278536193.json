@@ -5,28 +5,28 @@
     "MyPrefix": null,
     "MyLanguage": "en",
     "OctoName": "буль",
-    "OctoLvL": 100,
+    "OctoLvL": 1,
     "OctoInfo": "буль|3|вредный|вф|",
     "OctoAvatar": "https://i.imgur.com/wqB54af.png",
     "Inventory": [],
     "OctoItems": [],
-    "Attack_Tree": "1001|1003|1005|1007|1009|1011|1013|1015|1017|1019|1021|1023|1096|",
+    "Attack_Tree": "1001|1005|1007|1009|1011|1013|1015|1017|1019|1021|1023|",
     "Defensive_Tree": "1089|",
     "Agility_Tree": null,
     "Magic_Tree": null,
     "AllPassives": "1000|1002|1004|1006|1008|1010|1012|1014|1016|1018|1020|1022|",
-    "Turn": 0,
+    "Turn": 1,
     "Round": 0.0,
     "CurrentEnemy": 1,
     "MoveListPage": 1,
     "PlayingStatus": 2,
     "Health": 100.0,
     "MaxHealth": 100.0,
-    "Stamina": 397.0,
-    "MaxStamina": 397.0,
+    "Stamina": 100.0,
+    "MaxStamina": 100.0,
     "Strength": 30.0,
-    "AttackPower_Stats": 689.55,
-    "MagicPower_Stats": 20.0,
+    "AttackPower_Stats": 69.7,
+    "MagicPower_Stats": 11.0,
     "Agility_Stats": 1.0,
     "CriticalDamage": 150.0,
     "CriticalChance": 1.0,
@@ -35,74 +35,128 @@
     "MagicalResistance": 2.0,
     "PhysicalPenetration": 0.0,
     "MagicalPenetration": 0.0,
-    "OnHitDamage": 3.0,
+    "OnHitDamage": 2.0,
     "IsCrit": false,
     "CurrentLogString": "",
     "PassiveList": [
       {
         "skillId": 1000,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1002,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1004,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1006,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1008,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1010,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1012,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1014,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1016,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1018,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1020,
-        "cooldown": 19998
+        "cooldown": 39996
       },
       {
         "skillId": 1022,
-        "cooldown": 19998
+        "cooldown": 39996
       }
     ],
     "SkillCooldowns": [
       {
         "skillId": 1000,
-        "cooldown": 1998
+        "cooldown": 3994
+      },
+      {
+        "skillId": 1002,
+        "cooldown": 30
       },
       {
         "skillId": 1006,
-        "cooldown": 1998
+        "cooldown": 3994
       },
       {
         "skillId": 1020,
-        "cooldown": 1998
+        "cooldown": 3994
+      },
+      {
+        "skillId": 1001,
+        "cooldown": 22
       }
     ],
-    "InstantBuff": [],
+    "InstantBuff": [
+      {
+        "skillId": 1011,
+        "forHowManyTurns": 14,
+        "activated": true
+      },
+      {
+        "skillId": 1013,
+        "forHowManyTurns": 2,
+        "activated": false
+      },
+      {
+        "skillId": 1021,
+        "forHowManyTurns": 2,
+        "activated": false
+      },
+      {
+        "skillId": 1011,
+        "forHowManyTurns": 14,
+        "activated": true
+      },
+      {
+        "skillId": 1013,
+        "forHowManyTurns": 2,
+        "activated": false
+      },
+      {
+        "skillId": 1021,
+        "forHowManyTurns": 2,
+        "activated": false
+      },
+      {
+        "skillId": 1011,
+        "forHowManyTurns": 16,
+        "activated": false
+      },
+      {
+        "skillId": 1013,
+        "forHowManyTurns": 4,
+        "activated": false
+      },
+      {
+        "skillId": 1021,
+        "forHowManyTurns": 4,
+        "activated": false
+      }
+    ],
     "InstantDeBuff": [],
     "BuffToBeActivatedLater": [],
     "DeBuffToBeActivatedLater": [],
@@ -113,15 +167,9 @@
     "IsFirstHit": true,
     "MessageIdInList": 0,
     "dmgDealtLastTime": 0.0,
-    "PhysShield": 459.7,
+    "PhysShield": 63.7,
     "MagShield": 0.0,
     "HowManyTimesCrited": 0,
-    "StatsForTime": [
-      {
-        "AD_STATS": 344.775,
-        "timer": 2
-      }
-    ],
     "LifeStealPrec": 0.0,
     "BlockShield": []
   }
