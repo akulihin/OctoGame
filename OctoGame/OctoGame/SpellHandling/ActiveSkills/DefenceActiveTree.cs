@@ -129,7 +129,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     {//   dmg = account.AttackPower_Stats*1.5 + (account.OctoLvL * 0.4 + account.MagicPower_Stats * 1.5) + account.Stamina * 0.26;
                       account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId, 3, false));
                     }
-                    break;
+                    break;  
             
                     //1095(танк ветка - ульта) Доспехи Бессмертной Гидры - после активации 6% от хп переходит в выносливость с каждым ходом, пока выносливость не будет пробита
                 case 1095:
@@ -138,6 +138,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     account.InstantBuff.Add(new AccountSettings.InstantBuffClass(skillId,9999, false));
                 }
                     break;
+      
                 // 1099 (танк ветка) (без кд) Кулачный бой -  бьет врага микс уроном, скейлится (1% вражеской стамины или хп за 20 силы + 15% от своей выносливости +20% от ад +25% от ап)
                 case 1099:
                     //TODO implemet mixed dmg in deal dmg module

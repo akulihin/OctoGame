@@ -300,10 +300,10 @@ namespace OctoGame.OctoGame.UpdateMessages
 
             if (skill.SpellType == 0)
                 return
-                    $"{i + 1}. **{skill.SpellNameEn}**: {skill.SpellDescriptionRu} *({spellCdString})*\n";
+                    $"{i + 1}. **{skill.SpellNameEn}**: {skill.SpellDescriptionEn} *({spellCdString})*\n";
 
             return
-                $"{i + 1}. **{skill.SpellNameEn}**: {skill.SpellDescriptionRu} **{Math.Ceiling(dmg)}** *({spellCdString})*\n";
+                $"{i + 1}. **{skill.SpellNameEn}**: {skill.SpellDescriptionEn} **{Math.Ceiling(dmg)}** *({spellCdString})*\n";
         }
 
         public EmbedBuilder FightPage(SocketUser globalAccount, AccountSettings account, AccountSettings enemy,
