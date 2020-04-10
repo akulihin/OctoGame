@@ -28,37 +28,44 @@ namespace OctoGame.OctoBot.Automated
 
         }
         
-        public async Task MessageReceived(SocketMessage message, DiscordShardedClient client)
+        public async Task MessageReceived(SocketMessage message)
         {
-            /*
+            
             try
+            
             {
                 if (message.Author.IsBot)
                     return;
 
-                var context = new ModuleBaseCustom(client, message as SocketUserMessage);
-                var account = UserAccounts.GetAccount(context.User, context.Guild.Id);
-                var guild = ServerAccounts.GetServerAccount(context.Guild);
+                
+                var account = _accounts.GetAccount(message.Author.Id);
+                var server = _global.Client.Guilds.FirstOrDefault(x => x.Channels.Any(b => b.Id == message.Channel.Id));
+                var guild = _serverAccounts.GetServerAccount(server);
 
                 var rolesToGiveList = guild.Roles.ToList();
+
+                if (rolesToGiveList.Count == 0)
+                {
+                    return;
+                }
 
                 var roleToGive = "2gagwerweghsxbd";
 
 
                 var userCheck = "ju";
                 if (account.MyPrefix !=null)
-                    userCheck = context.Message.Content.Substring(0, account.MyPrefix.Length);
-                var serverCheck = context.Message.Content.Substring(0, guild.Prefix.Length);
+                    userCheck = message.Content.Substring(0, account.MyPrefix.Length);
+                var serverCheck = message.Content.Substring(0, guild.Prefix.Length);
 
                 if (serverCheck == guild.Prefix)
                 {
-                    roleToGive = context.Message.Content.Substring(guild.Prefix.Length,
+                    roleToGive = message.Content.Substring(guild.Prefix.Length,
                         message.Content.Length - guild.Prefix.Length);
                 }
 
                 if (userCheck == account.MyPrefix)
                 {
-                    roleToGive = context.Message.Content.Substring(account.MyPrefix.Length,
+                    roleToGive = message.Content.Substring(account.MyPrefix.Length,
                         message.Content.Length - account.MyPrefix.Length);
                 }
                 if(userCheck != account.MyPrefix && serverCheck != guild.Prefix)
@@ -68,11 +75,13 @@ namespace OctoGame.OctoBot.Automated
                     SocketRole roleToAdd = null;
 
                     foreach (var t in rolesToGiveList)
-                        if (string.Equals(t.Key, roleToGive, StringComparison.CurrentCultureIgnoreCase) )
-                            roleToAdd = context.Guild.Roles.SingleOrDefault(x => x.Name.ToString().ToLower() == t.Value.ToLower());
+                        if (string.Equals(t.Key, roleToGive, StringComparison.CurrentCultureIgnoreCase))
+                            if (server != null)
+                                roleToAdd = server.Roles.SingleOrDefault(x =>
+                                    string.Equals(x.Name.ToString(), t.Value, StringComparison.CurrentCultureIgnoreCase));
 
 
-                    if (!(context.User is SocketGuildUser guildUser) || roleToAdd == null)
+                    if (!(message.Author is SocketGuildUser guildUser) || roleToAdd == null)
                         return;
 
                     var roleList = guildUser.Roles.ToArray();
@@ -80,25 +89,29 @@ namespace OctoGame.OctoBot.Automated
                     if (roleList.Any(t => string.Equals(t.Name, roleToAdd.Name, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         await guildUser.RemoveRoleAsync(roleToAdd);
-                        await SendMessAsync($"-{roleToAdd.Name}");
+                        await message.Channel.SendMessageAsync($"-{roleToAdd.Name}");
                         return;
                     }
 
                     await guildUser.AddRoleAsync(roleToAdd);
-                    await SendMessAsync( $"+{roleToAdd.Name}");
+                    await message.Channel.SendMessageAsync( $"+{roleToAdd.Name}");
                 }
             }
             catch
             {
-                //  ignored
+                await message.Channel.SendMessageAsync($"Error. Please make sure, that OctoBot's role is higher than yours");
             }
-       */
-    }
+       
+        }
         
 
-        public async Task Client_MessageReceived(SocketMessage message, DiscordShardedClient client)
+        public async Task Client_MessageReceived(SocketMessage message)
         {
-            MessageReceived(message, client);
+            if (message.Content == "*oc")
+            {
+                var i = 1;
+            }
+            MessageReceived(message);
         }
         
     }

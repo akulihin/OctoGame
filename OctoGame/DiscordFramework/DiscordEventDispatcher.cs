@@ -177,7 +177,7 @@ namespace OctoGame.DiscordFramework
                 return;
             _global.TimeSpendOnLastMessage.AddOrUpdate(message.Author.Id, Stopwatch.StartNew(), (key, oldValue) =>  Stopwatch.StartNew());
             _commandHandler.HandleCommandAsync(message);
-            _checkIfCommandGiveRole.Client_MessageReceived(message, _client);
+            _checkIfCommandGiveRole.Client_MessageReceived(message);
             _serverActivityLogger.Client_MessageReceived(message);
             _serverActivityLogger.Client_MessageRecivedForServerStatistics(message);
             _lvLing.Client_UserSentMess(message);

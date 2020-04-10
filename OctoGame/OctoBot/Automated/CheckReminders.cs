@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using Discord;
 using OctoGame.DiscordFramework;
-using OctoGame.LocalPersistentData.ServerAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
 
 namespace OctoGame.OctoBot.Automated
@@ -15,20 +14,18 @@ namespace OctoGame.OctoBot.Automated
         public Task InitializeAsync()
             => Task.CompletedTask;
         private Timer _loopingTimer;
-        private readonly ServerAccounts _serverAccounts;
         private readonly UserAccounts _accounts;
         private readonly Global _global;
         private readonly LoginFromConsole _log;
 
-        public CheckReminders(ServerAccounts serverAccounts, UserAccounts accounts, Global global, LoginFromConsole log)
+        public CheckReminders(UserAccounts accounts, Global global, LoginFromConsole log)
         {
-            _serverAccounts = serverAccounts;
             _accounts = accounts;
             _global = global;
             _log = log;
             CheckTimer();
         }
-        private Task CheckTimer()
+        private void CheckTimer()
         {
             _loopingTimer = new Timer
             {
@@ -36,11 +33,10 @@ namespace OctoGame.OctoBot.Automated
                 Interval = 30000,
                 Enabled = true
             };
-            _loopingTimer.Elapsed += CheckForBirthdayRole;
-            return Task.CompletedTask;
+            _loopingTimer.Elapsed += CheckForReminder;
         }
 
-        public  async void CheckForBirthdayRole(object sender, ElapsedEventArgs e)
+        public  async void CheckForReminder(object sender, ElapsedEventArgs e)
         {
             try
             {

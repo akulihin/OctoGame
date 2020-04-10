@@ -148,12 +148,12 @@ namespace OctoGame.Helpers
             "https://cdn.discordapp.com/attachments/425865177813090314/445366639274491904/JPEG_20180124_141420.jpg",
             "https://cdn.discordapp.com/attachments/425865177813090314/445366662880034839/JPEG_20180128_211126.jpg",
             "https://cdn.discordapp.com/attachments/425865177813090314/445366385934204929/Screenshot_44.png",
-            "https://media.discordapp.net/attachments/370950995133464587/442770494937104395/IMG_20180506_122658.jpg?width=936&height=702",
-            "https://media.discordapp.net/attachments/370950995133464587/442770494089986064/IMG_20180506_122840.jpg?width=936&height=702",
-            "https://media.discordapp.net/attachments/370950995133464587/442770494089986058/IMG_20180505_115422.jpg?width=936&height=702",
-            "https://media.discordapp.net/attachments/370950995133464587/442770493599383562/IMG_20180506_112852.jpg?width=936&height=702",
-            "https://media.discordapp.net/attachments/370950995133464587/442770492798009355/IMG_20180505_115640.jpg?width=936&height=702",
-            "https://media.discordapp.net/attachments/370950995133464587/445467032176295947/IMG_20180506_121914.jpg?width=1872&height=1404"
+            "https://media.discordapp.net/attachments/370950995133464587/442770494937104395/IMG_20180506_122658.jpg",
+            "https://media.discordapp.net/attachments/370950995133464587/442770494089986064/IMG_20180506_122840.jpg",
+            "https://media.discordapp.net/attachments/370950995133464587/442770494089986058/IMG_20180505_115422.jpg",
+            "https://media.discordapp.net/attachments/370950995133464587/442770493599383562/IMG_20180506_112852.jpg",
+            "https://media.discordapp.net/attachments/370950995133464587/442770492798009355/IMG_20180505_115640.jpg",
+            "https://media.discordapp.net/attachments/370950995133464587/445467032176295947/IMG_20180506_121914.jpg"
         };
 
         public string[] OctoPicsPull =

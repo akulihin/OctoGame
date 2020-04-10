@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -45,6 +47,40 @@ namespace OctoGame.GeneralCommands
             _global = global;
         }
 
+        [Command("ddw")]
+        [RequireOwner]
+        public async Task Ddw()
+        {
+            using var client = new WebClient();
+            foreach (var v in _octoPicPull.OctoPics)
+            {
+                try
+                {
+                    var s = v.Split('/');
+                    client.DownloadFile(v, $"Octopuses/{s[^1]}");
+
+                }
+                catch
+                {
+                    SendMessAsync($"download it manually `{v}`");
+                }
+
+            }
+
+            foreach (var v in _octoPicPull.OctoPicsPull)
+            {
+                try
+                {
+                    var s = v.Split('/');
+                client.DownloadFile(v, $"Octopuses/{s[^1]}");
+                }
+                catch
+                {
+                    SendMessAsync($"download it manually `{v}`");
+                }
+            }
+            SendMessAsync($"done");
+        }
 
         [Command("tt")]
         [Summary("doing absolutely nothing. That's right - NOTHING")]
