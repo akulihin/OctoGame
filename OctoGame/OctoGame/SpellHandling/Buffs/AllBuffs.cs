@@ -82,15 +82,15 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                         case 1019:
                             if (!account.InstantBuff[i].activated)
                             {
-                                TemporaryAttack1019.GetOrAdd(account.DiscordId,account.AttackPower_Stats * 0.5);
+                                TemporaryAttack1019.GetOrAdd(account.Id,account.AttackPower_Stats * 0.5);
                                 account.InstantBuff[i].activated = true;
                             }
 
                             if (account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
                             {
-                                TemporaryAttack1019.TryGetValue(account.DiscordId, out var extra);
+                                TemporaryAttack1019.TryGetValue(account.Id, out var extra);
                                 account.AttackPower_Stats -= extra;
-                                TemporaryAttack1019.TryRemove(account.DiscordId, out _);
+                                TemporaryAttack1019.TryRemove(account.Id, out _);
                                 
                             }
                             break;
@@ -99,11 +99,11 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                         case 1011:
                             if (!account.InstantBuff[i].activated)
                             {
-                                TemporaryBonusDmg1011.GetOrAdd(account.DiscordId, 0);
+                                TemporaryBonusDmg1011.GetOrAdd(account.Id, 0);
                                 account.InstantBuff[i].activated = true;
                             }
 
-                            TemporaryBonusDmg1011.TryGetValue(account.DiscordId, out var extra1011);
+                            TemporaryBonusDmg1011.TryGetValue(account.Id, out var extra1011);
 
                             if (account.IsDodged && extra1011 < 0.4)
                             {
@@ -111,15 +111,15 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
 
                                 account.PrecentBonusDmg = account.PrecentBonusDmg - extra1011 + dmgToGive;
 
-                                TemporaryBonusDmg1011.AddOrUpdate(account.DiscordId, dmgToGive,
+                                TemporaryBonusDmg1011.AddOrUpdate(account.Id, dmgToGive,
                                     (key, oldValue) => dmgToGive);
                             }
 
                             if (account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
                             {
-                                TemporaryBonusDmg1011.TryGetValue(account.DiscordId, out var extra);
+                                TemporaryBonusDmg1011.TryGetValue(account.Id, out var extra);
                                 account.PrecentBonusDmg -= extra;
-                                TemporaryBonusDmg1011.TryRemove(account.DiscordId, out _);
+                                TemporaryBonusDmg1011.TryRemove(account.Id, out _);
                                 
                             }
 
@@ -160,7 +160,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
 
                                 account.OnHitDamage += onHitDamage;
 
-                                TemporaryBonusOnHitDmg1021.AddOrUpdate(account.DiscordId, onHitDamage,
+                                TemporaryBonusOnHitDmg1021.AddOrUpdate(account.Id, onHitDamage,
                                     (key, oldValue) => onHitDamage);
 
                                 account.InstantBuff[i].activated = true;
@@ -168,9 +168,9 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                           //  ada
                             if (!account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
                             {
-                                TemporaryBonusOnHitDmg1021.TryGetValue(account.DiscordId, out var extra);
+                                TemporaryBonusOnHitDmg1021.TryGetValue(account.Id, out var extra);
                                 account.OnHitDamage += extra;
-                                TemporaryBonusOnHitDmg1021.TryRemove(account.DiscordId, out _);
+                                TemporaryBonusOnHitDmg1021.TryRemove(account.Id, out _);
 
                             }
 
@@ -192,16 +192,16 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                         case 1089:
                             if (!account.InstantBuff[i].activated)
                             {
-                                TemporaryStrength1089.GetOrAdd(account.DiscordId, account.Strength);
+                                TemporaryStrength1089.GetOrAdd(account.Id, account.Strength);
                                 account.Strength = account.Strength * 2;
                                 account.InstantBuff[i].activated = true;
                             }
 
                             if (account.InstantBuff[i].activated && account.InstantBuff[i].forHowManyTurns <= 0)
                             {
-                                TemporaryStrength1089.TryGetValue(account.DiscordId, out var extra);
+                                TemporaryStrength1089.TryGetValue(account.Id, out var extra);
                                 account.Strength -= extra;
-                                TemporaryStrength1089.TryRemove(account.DiscordId, out _);
+                                TemporaryStrength1089.TryRemove(account.Id, out _);
                             }
 
                             break;
@@ -224,11 +224,11 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                     if (account.InstantBuff[i].forHowManyTurns <= 0)
                     {
                         account.InstantBuff.RemoveAt(i);
-                        _accounts.SaveAccounts(account.DiscordId);
+                        _accounts.SaveAccounts(account.Id);
                     }
                 }
 
-            _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.Id);
             _accounts.SaveAccounts(account.CurrentEnemy);
             await Task.CompletedTask;
         }
@@ -262,7 +262,7 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                     }
                 }
 
-            _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.Id);
             await Task.CompletedTask;
         }
 
@@ -304,11 +304,11 @@ namespace OctoGame.OctoGame.SpellHandling.Buffs
                     if (account.InstantDeBuff[i].forHowManyTurns <= 0)
                     {
                         account.InstantDeBuff.RemoveAt(i);
-                        _accounts.SaveAccounts(account.DiscordId);
+                        _accounts.SaveAccounts(account.Id);
                     }
                 }
 
-            _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.Id);
             await Task.CompletedTask;
         }
 

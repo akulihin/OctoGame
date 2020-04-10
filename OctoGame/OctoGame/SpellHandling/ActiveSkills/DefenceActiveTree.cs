@@ -151,7 +151,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     break;
             }
 
-            _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.Id);
             _accounts.SaveAccounts(enemy.DiscordId);
 
             return dmg;

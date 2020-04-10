@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using System.Collections.Concurrent;
+using System.Timers;
 
 namespace OctoGame.LocalPersistentData.ServerAccounts
 {
@@ -11,131 +13,88 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
     {
         public async Task InitializeAsync()
             => await Task.CompletedTask;
-        /*
-      это работуящая версия API варианта сторейджа
 
-        private  readonly List<ServerSettings> _accounts;
-
-        public ServerAccounts()
-        {
-           
-            _accounts = ServerDataStorage.LoadServerSettings().Result.ToList();
-        }
-
-
-        public async Task SaveServerAccounts()
-        {
-            await ServerDataStorage.SaveAllServersData(_accounts);
-        }
-
-        public  ServerSettings GetServerAccount(SocketGuild guild)
-        {
-            return GetOrCreateServerAccount(guild.DiscordId, guild.Name);
-        }
-
-        public  ServerSettings GetServerAccount(IGuildChannel guild)
-        {
-            return GetOrCreateServerAccount(guild.Guild.DiscordId, guild.Guild.Name);
-        }
-
-        public  ServerSettings GetOrCreateServerAccount(ulong id, string name)
-        {
-            var result = from a in _accounts
-                where a.ServerId == id
-                select a;
-            var account = result.FirstOrDefault() ?? CreateServerAccount(id, name);
-
-            return account;
-        }
-
-
-        public  List<ServerSettings> GetAllServerAccounts()
-        {
-            return _accounts.ToList();
-        }
-
-        public  List<ServerSettings> GetFilteredServerAccounts(Func<ServerSettings, bool> filter)
-        {
-            return _accounts.Where(filter).ToList();
-        }
-
-
-        public  ServerSettings CreateServerAccount(ulong id, string name)
-        {
-            var newAccount = new ServerSettings
-            {
-                ServerName = name,
-                ServerId = id,
-                Prefix = "*",
-                ServerActivityLog = 0,
-                Language = "en"
-            };
-
-            _accounts.Add(newAccount);
-        //    ServerDataStorage.AddNewAccount(newAccount);
-            return newAccount;
-        }
-        */
-        private  readonly List<ServerSettings> _accounts;
+        private readonly ConcurrentDictionary<ulong, List<ServerSettings>> _serverAccountsDictionary;
         private readonly ServerDataStorage _serverDataStorage;
-
-        private  readonly string _serverAccountsFile = @"DataBase/OctoDataBase/ServerAccounts.json";
-
-         public ServerAccounts(ServerDataStorage serverDataStorage)
-         {
-             _serverDataStorage = serverDataStorage;
-             if (_serverDataStorage.SaveExists(_serverAccountsFile))
-            {
-                _accounts = _serverDataStorage.LoadServerSettings(_serverAccountsFile).ToList();
-            }
-            else
-            {
-                _accounts = new List<ServerSettings>();
-                SaveServerAccounts();
-            }
-         }
+        private Timer _loopingTimer;
 
 
 
-        public  void SaveServerAccounts()
+        public ServerAccounts(ServerDataStorage serversDataStorage)
         {
-            _serverDataStorage.SaveServerSettings(_accounts, _serverAccountsFile);
+            _serverDataStorage = serversDataStorage;
+            _serverAccountsDictionary = LoadAllAccount();
+            CheckTimer();
         }
 
-        public  ServerSettings GetServerAccount(SocketGuild guild)
+
+        private ConcurrentDictionary<ulong, List<ServerSettings>> LoadAllAccount()
+        {
+           return _serverDataStorage.LoadAllServersSettings();
+        }
+
+        internal Task CheckTimer()
+        {
+            _loopingTimer = new Timer
+            {
+                AutoReset = true,
+                Interval = 60000,
+                Enabled = true
+            };
+            _loopingTimer.Elapsed += SaveAccount;
+            return Task.CompletedTask;
+        }
+
+        public ServerSettings GetServerAccount(SocketGuild guild)
         {
             return GetOrCreateServerAccount(guild.Id, guild.Name);
         }
 
-        public  ServerSettings GetServerAccount(IGuildChannel guild)
+        public ServerSettings GetServerAccount(IGuildChannel guild)
         {
             return GetOrCreateServerAccount(guild.Guild.Id, guild.Guild.Name);
         }
 
-        public  ServerSettings GetOrCreateServerAccount(ulong id, string name)
+        public List<ServerSettings> GetOrAddServerAccountsForGuild(ulong serverId)
         {
-            var result = from a in _accounts
-                where a.ServerId == id
-                select a;
-            var account = result.FirstOrDefault() ?? CreateServerAccount(id, name);
-
-            return account;
-        }
-
-
-        public  List<ServerSettings> GetAllServerAccounts()
-        {
-            return _accounts.ToList();
+            return _serverAccountsDictionary.GetOrAdd(serverId, x => _serverDataStorage.LoadServerSettings(serverId).ToList());
         }
 
         public  List<ServerSettings> GetFilteredServerAccounts(Func<ServerSettings, bool> filter)
         {
-            return _accounts.Where(filter).ToList();
+            var accounts = GetAllAccount();
+            return accounts.Where(filter).ToList();
+        }
+
+        public ServerSettings GetOrCreateServerAccount(ulong id, string name)
+        {
+            var accounts = GetOrAddServerAccountsForGuild(id);
+            var account = accounts.FirstOrDefault() ?? CreateServerAccount(id, name);
+            return account;
         }
 
 
-        public  ServerSettings CreateServerAccount(ulong id, string name)
+
+        private void SaveAccount(object sender, ElapsedEventArgs e)
         {
+            foreach (KeyValuePair<ulong, List<ServerSettings>> acount in _serverAccountsDictionary)
+            {
+                _serverDataStorage.SaveServerSettings(acount.Value, acount.Key);
+            }
+        }
+
+
+        public List<ServerSettings> GetAllAccount()
+        {
+            var accounts = new List<ServerSettings>();
+            foreach (var values in _serverAccountsDictionary.Values) accounts.AddRange(values);
+            return accounts;
+        }
+
+        public ServerSettings CreateServerAccount(ulong id, string name)
+        {
+            var accounts = GetOrAddServerAccountsForGuild(id);
+
             var newAccount = new ServerSettings
             {
                 ServerName = name,
@@ -145,8 +104,7 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
                 Language = "en"
             };
 
-            _accounts.Add(newAccount);
-            SaveServerAccounts();
+            accounts.Add(newAccount);
             return newAccount;
         }
     }

@@ -15,7 +15,7 @@ namespace OctoGame.DiscordFramework.Extensions
 
 
                UpdateGlobalCommandList(message, Context);
-            }
+           }
            else if (Context.MessageContentForEdit == "edit")
            {
                foreach (var t in Context.CommandsInMemory.CommandList)
@@ -37,7 +37,7 @@ namespace OctoGame.DiscordFramework.Extensions
                var message = await Context.Channel.SendMessageAsync($"{regularMess}");
 
                UpdateGlobalCommandList(message, Context);
-            }
+           }
            else if (Context.MessageContentForEdit == "edit")
            {
                foreach (var t in Context.CommandsInMemory.CommandList)
@@ -46,7 +46,7 @@ namespace OctoGame.DiscordFramework.Extensions
                        {
                            message.Content = "";
                            message.Embed = null;
-                           if (regularMess != null) message.Content = regularMess.ToString();
+                           if (regularMess != null) message.Content = regularMess;
                        });
            }
        }
@@ -68,7 +68,7 @@ namespace OctoGame.DiscordFramework.Extensions
                        {
                            message.Content = "";
                            message.Embed = null;
-                           if (regularMess != null) message.Content = regularMess.ToString();
+                           if (regularMess != null) message.Content = regularMess;
                        });
            }
        }

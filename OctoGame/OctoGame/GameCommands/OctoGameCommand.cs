@@ -224,9 +224,9 @@ namespace OctoGame.OctoGame.GameCommands
 
 
             // tis is a test of logging system. it does work btw
-            _loggingSystem.CreateNewLog(account.DiscordId, enemy.DiscordId);
-            _loggingSystem.SaveCurrentFightLog(account.DiscordId, enemy.DiscordId);
-            _loggingSystem.SaveCompletedFight(account.DiscordId, enemy.DiscordId);
+            _loggingSystem.CreateNewLog(account.Id, enemy.DiscordId);
+            _loggingSystem.SaveCurrentFightLog(account.Id, enemy.DiscordId);
+            _loggingSystem.SaveCompletedFight(account.Id, enemy.DiscordId);
 
             if (account.PlayingStatus >= 1)
             {
@@ -313,9 +313,9 @@ namespace OctoGame.OctoGame.GameCommands
 
 
             // tis is a test of logging system. it does work btw
-            _loggingSystem.CreateNewLog(account.DiscordId, enemy.DiscordId);
-            _loggingSystem.SaveCurrentFightLog(account.DiscordId, enemy.DiscordId);
-            _loggingSystem.SaveCompletedFight(account.DiscordId, enemy.DiscordId);
+            _loggingSystem.CreateNewLog(account.Id, enemy.DiscordId);
+            _loggingSystem.SaveCurrentFightLog(account.Id, enemy.DiscordId);
+            _loggingSystem.SaveCompletedFight(account.Id, enemy.DiscordId);
 
 
             if (account.PlayingStatus >= 1 || enemy.PlayingStatus >=1 )

@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using OctoGame.OctoBot.Automated;
 using OctoGame.OctoGame.ReactionHandling;
 
 namespace OctoGame.DiscordFramework
@@ -16,19 +18,33 @@ namespace OctoGame.DiscordFramework
         private readonly OctoGameReaction _octoGameReaction;
         private readonly LoginFromConsole _log;
         private readonly Global _global;
- 
+        private readonly UserSkatisticsCounter _userSkatisticsCounter;
+        private readonly ServerActivityLogger _serverActivityLogger;
+        private readonly LvLing _lvLing;
+        private readonly GiveRoleOnJoin _giveRoleOnJoin;
+        private readonly CheckIfCommandGiveRole _checkIfCommandGiveRole;
+        private readonly Announcer _announcer;
+        private readonly CheckForVoiceChannelStateForVoiceCommand _checkForVoiceChannelStateForVoiceCommand;
 
-        public DiscordEventDispatcher(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction, LoginFromConsole log, Global global)
+        public DiscordEventDispatcher(DiscordShardedClient client, CommandHandling commandHandler, OctoGameReaction octoGameReaction, LoginFromConsole log, Global global, ServerActivityLogger serverActivityLogger, UserSkatisticsCounter userSkatisticsCounter, LvLing lvLing, GiveRoleOnJoin giveRoleOnJoin, CheckIfCommandGiveRole checkIfCommandGiveRole, Announcer announcer, CheckForVoiceChannelStateForVoiceCommand checkForVoiceChannelStateForVoiceCommand)
         {
             _client = client;
             _commandHandler = commandHandler;
             _octoGameReaction = octoGameReaction;
             _log = log;
             _global = global;
+            _serverActivityLogger = serverActivityLogger;
+            _userSkatisticsCounter = userSkatisticsCounter;
+            _lvLing = lvLing;
+            _giveRoleOnJoin = giveRoleOnJoin;
+            _checkIfCommandGiveRole = checkIfCommandGiveRole;
+            _announcer = announcer;
+            _checkForVoiceChannelStateForVoiceCommand = checkForVoiceChannelStateForVoiceCommand;
         }
 
         public Task InitializeAsync()
         {
+            _client.ShardDisconnected += _client_ShardDisconnected;
             _client.ChannelCreated += ChannelCreated;
             _client.ChannelDestroyed += ChannelDestroyed;
             _client.ChannelUpdated += ChannelUpdated;
@@ -65,21 +81,33 @@ namespace OctoGame.DiscordFramework
             return Task.CompletedTask;
         }
 
+
+
+        private async Task _client_ShardDisconnected(Exception arg1, DiscordSocketClient arg2)
+        {
+            _log.Warning($"Shard {arg2.ShardId} Disconnected");
+            _serverActivityLogger.Client_Disconnected(arg1);
+
+        }
+
         private async Task _client_ShardConnected(DiscordSocketClient arg)
         {
-          
+            _serverActivityLogger.Client_Connected();
         }
 
         private async Task ChannelCreated(SocketChannel channel)
         {
+            _serverActivityLogger.Client_ChannelCreated(channel);
         }
 
         private async Task ChannelDestroyed(SocketChannel channel)
         {
+            _serverActivityLogger.Client_ChannelDestroyed(channel);
         }
 
         private async Task ChannelUpdated(SocketChannel channelBefore, SocketChannel channelAfter)
         {
+            _serverActivityLogger.Client_ChannelUpdated(channelBefore, channelAfter);
         }
 
         private async Task CurrentUserUpdated(SocketSelfUser userBefore, SocketSelfUser userAfter)
@@ -94,8 +122,10 @@ namespace OctoGame.DiscordFramework
         {
         }
 
+
         private async Task GuildMemberUpdated(SocketGuildUser userBefore, SocketGuildUser userAfter)
         {
+            _serverActivityLogger.Client_GuildMemberUpdated(userBefore, userAfter);
         }
 
         private async Task GuildUnavailable(SocketGuild guild)
@@ -108,6 +138,7 @@ namespace OctoGame.DiscordFramework
 
         private async Task JoinedGuild(SocketGuild guild)
         {
+            _serverActivityLogger.Client_JoinedGuild(guild);
         }
 
 
@@ -135,17 +166,22 @@ namespace OctoGame.DiscordFramework
                 return; //IActivity guess
             }
             _commandHandler._client_MessageDeleted(cacheMessage, channel);
+            _serverActivityLogger.Client_MessageDeleted(cacheMessage, channel);
+            _userSkatisticsCounter.Client_MessageDeleted(cacheMessage, channel);
         }
 
         private async Task MessageReceived(SocketMessage message)
         {
 
-            
             if(message.Author.IsBot)
                 return;
             _global.TimeSpendOnLastMessage.AddOrUpdate(message.Author.Id, Stopwatch.StartNew(), (key, oldValue) =>  Stopwatch.StartNew());
             _commandHandler.HandleCommandAsync(message);
-           
+            _checkIfCommandGiveRole.Client_MessageReceived(message, _client);
+            _serverActivityLogger.Client_MessageReceived(message);
+            _serverActivityLogger.Client_MessageRecivedForServerStatistics(message);
+            _lvLing.Client_UserSentMess(message);
+            _userSkatisticsCounter.Clien_MessageReceived(message);
         }
 
         private async Task MessageUpdated(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter,
@@ -161,8 +197,11 @@ namespace OctoGame.DiscordFramework
             _global.TimeSpendOnLastMessage.AddOrUpdate(messageAfter.Author.Id, Stopwatch.StartNew(), (key, oldValue) =>  Stopwatch.StartNew());
 
 
-            _commandHandler._client_MessageUpdated(cacheMessageBefore, messageAfter, channel);     
-            
+            _commandHandler._client_MessageUpdated(cacheMessageBefore, messageAfter, channel);
+
+            _serverActivityLogger.Client_MessageUpdated(cacheMessageBefore, messageAfter, channel);
+            _userSkatisticsCounter.Client_MessageUpdated(cacheMessageBefore, messageAfter, channel);
+
         }
 
         private async Task ReactionAdded(Cacheable<IUserMessage, ulong> cacheMessage, ISocketMessageChannel channel,
@@ -196,12 +235,15 @@ namespace OctoGame.DiscordFramework
         {
         }
 
+
         private async Task RoleDeleted(SocketRole role)
         {
+            _serverActivityLogger.Client_RoleDeleted(role);
         }
 
         private async Task RoleUpdated(SocketRole roleBefore, SocketRole roleAfter)
         {
+            _serverActivityLogger.Client_RoleUpdated(roleBefore, roleAfter);
         }
 
         private async Task UserBanned(SocketUser user, SocketGuild guild)
@@ -214,6 +256,8 @@ namespace OctoGame.DiscordFramework
 
         private async Task UserJoined(SocketGuildUser user)
         {
+            _announcer.AnnounceUserJoin(user);
+            _giveRoleOnJoin.Client_UserJoined_ForRoleOnJoin(user);
         }
 
         private async Task UserLeft(SocketGuildUser user)
@@ -231,6 +275,8 @@ namespace OctoGame.DiscordFramework
         private async Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState voiceStateBefore,
             SocketVoiceState voiceStateAfter)
         {
+            _checkForVoiceChannelStateForVoiceCommand.Client_UserVoiceStateUpdatedForCreateVoiceChannel(user,
+                voiceStateBefore, voiceStateAfter);
         }
 
     }

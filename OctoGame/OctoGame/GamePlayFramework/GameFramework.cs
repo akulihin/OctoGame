@@ -131,7 +131,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
 
             account.IsMyTurn = false;
             enemy.IsMyTurn = true;
-            _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.Id);
 
         }
 
@@ -155,7 +155,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             //TODO ?????
           //  account.IsCrit = false;
 
-            _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.Id);
             _accounts.SaveAccounts(enemy.DiscordId);
             await Task.CompletedTask;
         }

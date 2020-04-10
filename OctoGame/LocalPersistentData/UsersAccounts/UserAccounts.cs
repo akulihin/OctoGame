@@ -1,42 +1,56 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using System.Timers;
 
 namespace OctoGame.LocalPersistentData.UsersAccounts
 {
     public sealed class UserAccounts :  IServiceSingleton
     {
-        private static readonly ConcurrentDictionary<ulong, List<AccountSettings>> UserAccountsDictionary =
-            new ConcurrentDictionary<ulong, List<AccountSettings>>();
+        private readonly ConcurrentDictionary<ulong, List<AccountSettings>> _userAccountsDictionary;
 
         private readonly DiscordShardedClient _client;
         private readonly UsersDataStorage _usersDataStorage;
+        private Timer _loopingTimer;
 
         public UserAccounts(DiscordShardedClient client, UsersDataStorage usersDataStorage)
         {
             _client = client;
             _usersDataStorage = usersDataStorage;
+            _userAccountsDictionary = LoadAllAccount();
+            CheckTimer();
         }
 
         public async Task InitializeAsync()
-            => await Task.CompletedTask;
-
-        /*
-        static UserAccounts()
         {
-            var guildList = ServerAccounts.GetAllServerAccounts();
-            foreach (var guild in guildList)
-                UserAccountsDictionary.GetOrAdd(guild.ServerId,
-                    x => DataStorage.LoadAccountSettings(guild.ServerId).ToList());
-        }*/
+            await Task.CompletedTask;
+        }
+
+        private ConcurrentDictionary<ulong, List<AccountSettings>> LoadAllAccount()
+        {
+            return _usersDataStorage.LoadAllAccountSettings();
+        }
+
+        internal Task CheckTimer()
+        {
+            _loopingTimer = new Timer
+            {
+                AutoReset = true,
+                Interval = 60000,
+                Enabled = true
+            };
+            _loopingTimer.Elapsed += SaveAccount;
+            return Task.CompletedTask;
+        }
 
 
         public  List<AccountSettings> GetOrAddUserAccountsForGuild(ulong userId)
         {
-            return UserAccountsDictionary.GetOrAdd(userId, x => _usersDataStorage.LoadAccountSettings(userId).ToList());
+            return _userAccountsDictionary.GetOrAdd(userId, x => _usersDataStorage.LoadAccountSettings(userId).ToList());
         }
 
         public  AccountSettings GetAccount(IUser user)
@@ -44,22 +58,24 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
             return GetOrCreateAccount(user);
         }
 
-       public AccountSettings GetAccount(ulong userId)
+        public List<AccountSettings> GetFilteredUserAccounts(Func<AccountSettings, bool> filter)
+        {
+            var accounts = GetAllAccount();
+            return accounts.Where(filter).ToList();
+        }
+
+        public AccountSettings GetAccount(ulong userId)
         {
             if(userId > 1000)
-            return GetOrCreateAccount(_client.GetUser(userId));
+                return GetOrCreateAccount(_client.GetUser(userId));
             else
-            return UserAccountsDictionary.GetOrAdd(userId, x => _usersDataStorage.LoadAccountSettings(userId).ToList()).FirstOrDefault();
+                return _userAccountsDictionary.GetOrAdd(userId, x => _usersDataStorage.LoadAccountSettings(userId).ToList()).FirstOrDefault();
         }
-        /*
-        public AccountSettings GetBotAccount(ulong botId)
-        {
-            return UserAccountsDictionary.GetOrAdd(botId, x => UsersDataStorage.LoadAccountSettings(botId).ToList()).FirstOrDefault();
-        }
-        */
+
         public  AccountSettings GetOrCreateAccount(IUser user)
         {
             var accounts = GetOrAddUserAccountsForGuild(user.Id);
+
             var account = accounts.FirstOrDefault() ?? CreateUserAccount(user);
             return account;
         }
@@ -67,21 +83,27 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 
         public  void SaveAccounts(ulong userId)
         {
-            var accounts = GetOrAddUserAccountsForGuild(userId);
-            _usersDataStorage.SaveAccountSettings(accounts, userId);
+        //depricated
         }
 
         public  void SaveAccounts(IUser user)
         {
-            var accounts = GetOrAddUserAccountsForGuild(user.Id);
-            _usersDataStorage.SaveAccountSettings(accounts, user.Id);
+         //depricated
+        }
+
+        private void SaveAccount(object sender, ElapsedEventArgs e)
+        {
+            foreach (KeyValuePair<ulong, List<AccountSettings>> acount in _userAccountsDictionary)
+            {
+                _usersDataStorage.SaveAccountSettings(acount.Value, acount.Key);
+            }
         }
 
 
         public  List<AccountSettings> GetAllAccount()
         {
             var accounts = new List<AccountSettings>();
-            foreach (var values in UserAccountsDictionary.Values) accounts.AddRange(values);
+            foreach (var values in _userAccountsDictionary.Values) accounts.AddRange(values);
             return accounts;
         }
 

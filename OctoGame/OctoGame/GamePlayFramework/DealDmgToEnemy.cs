@@ -92,7 +92,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             if (myAccount.Health > myAccount.MaxHealth) myAccount.Health = myAccount.MaxHealth; // hp cant be more than MAX hp
 
             var status = 0;
-            var userId = myAccount.DiscordId;
+            var userId = myAccount.Id;
 
             if (dmg > 0)
                 dmg += onHitDmg;
@@ -155,10 +155,10 @@ namespace OctoGame.OctoGame.GamePlayFramework
                 status = 1;
             }
 
-            _accounts.SaveAccounts(myAccount.DiscordId);
-            _accounts.SaveAccounts(enemyAccount.DiscordId);
+            _accounts.SaveAccounts(myAccount.Id);
+            _accounts.SaveAccounts(enemyAccount.Id);
 
-            await _updateFightPage.UpdateIfWinOrContinue(status, myAccount.DiscordId, myAccount.MessageIdInList);
+            await _updateFightPage.UpdateIfWinOrContinue(status, myAccount.Id, myAccount.MessageIdInList);
 
 
         }
@@ -170,7 +170,7 @@ namespace OctoGame.OctoGame.GamePlayFramework
             {
                 shield.howManyHits--;
                 shield.howManyTurn--;
-                _accounts.SaveAccounts(myAccount.DiscordId);
+                _accounts.SaveAccounts(myAccount.Id);
 
                 if (shield.howManyHits <= -1 || shield.howManyTurn <= -1)
                     return dmg;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -78,6 +79,59 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
                 SaveAccountSettings(newList, $"{userId}-BACK_UP", json);
                 return newList;
             }
+        }
+
+
+        public ConcurrentDictionary<ulong, List<AccountSettings>> LoadAllAccountSettings()
+        {
+
+            var directoryPath = $@"DataBase/OctoDataBase/UserAccounts";
+      
+            var allFiles = new DirectoryInfo(directoryPath).GetFiles("*.json"); //Getting Text files
+
+            var fileEntries = Directory.GetFiles(directoryPath);
+            var allAccounts = new ConcurrentDictionary<ulong, List<AccountSettings>>();
+
+            foreach (var file in allFiles)
+            {
+                var filePath = file.FullName;
+                ulong userId;
+                try
+                {
+                    userId = Convert.ToUInt64(file.Name.Replace("account-", "").Replace(".json", ""));
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (!File.Exists(filePath))
+                {
+                    var newList = new List<AccountSettings>();
+                    SaveAccountSettings(newList, userId);
+                        
+                    allAccounts.AddOrUpdate(userId, newList, (key, oldValue) => newList);
+                }
+
+
+                var json = File.ReadAllText(filePath);
+
+                try
+                {
+                    var newList = JsonConvert.DeserializeObject<List<AccountSettings>>(json);
+                    allAccounts.AddOrUpdate(userId, newList, (key, oldValue) => newList);
+                }
+                catch (Exception e)
+                {
+                    _log.Critical($"LoadAllAccountSettings, BACK UP CREATED: {e}");
+
+                    var newList = new List<AccountSettings>();
+                    SaveAccountSettings(newList, $"{userId}-BACK_UP", json);
+                    allAccounts.AddOrUpdate(userId, newList, (key, oldValue) => newList);
+                }
+            }
+
+            return allAccounts;
         }
 
     }

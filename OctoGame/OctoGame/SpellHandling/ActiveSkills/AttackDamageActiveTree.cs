@@ -83,7 +83,7 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                 case 1007:
                     dmg = 0.25 >= enemyAccount.Health / enemyAccount.MaxHealth ? 99999999.00 : 1;
                     if (!check) myAccount.SkillCooldowns.Add(new AccountSettings.CooldownClass(skillId, 10));
-           //TODO: I can use this with LAmar        private readonly Scope _upd;   _upd.GetInstance<UpdateFightPage>().UpdateIfWinOrContinue(1, myAccount.DiscordId, myAccount.MessageIdInList);
+           //TODO: I can use this with LAmar        private readonly Scope _upd;   _upd.GetInstance<UpdateFightPage>().UpdateIfWinOrContinue(1, myAccount.Id, myAccount.MessageIdInList);
                 
 
                     break;
@@ -173,8 +173,8 @@ namespace OctoGame.OctoGame.SpellHandling.ActiveSkills
                     dmg);
 
 
-            _accounts.SaveAccounts(myAccount.DiscordId);
-            _accounts.SaveAccounts(enemyAccount.DiscordId);
+            _accounts.SaveAccounts(myAccount.Id);
+            _accounts.SaveAccounts(enemyAccount.Id);
 
 
             return dmg;

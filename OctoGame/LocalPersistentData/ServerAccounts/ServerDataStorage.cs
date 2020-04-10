@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,35 +11,6 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
     public sealed class ServerDataStorage : IServiceSingleton
     {
 
-        /*
-        это работуящая версия API варианта сторейджа
-
-
-        private static readonly HttpClient Client = new HttpClient();
-
-        //Save all ServerSettings
-        public static async Task SaveAllServersData(List<ServerSettings> accounts)
-        {
-            var json = JsonConvert.SerializeObject(accounts[0], Formatting.Indented);
-
-            var httpContent = new StringContent(json, Encoding.UTF8);
-            var httpResponse = await Client.PostAsync("http://localhost:3000/post", httpContent);
-
-            var responseContent = await httpResponse.Content.ReadAsStringAsync();
-            var i = 0;
-
-        }
-
-        //Get ServerSettings
-        
-        public static async Task<IEnumerable<ServerSettings>> LoadServerSettings()
-        {
-            HttpResponseMessage response = await Client.GetAsync("http://localhost:3000/pool");
-            return JsonConvert.DeserializeObject<List<ServerSettings>>(response.Content.ReadAsStringAsync().Result);
-        }
-        */
-
-
 
         private readonly LoginFromConsole _log;
 
@@ -47,32 +19,111 @@ namespace OctoGame.LocalPersistentData.ServerAccounts
             _log = log;
         }
 
-        public void SaveServerSettings(IEnumerable<ServerSettings> accounts, string filePath)
+        public void SaveServerSettings(IEnumerable<ServerSettings> accounts, string idString, string json)
         {
+
+            var filePath = $@"DataBase/OctoDataBase/ServerAccounts/account-{idString}.json";
+            try
+            {
+                File.WriteAllText(filePath, json);
+            }
+            catch (Exception e)
+            {
+                _log.Critical($"Save SERVER AccountSettings (3 params): {e.Message}");
+            }
+        }
+
+        public void SaveServerSettings(IEnumerable<ServerSettings> accounts, ulong serverId)
+        {
+
+            var filePath = $@"DataBase/OctoDataBase/ServerAccounts/account-{serverId}.json";
             try
             {
                 var json = JsonConvert.SerializeObject(accounts, Formatting.Indented);
                 File.WriteAllText(filePath, json);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                _log.Critical($"Failed To ReadFile(Save SERVER Settings): {e.Message}");
-              
+                _log.Critical($"Save SERVER AccountSettings (2 params): {e.Message}");
+
             }
         }
 
         //Get ServerSettings
 
-        public IEnumerable<ServerSettings> LoadServerSettings(string filePath)
+
+        public IEnumerable<ServerSettings> LoadServerSettings(ulong serverId)
         {
-            if (!File.Exists(filePath)) return null;
+            var filePath = $@"DataBase/OctoDataBase/ServerAccounts/account-{serverId}.json";
+            if (!File.Exists(filePath))
+            {
+                var newList = new List<ServerSettings>();
+                SaveServerSettings(newList, serverId);
+                return newList;
+            }
+
             var json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<List<ServerSettings>>(json);
+
+            try
+            {
+                return JsonConvert.DeserializeObject<List<ServerSettings>>(json);
+            }
+            catch (Exception e)
+            {
+                _log.Critical($"LoadAccountSettings, BACK UP CREATED: {e}");
+
+                var newList = new List<ServerSettings>();
+                SaveServerSettings(newList, $"{serverId}-BACK_UP", json);
+                return newList;
+            }
         }
 
-        public bool SaveExists(string filePath)
+
+        public ConcurrentDictionary<ulong, List<ServerSettings>> LoadAllServersSettings()
         {
-            return File.Exists(filePath);
+            var directoryPath = $@"DataBase/OctoDataBase/ServerAccounts";
+            var allFiles = new DirectoryInfo(directoryPath).GetFiles("*.json"); //Getting Text files
+            var allAccounts = new ConcurrentDictionary<ulong, List<ServerSettings>>();
+
+            foreach (var file in allFiles)
+            {
+                var filePath = file.FullName;
+                ulong userId;
+                try
+                {
+                    userId = Convert.ToUInt64(file.Name.Replace("account-", "").Replace(".json", ""));
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (!File.Exists(filePath))
+                {
+                    var newList = new List<ServerSettings>();
+                    SaveServerSettings(newList, userId);
+                    allAccounts.AddOrUpdate(userId, newList, (key, oldValue) => newList);
+                }
+
+
+                var json = File.ReadAllText(filePath);
+
+                try
+                {
+                    var newList = JsonConvert.DeserializeObject<List<ServerSettings>>(json);
+                    allAccounts.AddOrUpdate(userId, newList, (key, oldValue) => newList);
+                }
+                catch (Exception e)
+                {
+                    _log.Critical($"LoadAllServersSettings, BACK UP CREATED: {e}");
+
+                    var newList = new List<ServerSettings>();
+                    SaveServerSettings(newList, $"{userId}-BACK_UP", json);
+                    allAccounts.AddOrUpdate(userId, newList, (key, oldValue) => newList);
+                }
+            }
+
+            return allAccounts;
         }
 
         public async Task InitializeAsync()

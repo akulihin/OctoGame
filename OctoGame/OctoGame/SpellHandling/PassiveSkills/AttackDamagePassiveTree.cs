@@ -51,13 +51,13 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                     case 1004:
                         var dmgValue1004 =   0.1 * enemy.Stamina;
 
-                        if (TemporaryAd1004.TryGetValue(account.DiscordId, out double trying1004))
+                        if (TemporaryAd1004.TryGetValue(account.Id, out double trying1004))
                         {
                             account.AttackPower_Stats -= trying1004;
                         }
                         
                         account.AttackPower_Stats += dmgValue1004;
-                        TemporaryAd1004.AddOrUpdate(account.DiscordId, dmgValue1004, (key, oldValue) => dmgValue1004);
+                        TemporaryAd1004.AddOrUpdate(account.Id, dmgValue1004, (key, oldValue) => dmgValue1004);
 
                         break;
 
@@ -79,14 +79,14 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                         var dmgValue1008 = Math.Round((1 - account.Health / account.MaxHealth) / 0.5 / 10 * account.AttackPower_Stats);
 
 
-                        if (TemporaryAd1008.TryGetValue(account.DiscordId, out double trying1008))
+                        if (TemporaryAd1008.TryGetValue(account.Id, out double trying1008))
                         {
                             account.AttackPower_Stats -= trying1008;
                         }
                         
                         account.AttackPower_Stats += dmgValue1008;
 
-                        TemporaryAd1008.AddOrUpdate(account.DiscordId, dmgValue1008, (key, oldValue) => dmgValue1008);
+                        TemporaryAd1008.AddOrUpdate(account.Id, dmgValue1008, (key, oldValue) => dmgValue1008);
                         break;
 
                     //1010 (ад ветка) Мародер - пассивно каждый крит хилит 2% от максимальной стамины.
@@ -118,14 +118,14 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
 
                         var dmgValue1016 = Math.Round((1 - enemy.Health / enemy.MaxHealth) / 0.5 / 10 * account.AttackPower_Stats);
 
-                        if (TemporaryAd1016.TryGetValue(account.DiscordId, out double trying1016))
+                        if (TemporaryAd1016.TryGetValue(account.Id, out double trying1016))
                         {
                             account.AttackPower_Stats -= trying1016;
                         }
                         
                         account.AttackPower_Stats += dmgValue1016;
 
-                        TemporaryAd1016.AddOrUpdate(account.DiscordId, dmgValue1016, (key, oldValue) => dmgValue1016);
+                        TemporaryAd1016.AddOrUpdate(account.Id, dmgValue1016, (key, oldValue) => dmgValue1016);
                         break;
 
                     //1018 (ад ветка) Мясорубка - пассивно каждый крит увеличивает АД на 1% до конца боя.
@@ -135,13 +135,13 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                       
                         var dmgValue1018 = account.AttackPower_Stats * 0.01 * account.HowManyTimesCrited;
 
-                        if (TemporaryAd1018.TryGetValue(account.DiscordId, out double trying1018))
+                        if (TemporaryAd1018.TryGetValue(account.Id, out double trying1018))
                         {
                             account.AttackPower_Stats -= trying1018;
                         }
 
                         account.AttackPower_Stats += dmgValue1018;
-                        TemporaryAd1018.AddOrUpdate(account.DiscordId, dmgValue1018, (key, oldValue) => dmgValue1018);
+                        TemporaryAd1018.AddOrUpdate(account.Id, dmgValue1018, (key, oldValue) => dmgValue1018);
 
                         break;
 
@@ -159,7 +159,7 @@ namespace OctoGame.OctoGame.SpellHandling.PassiveSkills
                     case 1022:
                         break;
                 }
-            _accounts.SaveAccounts(account.DiscordId);
+            _accounts.SaveAccounts(account.Id);
             _accounts.SaveAccounts(enemy.DiscordId);
         }
     }
