@@ -47,17 +47,18 @@ namespace OctoGame.OctoBot
             await SendMessAsync( $"boole: `{guild.Prefix}`");
         }
 
-
         [Command("myPrefix")]
-        [Summary("Set your own prefix for this bot")]
+        [Summary("Shows or sets YOUR OWN prefix for the bot")]
         public async Task SetMyPrefix([Remainder] string prefix = null)
         {
             var account = _accounts.GetAccount(Context.User);
 
             if (prefix == null)
             {
+                var myAccountPrefix = account.MyPrefix ?? "You don't have own prefix yet";
+
                 await SendMessAsync(
-                    $"Your prefix: **{account.MyPrefix}**");
+                    $"Your prefix: **{myAccountPrefix}**");
                 return;
             }
 
@@ -67,11 +68,11 @@ namespace OctoGame.OctoBot
                 if (prefix.Contains("everyone") || prefix.Contains("here"))
                 {
                     await SendMessAsync(
-                        $"Boooooo! no `here` or `everyone` prefix!");
+                        "No `here` or `everyone` prefix allowed.");
                     return;
                 }
 
-
+                _accounts.SaveAccounts(Context.User);
                 await SendMessAsync(
                     $"Booole~, your own prefix is now **{prefix}**");
             }

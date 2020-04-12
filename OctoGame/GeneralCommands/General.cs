@@ -48,6 +48,7 @@ namespace OctoGame.GeneralCommands
         }
 
         [Command("ddw")]
+        [Summary("Download all Octo Pictures.")]
         [RequireOwner]
         public async Task Ddw()
         {
@@ -90,14 +91,8 @@ namespace OctoGame.GeneralCommands
             acc.Attack_Tree = st; 
             _accounts.SaveAccounts(Context.User);
 
- 
-
-
-            
-
             SendMessAsync($"updated");
             // Context.User.GetAvatarUrl()
-
         }
 
 
@@ -159,7 +154,7 @@ namespace OctoGame.GeneralCommands
        
         [Command("upd")]
         [RequireOwner]
-        [Summary("RequireOwner")]
+        [Summary("UpdateDiscordBotListGuildCount")]
         public async Task UpdateDiscordBotListGuildCount(int num)
         {
             _dblApi.UpdateStats(num);
@@ -188,45 +183,11 @@ namespace OctoGame.GeneralCommands
             await _service.SendAudioAsync(Context.Guild, Context.Channel, song);
         }
 
-        [Command("myPrefix")]
-        [Summary("Shows or sets YOUR OWN prefix for the bot")]
-        public async Task SetMyPrefix([Remainder] string prefix = null)
-        {
-            var account = _accounts.GetAccount(Context.User);
 
-            if (prefix == null)
-            {
-                var myAccountPrefix = account.MyPrefix ?? "You don't have own prefix yet";
-
-                await SendMessAsync(
-                    $"Your prefix: **{myAccountPrefix}**");
-                return;
-            }
-
-            if (prefix.Length < 100)
-            {
-                account.MyPrefix = prefix;
-                if (prefix.Contains("everyone") || prefix.Contains("here"))
-                {
-                    await SendMessAsync(
-                        "No `here` or `everyone` prefix allowed.");
-                    return;
-                }
-
-                _accounts.SaveAccounts(Context.User);
-                await SendMessAsync(
-                    $"Booole~, your own prefix is now **{prefix}**");
-            }
-            else
-            {
-                await SendMessAsync(
-                    "Booooo! Prefix have to be less than 100 characters");
-            }
-        }
 
         [Command("octo")]
         [Alias("окто", "octopus", "Осьминог", "Осьминожка", "Осьминога", "o", "oct", "о")]
-        [Summary("Show a random oct. The pull contains only my own pictures.")]
+        [Summary("Show a random octo. The pull contains only my own pictures.")]
         public async Task OctopusPicture()
         {
             var octoIndex = _secureRandom.Random(0, _octoPicPull.OctoPics.Length-1);
@@ -275,7 +236,7 @@ namespace OctoGame.GeneralCommands
 
 
         [Command("test")]
-        [Summary("just a test of a multiple language shit")]
+        [Summary("just a test of a multiple language shit, does not work")]
         public async Task TestLanguges([Remainder] string rem)
         {
             var kek = _lang.Resolve($"{Context.User.Mention}\n[PRIVACY_DATA_REPORT_TEMPLATE(@DATA)]");
