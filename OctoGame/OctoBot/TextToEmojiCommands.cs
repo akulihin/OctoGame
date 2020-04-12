@@ -24,6 +24,7 @@ namespace OctoGame.OctoBot
 
         [Command("Emotify")]
         [Alias("emoji", "emotion", "emo")]
+        [Summary("Convert text to Emojis")]
         public async Task Emotify([Remainder] string args)
         {
             string[] convertorArray = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
@@ -55,6 +56,7 @@ namespace OctoGame.OctoBot
         //await socketMsg.AddReactionAsync(mumu); 
         [Command("EmoteSay")]
         [Alias("emojiM", "emotionM", "emoM")]
+        [Summary("Add this text to this message as Emojis")]
         public async Task EmoteSay(ulong chanelId, ulong messId, [Remainder] string args)
         {
             string[] numArray = {"0⃣", "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣"};

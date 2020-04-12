@@ -31,7 +31,7 @@ namespace OctoGame.GeneralCommands
             "Shows help about specific command or module. If command has 2 or more variants you can select a page, for example `help roll 2`")]
         public async Task HelpSpecific([Remainder] string command)
         {
-            var isNumeric = int.TryParse(command[command.Length - 1].ToString(), out var pageNum);
+            var isNumeric = int.TryParse(command[^1].ToString(), out var pageNum);
 
             if (isNumeric)
                 command = command.Substring(0, command.Length - 2);

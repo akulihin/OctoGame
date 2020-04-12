@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using OctoGame.DiscordFramework.Extensions;
 using OctoGame.LocalPersistentData.ServerAccounts;
 using OctoGame.LocalPersistentData.UsersAccounts;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OctoGame.OctoBot
 {
@@ -27,6 +27,7 @@ namespace OctoGame.OctoBot
 
         [Command("purge",  RunMode = RunMode.Async)]
         [Alias("clean", "убрать", "clear")]
+        [Summary("Delete number of messages in current channel. You can specify a user like \"purge 15 @OctoBot\" which will delete messages only from this user")]
         //[RequireUserPermission(GuildPermission.Administrator)]
         public async Task Delete(int number, IGuildUser user = null)
         {
@@ -98,6 +99,7 @@ namespace OctoGame.OctoBot
 
         [Command("warn")]
         [Alias("варн", "предупреждение", "warning")]
+        [Summary("Set a warning to this user.")]
         // [RequireUserPermission(GuildPermission.Administrator)]
         public async Task WarnUser(IGuildUser user, [Remainder] string message = null)
         {
@@ -155,6 +157,7 @@ namespace OctoGame.OctoBot
         [Alias("кик")]
         [RequireUserPermission(GuildPermission.KickMembers)]
         [RequireBotPermission(GuildPermission.KickMembers)]
+        [Summary("Kick users from the server")]
         public async Task KickUser(IGuildUser user, [Remainder] string reason = null)
         {
             try
@@ -193,6 +196,7 @@ namespace OctoGame.OctoBot
         [Alias("бан")]
         [RequireUserPermission(GuildPermission.BanMembers)]
         [RequireBotPermission(GuildPermission.BanMembers)]
+        [Summary("Ban User")]
         public async Task BanUser(IGuildUser user, string reason = null)
         {
             try
@@ -229,6 +233,7 @@ namespace OctoGame.OctoBot
 
 
         [Command("mute")]
+        [Summary("mute user - not working as of now")]
         public async Task MuteCommand(SocketGuildUser user, uint minute, [Remainder] string warningMess = null)
         {
             try
@@ -289,6 +294,7 @@ namespace OctoGame.OctoBot
 
         [Command("unmute")]
         [Alias("umute")]
+        [Summary("remove mute from a user")]
         public async Task UnMuteCommand(SocketGuildUser user)
         {
             var check = Context.User as IGuildUser;
@@ -306,25 +312,6 @@ namespace OctoGame.OctoBot
 
 
                 await SendMessAsync( "boole...");
-            }
-        }
-
-        [Command("moderator")]
-        [Alias("moder")]
-        public async Task SetModerator(SocketGuildUser user)
-        {
-            var check = Context.User as IGuildUser;
-            var commander = _accounts.GetAccount(Context.User);
-            if (check != null && (Context.Guild.Owner.Id == Context.User.Id || commander.IsModerator >= 2 ||
-                                  check.GuildPermissions.ManageRoles))
-            {
-                var account = _accounts.GetAccount(user);
-                account.IsModerator = 1;
-                
-
-
-                await SendMessAsync(
-                    $"{user.Mention} is now a moderator! Booole~");
             }
         }
     }

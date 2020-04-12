@@ -26,7 +26,7 @@ namespace OctoGame.OctoBot
 
         [Command("topo")]
         [Alias("topp")]
-        [Description("Top by Octo Points")]
+        [Summary("Top users by Octo Points")]
         public async Task TopByOctoPoints(int page = 1)
         {
             try
@@ -81,82 +81,10 @@ namespace OctoGame.OctoBot
             }
         }
 
-        [Command("tops")]
-        [Description("Top by Subed To You Qty (for the Blog system)")]
-        public async Task TopBySubc(int page = 1)
-        {
-            try
-            {
-                if (page < 1)
-                {
-                    await SendMessAsync(
-                        "Boole! Try different page <_<");
-
-                    return;
-                }
-
-                // Get only accounts of this server
-                var accounts = _accounts.GetAllAccount();
-
-                const int usersPerPage = 9;
-
-                var lastPage = 1 + accounts.Count / (usersPerPage + 1);
-                if (page > lastPage)
-                {
-                    await SendMessAsync(
-                        $"Boole. Last Page is {lastPage}");
-
-                    return;
-                }
-
-                foreach (var t in accounts)
-                    if (t.SubedToYou == null)
-                        t.SubedToYou = "0";
-
-                var ordered = accounts.OrderByDescending(acc =>
-                    acc.SubedToYou.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries).Length).ToList();
-
-                var embB = new EmbedBuilder()
-                    .WithTitle("Top By Subs Qty:")
-                    .WithFooter(
-                        $"Page {page}/{lastPage} ● Say \"tops 2\" to see second page (you can edit previous message)");
-
-                page--;
-                for (var j = 0; j < ordered.Count; j++)
-                    if (ordered[j].Id == Context.User.Id)
-                    {
-                        var size = ordered[j].SubedToYou.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries)
-                            .Length;
-                        if (size == 1)
-                            size = 0;
-                        embB.WithDescription(
-                            $"**#{j + usersPerPage * page + 1} {Context.User.Username} {size} Subscribers**\n**______**");
-                    }
-
-
-                for (var i = 1; i <= usersPerPage && i + usersPerPage * page <= ordered.Count; i++)
-                {
-                    var account = ordered[i - 1 + usersPerPage * page];
-                    var user = _global.Client.GetUser(account.Id);
-
-                    var size = account.SubedToYou.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries).Length;
-                    if (size == 1)
-                        size = 0;
-                    embB.AddField($"#{i + usersPerPage * page} {user.Username}", $"{size} Subscribers", true);
-                }
-
-                await SendMessAsync( embB);
-            }
-            catch
-            {
-             //   await ReplyAsync(
-             //       "boo... An error just appear >_< \nTry to use this command properly: **tops [page_number]**(Top By Subs Qty)");
-            }
-        }
 
         [Command("top")]
         [Alias("topl")]
-        [Description("Top by Activity on Server")]
+        [Summary("Top users  by Activity on Server")]
         public async Task TopByLvL(int page = 1)
         {
             try

@@ -28,7 +28,7 @@ namespace OctoGame.OctoBot
 
         [Command("topRoles")]
         [Alias("topr")]
-        [Description("Top by Roles (Statistics fore Roles in the Guild)")]
+        [Summary("Top by Roles (Statistics fore Roles in the Guild)")]
         public async Task TopByRoles(int page = 1)
         {
             try
@@ -84,7 +84,7 @@ namespace OctoGame.OctoBot
 
         [Command("topChannels")]
         [Alias("topChan", "top Channels", "topChannel", "top Channel")]
-        [Description("Top by Roles (Statistics fore Channels in the Guild)")]
+        [Summary("Top by Roles (Statistics fore Channels in the Guild)")]
         public async Task TopByChannels(int page = 1)
         {
             try
@@ -173,7 +173,7 @@ namespace OctoGame.OctoBot
         
         [Command("sstats")]
         [Alias("ServerStats", "serverInfo")]
-        [Description("Showing usefull Server Statistics")]
+        [Summary("Showing usefull Server Statistics")]
         public async Task ServerStats(ulong guildId = 0)
         {
             try

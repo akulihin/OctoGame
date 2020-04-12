@@ -23,11 +23,10 @@ namespace OctoGame.OctoBot
         }
 
         [Command("pick")]
+        [Summary("Local Joke.")]
         public async Task Pick([Remainder] string message)
         {
-            try
-            {
-                var option = message.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+            var option = message.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
 
                 var rand = new Random();
                 var selection = option[rand.Next(0, option.Length)];
@@ -42,15 +41,10 @@ namespace OctoGame.OctoBot
 
                 await SendMessAsync( embed);
             }
-            catch
-            {
-             //   await ReplyAsync(
-             //       "boo... An error just appear >_< \nTry to use this command properly: **pick option1|option2|option3**(output random option (can be as many as you want))\n");
-            }
-        }
 
         [Command("ping")]
         [Alias("пинг")]
+        [Summary("Local Joke.")]
         public async Task DefaultPing()
         {
             await SendMessAsync( $"{Context.User.Mention} pong!");
@@ -58,6 +52,7 @@ namespace OctoGame.OctoBot
 
 
         [Command("DM")]
+        [Summary("A bot will send you a DM")]
         public async Task DmMess()
         {
             try
@@ -74,10 +69,10 @@ namespace OctoGame.OctoBot
 
         [Command("guess", RunMode = RunMode.Async)]
         [Alias("Рулетка", "угадайка")]
+        [Summary("Guess Game")]
         public async Task GuessGame(ulong enter)
         {
-            try
-            {
+
                 var amount = (int) enter;
 
                 var userAccount = _accounts.GetAccount(Context.User);
@@ -140,47 +135,9 @@ namespace OctoGame.OctoBot
                     await SendMessAsync(
                         $"The choice should be between 0 and {slots}, answer only with a number.");
                 }
-            }
-            catch
-            {
-            //    await ReplyAsync(
-            //        "boo... An error just appear >_< \nTry to use this command properly: **guess [rate_num]**(like cassino, ty it!)\n" +
-            //        "Alias: Рулетка, угадайка");
-            }
         }
 
 
-        [Command("myPrefix")]
-        public async Task SetMyPrefix([Remainder] string prefix = null)
-        {
-            var account = _accounts.GetAccount(Context.User);
 
-            if (prefix == null)
-            {
-                await SendMessAsync(
-                    $"Your prefix: **{account.MyPrefix}**");
-                return;
-            }
-
-            if (prefix.Length < 100)
-            {
-                account.MyPrefix = prefix;
-                if (prefix.Contains("everyone") || prefix.Contains("here"))
-                {
-                    await SendMessAsync(
-                        $"Boooooo! no `here` or `everyone` prefix!");
-                    return;
-                }
-
-                
-                await SendMessAsync(
-                    $"Booole~, your own prefix is now **{prefix}**");
-            }
-            else
-            {
-                await SendMessAsync(
-                    "Booooo! Prefix have to be less than 100 characters");
-            }
-        }
     }
 }

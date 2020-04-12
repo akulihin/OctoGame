@@ -22,6 +22,7 @@ namespace OctoGame.OctoBot
 
         [Command("я проиграл")]
         [Alias("я проиграла", "я проиграл.", "я проиграла.", "я проиграл...", "я проиграл..", "я проиграла...")]
+        [Summary("Local Joke.")]
         public async Task Lost()
         {
             var account = _accounts.GetAccount(Context.User);
@@ -68,6 +69,7 @@ namespace OctoGame.OctoBot
 
 
         [Command("кто там?")]
+        [Summary("Local Joke.")]
         [Alias("кто там", "кто ... там", "кто .. там", "кто .... там", "кто там?!", "Таам", "кто там...", "кто там..",
             "кто там....", "кто ... там?", "кто ... там?!", "кто там.", "кто там.", "кто там,")]
         public async Task WhoAreThere()
@@ -86,6 +88,7 @@ namespace OctoGame.OctoBot
         }
 
         [Command("А там")]
+        [Summary("Local Joke.")]
         [Alias("А там", "А там...", "А там..", "А там....")]
         public async Task WhoAreThereA()
         {
@@ -103,6 +106,7 @@ namespace OctoGame.OctoBot
 
 
         [Command("Заповедь")]
+        [Summary("Local Joke.")]
         [Alias("Заповеди", "Заповеди Бога Лола", "10 заповедей бога лола")]
         public async Task Commandment()
         {

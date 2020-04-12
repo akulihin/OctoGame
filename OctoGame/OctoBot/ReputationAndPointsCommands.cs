@@ -27,7 +27,7 @@ namespace OctoGame.OctoBot
         [Command("OctoRep")]
         [Alias("Octo Rep", "Rep", "октоРепа", "Окто Репа", "Репа")]
         //[RequireUserPermission(GuildPermission.Administrator)]
-        [Description("Adding Octo Rep on a Account")]
+        [Summary("Adding Octo Rep on a Account")]
         public async Task AddPoints(IGuildUser user, long rep)
         {
             var comander = _accounts.GetAccount(Context.User);
@@ -50,7 +50,7 @@ namespace OctoGame.OctoBot
         [Command("OctoPoint")]
         [Alias("Octo Point", "OctoPoints", "Octo Points", "ОктоПоинты", "Окто Поинты", "Поинты", "points", "point")]
         // [RequireUserPermission(GuildPermission.Administrator)]
-        [Description("Adding Octo Points on a Account")]
+        [Summary("Adding Octo Points on a Account")]
         public async Task GivePoints(IGuildUser user, long points)
         {
             var comander = _accounts.GetAccount(Context.User);
@@ -72,7 +72,7 @@ namespace OctoGame.OctoBot
 
         [Command("pass", RunMode = RunMode.Async)]
         [Alias("Пасс", "Купить Пропуск", "Пропуск", "КупитьПропуск", "Доступ")]
-        [Description("Buy a Next LVL Pss to get more features from bot (commands)")]
+        [Summary("Buy a Next LVL Pss to get more features from bot (commands)")]
         public async Task BuyPass()
         {
             try

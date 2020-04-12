@@ -30,6 +30,7 @@ namespace OctoGame.OctoBot
 
         [Command("build")]
         [RequireOwner]
+        [Summary("Build guild database")]
         public async Task BuildExistingServer()
         {
             var guild = _global.Client.Guilds.ToList();
@@ -39,15 +40,51 @@ namespace OctoGame.OctoBot
         }
 
         [Command("prefix")]
+        [Summary("Show server's prefix for this bot")]
         public async Task CheckPrefix()
         {
             var guild = _serverAccounts.GetServerAccount(Context.Guild);
             await SendMessAsync( $"boole: `{guild.Prefix}`");
         }
 
+
+        [Command("myPrefix")]
+        [Summary("Set your own prefix for this bot")]
+        public async Task SetMyPrefix([Remainder] string prefix = null)
+        {
+            var account = _accounts.GetAccount(Context.User);
+
+            if (prefix == null)
+            {
+                await SendMessAsync(
+                    $"Your prefix: **{account.MyPrefix}**");
+                return;
+            }
+
+            if (prefix.Length < 100)
+            {
+                account.MyPrefix = prefix;
+                if (prefix.Contains("everyone") || prefix.Contains("here"))
+                {
+                    await SendMessAsync(
+                        $"Boooooo! no `here` or `everyone` prefix!");
+                    return;
+                }
+
+
+                await SendMessAsync(
+                    $"Booole~, your own prefix is now **{prefix}**");
+            }
+            else
+            {
+                await SendMessAsync(
+                    "Booooo! Prefix have to be less than 100 characters");
+            }
+        }
+
         [Command("setPrefix")]
         [Alias("setpref")]
-        [Description("Set prefix for currrent Guild")]
+        [Summary("Set prefix for the bot for the current Server")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         public async Task SetPrefix([Remainder] string prefix)
         {
@@ -76,7 +113,7 @@ namespace OctoGame.OctoBot
 
         [Command("offLog")]
         [RequireUserPermission(GuildPermission.Administrator)]
-        [Description("Turn off logging to a channel")]
+        [Summary("Turn off logging to a channel")]
         public async Task SetServerActivivtyLogOff()
         {
             var guild = _serverAccounts.GetServerAccount(Context.Guild);
@@ -90,7 +127,7 @@ namespace OctoGame.OctoBot
         [Command("SetLog")]
         [Alias("SetLogs")]
         [RequireUserPermission(GuildPermission.Administrator)]
-        [Description("Set Log Channel and Activate Logging")]
+        [Summary("Set Log Channel and Activate Logging")]
         public async Task SetServerActivivtyLog(IGuildChannel logChannel = null)
         {
             var guild = _serverAccounts.GetServerAccount(Context.Guild);
@@ -183,7 +220,7 @@ namespace OctoGame.OctoBot
         [Command("SetLanguage")]
         [Alias("setlang")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
-        [Description("Set Language")]
+        [Summary("Set Language")]
         public async Task SetLanguage(string lang)
         {
             if (lang.ToLower() != "en" && lang.ToLower() != "ru")
@@ -205,7 +242,7 @@ namespace OctoGame.OctoBot
         [Command("SetRoleOnJoin")]
         [Alias("RoleOnJoin")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
-        [Description("Set Role on Join")]
+        [Summary("Set Role on Join")]
         public async Task SetRoleOnJoin(string role = null)
         {
             string text;
@@ -228,7 +265,7 @@ namespace OctoGame.OctoBot
 
         [Command("channelInfo")]
         [Alias("ci")]
-        [Description("Showing usefull Server's Channels Statistics")]
+        [Summary("Showing useful Server's Channels Statistics")]
         public async Task ChannelInfo(ulong guildId)
         {
             var channels = _global.Client.GetGuild(guildId).TextChannels.ToList();
@@ -250,7 +287,7 @@ namespace OctoGame.OctoBot
         }
 
         [Command("role")]
-        [Description("Giving any available role to any user in this guild")]
+        [Summary("Giving any available role to any user in this guild")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task TeninzRole(SocketUser user, string role)
         {
@@ -281,7 +318,7 @@ namespace OctoGame.OctoBot
         [Command("AddCustomRole", RunMode = RunMode.Async)]
         [RequireUserPermission(GuildPermission.Administrator)]
         [Alias("acr")]
-        [Description("Add a custom command that will give specific role to a user that used this command.")]
+        [Summary("Add a custom command that will give specific role to a user that used this command.")]
 
         public async Task AddCustomRoleToBotList(string command, [Remainder] string role)
         {
@@ -321,42 +358,10 @@ namespace OctoGame.OctoBot
                 }
         }
 
-        /*
-        [Command("r")]
-        public async Task AddCustomRoleToUser([Remainder] string role)
-        {
-            var guild = _serverAccounts.GetServerAccount(Context.Guild);
-            var guildRoleList = guild.Roles.ToArray();
-            SocketRole roleToAdd = null;
-            if (guildRoleList.Any(x => x.Key == role))
-                foreach (var t in guildRoleList)
-                    if (t.Key == role)
-                        roleToAdd = Context.Guild.Roles.SingleOrDefault(x => x.Name.ToString() == t.Value);
-                    else
-                        return;
-
-
-            if (!(Context.User is SocketGuildUser guildUser) || roleToAdd == null)
-                return;
-
-            var roleList = guildUser.Roles.ToArray();
-
-            if (roleList.Any(t => t.Name == roleToAdd.Name))
-            {
-                await guildUser.RemoveRoleAsync(roleToAdd);
-                await SendMessAsync( $"-{roleToAdd.Name}");
-                return;
-            }
-
-            await guildUser.AddRoleAsync(roleToAdd);
-            await SendMessAsync( $"+{roleToAdd.Name}");
-        }
-        */
-
 
         [Command("ShowAllCustomRoles")]
         [Alias("sacr")]
-        [Description("Show all roles, that you get get using a specific command")]
+        [Summary("Show all roles, that you get get using a specific command")]
         public async Task AllCustomRoles()
         {
             var guild = _serverAccounts.GetServerAccount(Context.Guild);
@@ -379,7 +384,7 @@ namespace OctoGame.OctoBot
         [Command("DeleteCustomRole")]
         [Alias("dcr")]
         [RequireUserPermission(GuildPermission.Administrator)]
-        [Description("Removes Custom Role from the list")]
+        [Summary("Removes Custom Role from the list")]
         public async Task DeleteCustomRoles(string role)
         {
             var guild = _serverAccounts.GetServerAccount(Context.Guild);
@@ -397,7 +402,7 @@ namespace OctoGame.OctoBot
         }
 
         [Command("editIgnore")]
-        [Description("Set length of a message that you wish to Log in for 'Edit Message'. Default is 0")]
+        [Summary("Set length of a message that you wish to Log in for 'Edit Message'. Default is 0")]
         public async Task LoggingMessEditIgnore(int ignore)
         {
             if (ignore < 0 || ignore > 2000)

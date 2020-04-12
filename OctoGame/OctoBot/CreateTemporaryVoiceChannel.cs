@@ -22,7 +22,7 @@ namespace OctoGame.OctoBot
         }
 
         [Command("voice")]
-        [Description(
+        [Summary(
             "Will create a voice channel under context Category. The owner is getting full Perms to do anything with the channel" +
             "He may have only 1 channel." +
             "As he leaves, after 10 minutes, he will transer the ownership to another person in that Voice Channel, and he may create another channel now" +

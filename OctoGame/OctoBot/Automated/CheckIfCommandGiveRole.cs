@@ -30,14 +30,13 @@ namespace OctoGame.OctoBot.Automated
         
         public async Task MessageReceived(SocketMessage message)
         {
-            
             try
-            
             {
-                if (message.Author.IsBot)
+                if (message.Author.IsBot || message.Content.Length > 30)
+                {
                     return;
+                }
 
-                
                 var account = _accounts.GetAccount(message.Author.Id);
                 var server = _global.Client.Guilds.FirstOrDefault(x => x.Channels.Any(b => b.Id == message.Channel.Id));
                 var guild = _serverAccounts.GetServerAccount(server);
@@ -48,6 +47,8 @@ namespace OctoGame.OctoBot.Automated
                 {
                     return;
                 }
+
+
 
                 var roleToGive = "2gagwerweghsxbd";
 
@@ -86,20 +87,28 @@ namespace OctoGame.OctoBot.Automated
 
                     var roleList = guildUser.Roles.ToArray();
 
-                    if (roleList.Any(t => string.Equals(t.Name, roleToAdd.Name, StringComparison.CurrentCultureIgnoreCase)))
+                    try
                     {
-                        await guildUser.RemoveRoleAsync(roleToAdd);
-                        await message.Channel.SendMessageAsync($"-{roleToAdd.Name}");
-                        return;
-                    }
+                        if (roleList.Any(t => string.Equals(t.Name, roleToAdd.Name, StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            await guildUser.RemoveRoleAsync(roleToAdd);
+                            await message.Channel.SendMessageAsync($"-{roleToAdd.Name}");
+                            return;
+                        }
 
-                    await guildUser.AddRoleAsync(roleToAdd);
-                    await message.Channel.SendMessageAsync( $"+{roleToAdd.Name}");
+
+                        await guildUser.AddRoleAsync(roleToAdd);
+                        await message.Channel.SendMessageAsync( $"+{roleToAdd.Name}");
+                    }
+                    catch
+                    {
+                        await message.Channel.SendMessageAsync($"Error. Please make sure, that OctoBot's role is higher than yours");
+                    }
                 }
             }
             catch
             {
-                await message.Channel.SendMessageAsync($"Error. Please make sure, that OctoBot's role is higher than yours");
+                //ignored
             }
        
         }
@@ -107,10 +116,6 @@ namespace OctoGame.OctoBot.Automated
 
         public async Task Client_MessageReceived(SocketMessage message)
         {
-            if (message.Content == "*oc")
-            {
-                var i = 1;
-            }
             MessageReceived(message);
         }
         

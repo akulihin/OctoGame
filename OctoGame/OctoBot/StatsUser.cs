@@ -24,6 +24,7 @@ namespace OctoGame.OctoBot
 
         [Command("stats", RunMode = RunMode.Async)]
         [Alias("статы")]
+        [Summary("Show your personal \"server\" information")]
         public async Task Xp()
         {
             try
@@ -157,6 +158,7 @@ namespace OctoGame.OctoBot
 
         [Command("stats", RunMode = RunMode.Async)]
         [Alias("Статы")]
+        [Summary("Show someone' personal \"server\" information")]
         public async Task CheckUser(IGuildUser user)
         {
             try

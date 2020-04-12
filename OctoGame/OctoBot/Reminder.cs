@@ -70,6 +70,7 @@ namespace OctoGame.OctoBot
         [Priority(1)]
         [Alias("Напомнить", "напомни мне", "напиши мне", "напомни", "алярм", " Напомнить", " напомни мне",
             " напиши мне", " напомни", " алярм", " Remind")]
+        [Summary("A reminder message. \"Remind bla-bla-bla in 10m\", \"Remind bla-bla-bla in 1h3m42s\", \"Remind bla-bla-bla in 30m33s\". Sends a DM message with the \"bla-bla-bla\" content **in** specified time")]
         public async Task AddReminder([Remainder] string args)
         {
             try
@@ -151,6 +152,7 @@ namespace OctoGame.OctoBot
 
         ///REMINDER FOR MINUTES!
         [Command("Re")]
+        [Summary("A reminder message. \"Re 15 bla-bla-bla\". Sends a DM message with the \"bla-bla-bla\" content in specified time. Specified time are only minutes, from 0 to 1439")]
         public async Task AddReminderMinute(uint minute = 0, [Remainder] string reminderString = null)
         {
             try
@@ -224,6 +226,7 @@ namespace OctoGame.OctoBot
         //REminder To A User
         [Command("RemTo")]
         [Alias("RemindTo", "RemindTo")]
+        [Summary("Same as regular \"Remind\", but it will send a DM not to you, but to the specified user. \"RemindTo user_id bla-bla-bla in 1d15h3m22s\"")]
         public async Task AddReminderToSomeOne(ulong userId, [Remainder] string args)
         {
             try
@@ -305,6 +308,7 @@ namespace OctoGame.OctoBot
 
         [Command("List")]
         [Alias("Напоминания", "Мои Напоминания", "список")]
+        [Summary("List your reminders")]
         public async Task ShowReminders()
         {
             try
@@ -347,7 +351,9 @@ namespace OctoGame.OctoBot
 
 
         [Command("List")]
+        [RequireOwner]
         [Alias("Напоминания", "Мои Напоминания", "список")]
+        [Summary("Show someones reminders. Only for @mylorik (Bot owner)")]
         public async Task ShowUserReminders(SocketUser user)
         {
             try
@@ -397,6 +403,7 @@ namespace OctoGame.OctoBot
 
         [Command("Delete")]
         [Alias("Удалить Напоминания", "Удалить", "Удалить Напоминание", "del")]
+        [Summary("Delete remind. Please check the index using \"List\" command")]
         public async Task DeleteReminder(int index)
         {
             try
@@ -438,6 +445,7 @@ namespace OctoGame.OctoBot
 
         [Command("Время")]
         [Alias("time", "date")]
+        [Summary("Show current time")]
         public async Task CheckTime()
         {
             try
@@ -459,6 +467,7 @@ namespace OctoGame.OctoBot
 
         [Command("RemindOn", RunMode = RunMode.Async)]
         [Alias("Remind On")]
+        [Summary("Similar to regular \"Remind\", but you specify date in front of it. \"RemindOn yyyy-mm-dd bla-bla-bla\",\"RemindOn 2022-01-27 bla-bla-bla\"")]
         public async Task AddReminderOn(string timeOn, [Remainder] string args)
         {
             try
