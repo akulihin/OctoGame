@@ -142,7 +142,7 @@ namespace OctoGame.GeneralCommands
                                       $"Client Latency: {_global.Client.Latency}\n" +
                                       $"Time I spend processing your command: {watch?.Elapsed:m\\:ss\\.ffff}s\n" +
                                       $"This time counts from from the moment he receives this command.\n" +
-                                      $"Memory Used: {ramUsage}"+
+                                      $"Memory Used: {ramUsage}\n" +
                                       $"Total Servers: {_global.Client.Guilds.Count}");
 
 

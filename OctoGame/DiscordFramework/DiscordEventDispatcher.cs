@@ -207,6 +207,7 @@ namespace OctoGame.DiscordFramework
         private async Task ReactionAdded(Cacheable<IUserMessage, ulong> cacheMessage, ISocketMessageChannel channel,
             SocketReaction reaction)
         {
+            return; //It's a fix, I need to figure out how to go around it when the game is out
             if (reaction.User.Value.IsBot) return;
             _octoGameReaction.ReactionAddedForOctoGameAsync(cacheMessage, channel, reaction);
         }
@@ -214,6 +215,7 @@ namespace OctoGame.DiscordFramework
         private async Task ReactionRemoved(Cacheable<IUserMessage, ulong> cacheMessage, ISocketMessageChannel channel,
             SocketReaction reaction)
         {
+            return; //It's a fix, I need to figure out how to go around it when the game is out
             if (reaction.User.Value.IsBot)
             {
             }
@@ -221,6 +223,7 @@ namespace OctoGame.DiscordFramework
 
         private async Task ReactionsCleared(Cacheable<IUserMessage, ulong> cacheMessage, ISocketMessageChannel channel)
         {
+            return; //It's a fix, I need to figure out how to go around it when the game is out
         }
 
         private async Task RecipientAdded(SocketGroupUser user)

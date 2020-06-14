@@ -18,7 +18,7 @@ namespace OctoGame
         private DiscordShardedClient _client;
         private Container _services;
 
-        private readonly int[] _shardIds = {0,1,2};
+        private readonly int[] _shardIds = {0,1};
 
         private static void Main()
         {
@@ -32,7 +32,7 @@ namespace OctoGame
                 LogLevel = LogSeverity.Verbose,
                 DefaultRetryMode = RetryMode.AlwaysRetry,
                 MessageCacheSize = 50,
-                TotalShards = 3
+                TotalShards = 2
             });
             
             _services = new Container(x => 
