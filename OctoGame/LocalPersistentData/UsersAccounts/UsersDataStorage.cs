@@ -26,6 +26,12 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public void SaveAccountSettings(IEnumerable<AccountSettings> accounts, string idString, string json)
         {
             var filePath = $@"DataBase/OctoDataBase/UserAccounts/account-{idString}.json";
+
+            if (idString.Contains("BACK_UP"))
+            {
+                filePath = $@"DataBase/OctoDataBase/UserAccountsBackup/account-{idString}.json";
+            }
+
             try
             {
                 File.WriteAllText(filePath, json);
@@ -95,6 +101,12 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
             foreach (var file in allFiles)
             {
                 var filePath = file.FullName;
+
+                if (filePath.Contains("BACK_UP"))
+                {
+                    File.Delete(filePath);
+                }
+
                 ulong userId;
                 try
                 {
@@ -115,6 +127,12 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
 
 
                 var json = File.ReadAllText(filePath);
+
+                if (json.Length < 20)
+                {
+                    File.Delete(filePath);
+                    continue;
+                }
 
                 try
                 {
