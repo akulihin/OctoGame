@@ -103,7 +103,18 @@ namespace OctoGame.LocalPersistentData.UsersAccounts
         public  List<AccountSettings> GetAllAccount()
         {
             var accounts = new List<AccountSettings>();
-            foreach (var values in _userAccountsDictionary.Values) accounts.AddRange(values);
+            foreach (var values in _userAccountsDictionary.Values)
+            {
+                try
+                {
+                    accounts.AddRange(values);
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine("ERROR: GetAllAccount - '{0}'", error);
+                }
+                
+            }
             return accounts;
         }
 
